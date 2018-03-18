@@ -1,7 +1,7 @@
 <?php
 
 $header = <<<EOF
-This file is part of the Unicode Normalization project.
+This file is part of the Runtime Capability project.
 
 (c) Stephan Jorek <stephan.jorek@gmail.com>
 
@@ -12,9 +12,9 @@ EOF;
 $finder = PhpCsFixer\Finder::create()
     ->exclude('Fixtures')
     ->exclude('vendor')
-    ->in(__DIR__ . DIRECTORY_SEPARATOR . 'build')
+//     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'build')
     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'src')
-    ->in(__DIR__ . DIRECTORY_SEPARATOR . 'tests')
+//     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'tests')
 ;
 
 return PhpCsFixer\Config::create()
