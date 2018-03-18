@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Configuration;
 
-use Sjorek\RuntimeCapability\Exception\CapabilityDetectionFailure;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
 
 /**
@@ -78,6 +78,8 @@ trait ConfigurableTrait
      * @param null|string $type
      * @param mixed       $key
      *
+     * @throws ConfigurationFailure
+     *
      * @return mixed
      */
     public function config($key, $type = null)
@@ -104,13 +106,13 @@ trait ConfigurableTrait
             }
         }
         if (!$found) {
-            throw new CapabilityDetectionFailure(
+            throw new ConfigurationFailure(
                 sprintf('Missing configuration for key: %s (%s).', $key, $id),
                 1521291482
             );
         }
         if (null !== $type && $type !== ($actual = ConfigurationUtility::getTypeForValue($type, $value))) {
-            throw new CapabilityDetectionFailure(
+            throw new ConfigurationFailure(
                 sprintf(
                     'Invalid configuration value type for key "%s", expected type "%s", but got type "%s".',
                     $key,

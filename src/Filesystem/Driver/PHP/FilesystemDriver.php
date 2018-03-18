@@ -11,10 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Driver\PHP;
+namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\AbstractFilesystemDriver;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\AbstractFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

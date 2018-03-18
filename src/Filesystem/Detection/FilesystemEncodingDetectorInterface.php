@@ -11,19 +11,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Detection;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection;
 
 use Sjorek\RuntimeCapability\Capability\Detection\DetectorInterface;
 use Sjorek\UnicodeNormalization\Implementation\NormalizationForms;
 
 /**
- * Facade to filesystem specific functionality, providing a reduced interface to what is needed.
- *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
- *
- * @todo Check if we need to implement chdir() to circumvent exceeding maximum path length
  */
-interface PathNormalizationDetectorInterface extends DetectorInterface
+interface FilesystemEncodingDetectorInterface extends DetectorInterface
 {
     /**
      * We use a pattern to identify the test files that have been created.

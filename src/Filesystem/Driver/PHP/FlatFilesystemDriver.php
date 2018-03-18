@@ -11,10 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Driver\PHP;
+namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\AbstractFilesystemDriver;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FlatFilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\AbstractFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FlatFilesystemDriverInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -135,7 +135,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
         $pattern = $this->canonical($this->iteratorPattern);
 
         return function () use ($pattern) {
-            foreach (glob($pattern) as $path) {
+            foreach (glob($pattern, GLOB_NOSORT) as $path) {
                 yield basename($path);
             }
         };

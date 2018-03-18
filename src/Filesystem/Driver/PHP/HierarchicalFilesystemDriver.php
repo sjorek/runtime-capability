@@ -11,9 +11,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Driver\PHP;
+namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 /**

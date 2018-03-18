@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Detection;
 
-use Sjorek\RuntimeCapability\Exception\CapabilityDetectionFailure;
+use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
+use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableTrait;
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
 
 /**
@@ -21,22 +22,12 @@ use Sjorek\RuntimeCapability\Management\AbstractManageable;
  */
 abstract class AbstractDetector extends AbstractManageable implements DetectorInterface
 {
+    use ConfigurableTrait;
+
     /**
      * @var DetectorManagerInterface
      */
     protected $manager = null;
-
-    /**
-     * @var array
-     */
-    protected static $DEFAULT_CONFIGURATION = [
-        'compact-result' => true,
-    ];
-
-    /**
-     * @var array
-     */
-    protected $configuration = [];
 
     /**
      * @var bool
@@ -61,12 +52,13 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     /**
      * {@inheritdoc}
      *
-     * @see DetectorInterface::setup()
+     * @see ConfigurableInterface::setup()
      */
-    public function setup(array &$configuration)
+    public function setup()
     {
-        $this->configuration = &$configuration;
-        $this->compactResult = $this->getConfiguration('compact-result', 'boolean');
+        $this->compactResult = $this->config('compact-result', 'boolean');
+
+        return $this;
     }
 
     /**
@@ -105,57 +97,6 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     public function setManager(DetectorManagerInterface $manager): DetectorInterface
     {
         return parent::setManager($manager);
-    }
-
-    /**
-     * @param string[]    $keys
-     * @param null|string $type
-     * @param mixed       $key
-     *
-     * @return mixed
-     */
-    protected function getConfiguration($key, $type = null)
-    {
-        $key = $this->normalizeId($key);
-        $id = strtolower(sprintf('%s.%s', $this->identify(), $key));
-        $value = null;
-        $found = false;
-        foreach ([$id, $key] as $lookup) {
-            if (isset($this->configuration[$lookup])) {
-                $value = $this->configuration[$lookup];
-                $found = true;
-                break;
-            }
-            if (isset(static::$DEFAULT_CONFIGURATION[$lookup])) {
-                $value = static::$DEFAULT_CONFIGURATION[$lookup];
-                $found = true;
-                break;
-            }
-            if (isset(self::$DEFAULT_CONFIGURATION[$lookup])) {
-                $value = self::$DEFAULT_CONFIGURATION[$lookup];
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            throw new CapabilityDetectionFailure(
-                sprintf('Missing configuration for key: %s (%s).', $key, $id),
-                1521291482
-            );
-        }
-        if (null !== $type && $type !== ($actual = gettype($value))) {
-            throw new CapabilityDetectionFailure(
-                sprintf(
-                    'Invalid configuration value type for key "%s": expected type "%s", but got type "%s".',
-                    $key,
-                    $type,
-                    $actual
-                ),
-                1521291487
-            );
-        }
-
-        return $value;
     }
 
     /**

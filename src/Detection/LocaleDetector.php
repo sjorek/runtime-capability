@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Detection;
 
-use Sjorek\RuntimeCapability\Exception\CapabilityDetectionFailure;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -68,22 +68,26 @@ class LocaleDetector extends AbstractDetector
     /**
      * {@inheritdoc}
      *
+     * @throws ConfigurationFailure
+     *
      * @see AbstractDetector::setup()
      */
-    public function setup(array &$configuration)
+    public function setup()
     {
-        parent::setup($configuration);
+        parent::setup();
 
-        $categories = $this->getConfiguration('categories', 'array');
+        $categories = $this->config('categories', 'array');
         if ($invalid = array_diff($categories, static::LOCALE_CATEGORIES)) {
-            throw new CapabilityDetectionFailure(
+            throw new ConfigurationFailure(
                 sprintf('Invalid configuration values for key "categories": %s', implode(',', $invalid)),
                 1521291497
             );
         }
         $this->categories = $categories;
 
-        $this->emptyLocaleOnWindowsIsValid = $this->getConfiguration('empty-locale-on-windows-is-valid', 'boolean');
+        $this->emptyLocaleOnWindowsIsValid = $this->config('empty-locale-on-windows-is-valid', 'boolean');
+
+        return $this;
     }
 
     /**

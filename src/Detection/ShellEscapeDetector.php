@@ -62,7 +62,7 @@ class ShellEscapeDetector extends AbstractDetector
         $quote = 'Windows' === $platform['os-family'] ? '"' : '\'';
 
         return
-            (version_compare($platform['version'], '5.6.0', '<') || 'UTF8' === $defaultCharset) &&
+            ('UTF8' === $defaultCharset || version_compare($platform['version'], '5.6.0', '<')) &&
             escapeshellarg($testString) === $quote . $testString . $quote
         ;
     }

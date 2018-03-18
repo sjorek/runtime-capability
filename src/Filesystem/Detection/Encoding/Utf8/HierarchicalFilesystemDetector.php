@@ -11,11 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalization;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalizationDetectorInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\PHP\HierarchicalFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\HierarchicalFilesystemDriver;
 
 /**
  * Class to detect unicode filesystem capabilities.
@@ -49,36 +48,39 @@ class HierarchicalFilesystemDetector extends FlatFilesystemDetector
      *
      * @see FlatFilesystemDetector::setup()
      */
-    public function setup(array &$configuration)
+    public function setup()
     {
-        parent::setup($configuration);
-        $this->detectionFolderName = $this->getConfiguration('detection-folder-name', 'string');
+        parent::setup();
+        $this->detectionFolderName = $this->getConfiguration('detection-folder-name', 'match:^[A-Za-z0-9._-]+$');
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDetector::testFilesystemRead()
+     * @see FlatFilesystemDetector::testFilesystem()
      */
-    protected function testFilesystemRead(array &$normalizations, array $tests, array $fileNames)
+    protected function testFilesystem(array $normalizations, array $tests): array
     {
-        $oldPath = $this->path;
-        $this->createFolder($this->detectionFolderName);
+        $this->filesystemDriver->createFolder($this->detectionFolderName);
         $this->filesystemDriver->setPath($this->detectionFolderName);
-        parent::testFilesystemRead($normalizations, $tests, $fileNames);
-        $this->filesystemDriver->setPath($oldPath);
+
+        $normalizations = parent::testFilesystem($normalizations, $tests);
+
+        $this->filesystemDriver->setPath($this->filesystemPath);
         $this->filesystemDriver->remove($this->detectionFolderName);
+
+        return $normalizations;
     }
 
     /**
-     * @param HierarchicalFilesystemDriverInterface $driver
-     *
-     * @return PathNormalizationDetectorInterface
+     * @return HierarchicalFilesystemDriverInterface
      */
-    protected function setFilesystemDriver(HierarchicalFilesystemDriverInterface $driver): PathNormalizationDetectorInterface
+    protected function setupFilesystemDriver(): HierarchicalFilesystemDriverInterface
     {
-        $this->filesystemDriver = $driver;
-
-        return $this;
+        return $this->manager->getManagement()->getFilesystemDriverManager(
+            $this->config('filesystem-driver', 'subclass:' . HierarchicalFilesystemDriverInterface::class)
+        );
     }
 }

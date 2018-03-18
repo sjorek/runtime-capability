@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Detection;
 
+use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
@@ -22,17 +23,12 @@ use Sjorek\RuntimeCapability\Management\ManageableInterface;
  *
  * @todo Check if we need to implement chdir() to circumvent exceeding maximum path length
  */
-interface DetectorInterface extends ManageableInterface
+interface DetectorInterface extends ManageableInterface, ConfigurableInterface
 {
     /**
      * @return string[]
      */
     public function depends();
-
-    /**
-     * @param array $configuration
-     */
-    public function setup(array &$configuration);
 
     /**
      * @param array[bool[]]|bool[]|bool ...$dependencies

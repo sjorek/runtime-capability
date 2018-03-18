@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Driver;
+namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 
 /**
  * Interface for filesystem specific functionality.

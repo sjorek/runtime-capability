@@ -11,11 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalization;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalizationDetectorInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FlatFilesystemDriverInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\PHP\FlatFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FlatFilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FlatFilesystemDriver;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
@@ -23,7 +22,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FlatFilesystemDetector extends FilesystemDetector implements PathNormalizationDetectorInterface
+class FlatFilesystemDetector extends FilesystemDetector
 {
     /**
      * @var int[]
@@ -49,10 +48,24 @@ class FlatFilesystemDetector extends FilesystemDetector implements PathNormaliza
      *
      * @see FilesystemDetector::setup()
      */
-    public function setup(array &$configuration)
+    public function setup()
     {
-        parent::setup($configuration);
-        $this->filesystemPath = $this->getConfiguration('filesystem-path', 'string');
+        parent::setup();
+        $this->filesystemPath = $this->config('filesystem-path', 'match:^\.?(?:[^.]|\.[^.])*$');
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see FilesystemDetector::evaluate()
+     */
+    protected function evaluate()
+    {
+        $this->filesystemDriver->setPath($this->filesystemPath);
+
+        return parent::evaluate();
     }
 
     /**
@@ -109,42 +122,32 @@ class FlatFilesystemDetector extends FilesystemDetector implements PathNormaliza
      * php > ]
      * </pre>
      *
-     * @param array $normalizations
-     * @param array $tests
+     * {@inheritdoc}
+     *
+     * @see FilesystemDetector::testFilesystem()
      */
-    protected function testFilesystem(array &$normalizations, array $tests)
+    protected function testFilesystem(array $normalizations, array $tests): array
     {
-        $this->filesystemDriver->setPath($this->filesystemPath);
         $fileNames = [];
-        foreach ($tests as $normalization => $fileName) {
-            if (false === $fileName) {
+        foreach ($tests as $form => $fileName) {
+            if (false === $fileName || !isset($normalizations[$form])) {
                 continue;
             }
-            $normalizations[$normalization] = [
+            $normalizations[$form] = [
                 'read' => false,
                 'write' => true,
             ];
-            $fileName = sprintf($this->filenameDetectionPattern, $normalization, hex2bin($fileName));
-            $fileNames[$normalization] = $fileName;
+            $fileName = sprintf($this->filenameDetectionPattern, $form, hex2bin($fileName));
+            $fileNames[$form] = $fileName;
             try {
                 $this->filesystemDriver->create($fileName);
             } catch (IOExceptionInterface $e) {
-                $normalizations[$normalization]['write'] = false;
+                $normalizations[$form]['write'] = false;
             }
         }
-        $this->testFilesystemRead($normalizations, $tests, $fileNames);
-    }
-
-    /**
-     * @param array $normalizations
-     * @param array $tests
-     * @param array $fileNames
-     */
-    protected function testFilesystemRead(array &$normalizations, array $tests, array $fileNames)
-    {
         foreach ($this->filesystemDriver as $fileName) {
-            foreach ($fileNames as $normalization => $candidate) {
-                if ($normalizations[$normalization]['read'] === true) {
+            foreach ($fileNames as $form => $candidate) {
+                if ($normalizations[$form]['read'] === true) {
                     continue;
                 }
                 // If all files exist then the filesystem does not normalize unicode. If
@@ -152,22 +155,22 @@ class FlatFilesystemDetector extends FilesystemDetector implements PathNormaliza
                 // or it denies access to not-normalized paths or it simply does not support
                 // unicode at all, at least not those normalization forms we test.
                 if ($fileName === $candidate) {
-                    $normalizations[$normalization]['read'] = true;
+                    $normalizations[$form]['read'] = true;
                 }
             }
             $this->filesystemDriver->remove($fileName);
         }
+
+        return $normalizations;
     }
 
     /**
-     * @param FlatFilesystemDriverInterface $driver
-     *
-     * @return PathNormalizationDetectorInterface
+     * @return FlatFilesystemDriverInterface
      */
-    protected function setFilesystemDriver(FlatFilesystemDriverInterface $driver): PathNormalizationDetectorInterface
+    protected function setupFilesystemDriver(): FlatFilesystemDriverInterface
     {
-        $this->filesystemDriver = $driver;
-
-        return $this;
+        return $this->manager->getManagement()->getFilesystemDriverManager(
+            $this->config('filesystem-driver', 'subclass:' . FlatFilesystemDriverInterface::class)
+        );
     }
 }

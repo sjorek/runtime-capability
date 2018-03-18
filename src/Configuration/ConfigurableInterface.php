@@ -33,12 +33,12 @@ interface ConfigurableInterface
     public function &getConfiguration(): array;
 
     /**
-     * @return array
+     * @return ConfigurableInterface
      */
     public function setup(): self;
 
     /**
-     * @return array
+     * @return ConfigurableInterface
      */
     public function reset(): self;
 
