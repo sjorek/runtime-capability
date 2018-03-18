@@ -7,10 +7,10 @@
         "detection"
     ],
     "license" : "BSD-3-Clause",
-    "homepage" : "https://sjorek.github.io/capability-detector",
+    "homepage" : "https://sjorek.github.io/runtime-capability",
     "support" : {
-        "issues" : "https://github.com/sjorek/capability-detector/issues",
-        "source" : "https://github.com/sjorek/capability-detector"
+        "issues" : "https://github.com/sjorek/runtime-capability/issues",
+        "source" : "https://github.com/sjorek/runtime-capability"
     },
     "authors" : [{
             "name" : "Stephan Jorek",
@@ -21,7 +21,7 @@
     ],
     "autoload" : {
         "psr-4" : {
-            "Sjorek\\CapabilityDetector\\" : "src/"
+            "Sjorek\\RuntimeCapability\\" : "src/"
         }
     },
     "require" : {
@@ -63,17 +63,19 @@
             "phpunit -v --colors=always --exclude-group=runtime --coverage-text"
         ],
         "run:report-coverage-html": [
-            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-html coverage"
+            "@run:setup-build-dir",
+            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-html .build/coverage"
         ],
         "run:report-coverage-clover": [
-            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-clover coverage.xml"
+            "@run:setup-build-dir",
+            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-clover .build/coverage.xml"
         ],
         "run:cs-lint": [
-            "@run:create-cache-dir",
+            "@run:setup-build-dir",
             "php-cs-fixer fix --ansi --diff --stop-on-violation --verbose --dry-run --cache-file=.build/cache/php_cs.cache.json"
         ],
         "run:cs-fix": [
-            "@run:create-cache-dir",
+            "@run:setup-build-dir",
             "php-cs-fixer fix -vv --ansi --cache-file=.build/cache/php_cs.cache.json"
         ],
         "run:security-check": [
@@ -82,11 +84,11 @@
         "run:security-check-bugfix-for-travis": [
             "security-checker security:check --ansi --end-point=http://security.sensiolabs.org/check_lock"
         ],
-        "run:create-cache-dir": [
+        "run:setup-build-dir": [
             "@composer run:alter-filesystem -- mkdir .build/cache"
         ],
         "run:alter-filesystem": [
-            "@php -r '$method=$_SERVER[\"argv\"][1];$args=array_map(function($v){return $v===\"EOL\"?PHP_EOL:$v;},array_slice($_SERVER[\"argv\"],2));require\".Build/vendor/autoload.php\";$fs=new Symfony\\Component\\Filesystem\\Filesystem();call_user_func([$fs,$method],...$args);'"
+            "@php -r '$method=$_SERVER[\"argv\"][1];$args=array_map(function($v){return $v===\"EOL\"?PHP_EOL:$v;},array_slice($_SERVER[\"argv\"],2));require\"vendor/autoload.php\";$fs=new Symfony\\Component\\Filesystem\\Filesystem();call_user_func([$fs,$method],...$args);'"
         ],
         "run:venv": [
             "@run:venv-remove",
