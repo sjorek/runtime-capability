@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalization\FilesystemDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity\FilesystemDetector as CaseSensitivityDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8\FilesystemDetector as Utf8EncodingDetector;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -27,8 +28,10 @@ class FilesystemCapability extends AbstractCapability
      */
     public function get()
     {
+        $manager = $this->manager->getManagement()->getDetectorManager();
         return $this->evaluate(
-            $this->manager->getManagement()->getDetectorManager()->get(FilesystemDetector::class)
+            $manager->get(CaseSensitivityDetector::class),
+            $manager->get(Utf8EncodingDetector::class)
         );
     }
 }
