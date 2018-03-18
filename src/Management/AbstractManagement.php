@@ -4,7 +4,7 @@ namespace Sjorek\RuntimeCapability\Management;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class AbstractManagement extends AbstractManager implements ManagementInterface
+abstract class AbstractManagement extends AbstractManager implements ManagementInterface
 {
     /**
      * {@inheritdoc}

@@ -11,19 +11,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Management;
+namespace Sjorek\RuntimeCapability;
 
-use Sjorek\RuntimeCapability\Identification\IdentifyableInterface;
+use Sjorek\RuntimeCapability\Management\ManagementInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ManageableInterface extends IdentifyableInterface
+interface RuntimeCapabilityInterface extends ManagementInterface
 {
-    /**
-     * @param ManagerInterface $manager
-     *
-     * @return ManageableInterface
-     */
-    public function setManager(ManagerInterface $manager): self;
 }

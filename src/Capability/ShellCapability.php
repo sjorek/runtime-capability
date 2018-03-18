@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManager;
 use Sjorek\RuntimeCapability\Capability\Detection\ShellEscapeDetector;
 
 /**
@@ -29,7 +28,7 @@ class ShellCapability extends AbstractCapability
     public function get()
     {
         return $this->evaluate(
-            $this->manager->getManagement()
+            $this->manager->getManagement()->getDetectorManager()->get(ShellEscapeDetector::class)
         );
     }
 }

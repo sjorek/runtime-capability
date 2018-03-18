@@ -11,19 +11,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Management;
-
-use Sjorek\RuntimeCapability\Identification\IdentifyableInterface;
+namespace Sjorek\RuntimeCapability\Identification;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ManageableInterface extends IdentifyableInterface
+abstract class AbstractIdentifyable implements IdentifyableInterface
 {
-    /**
-     * @param ManagerInterface $manager
-     *
-     * @return ManageableInterface
-     */
-    public function setManager(ManagerInterface $manager): self;
+    use IdentifyableTrait;
 }

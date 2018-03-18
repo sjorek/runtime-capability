@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Capability\Filesystem\Detection;
 
 use Sjorek\RuntimeCapability\Capability\Detection\DetectorInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverManagerInterface;
 use Sjorek\UnicodeNormalization\Implementation\NormalizationForms;
 
 /**
@@ -111,11 +110,4 @@ interface PathNormalizationDetectorInterface extends DetectorInterface
         NormalizationForms::NFKD => false,
         NormalizationForms::NFKC => false,
     ];
-
-    /**
-     * @param FilesystemDriverManagerInterface $manager
-     *
-     * @return DetectorInterface
-     */
-    public function setFilesystemDriverManager(FilesystemDriverManagerInterface $manager): self;
 }

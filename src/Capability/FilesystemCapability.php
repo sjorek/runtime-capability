@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
+use Sjorek\RuntimeCapability\Capability\Filesystem\Detection\PathNormalization\FilesystemDetector;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
@@ -25,6 +27,8 @@ class FilesystemCapability extends AbstractCapability
      */
     public function get()
     {
-
+        return $this->evaluate(
+            $this->manager->getManagement()->getDetectorManager()->get(FilesystemDetector::class)
+        );
     }
 }

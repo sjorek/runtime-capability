@@ -13,69 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Management;
 
+use Sjorek\RuntimeCapability\Identification\AbstractIdentifyable;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractManageable implements ManageableInterface
+abstract class AbstractManageable extends AbstractIdentifyable implements ManageableInterface
 {
-    /**
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * @var ManagerInterface
-     */
-    protected $manager;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ManageableInterface::id()
-     */
-    public function identify(): string
-    {
-        if (null !== $this->id) {
-            return $this->id;
-        }
-        $className = static::class;
-        if (defined($className . '::CAPABILITY_ID')) {
-            return $this->id = (string) static::CAPABILITY_ID;
-        }
-        $id = $this->extractId($className);
-
-        return $this->id = $id === $className ? $id : $this->normalizeId($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ManageableInterface::setManager()
-     */
-    public function setManager(ManagerInterface $manager): ManageableInterface
-    {
-        $this->manager = $manager;
-
-        return $this;
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    protected function extractId($id)
-    {
-        return preg_replace(self::EXTRACT_ID_PATTERN, '$1', $id);
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    protected function normalizeId($id)
-    {
-        return strtolower(preg_replace(self::NORMALIZE_ID_PATTERN, '-$0', $id));
-    }
+    use ManageableTrait;
 }

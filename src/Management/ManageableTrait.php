@@ -13,17 +13,25 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Management;
 
-use Sjorek\RuntimeCapability\Identification\IdentifyableInterface;
-
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ManageableInterface extends IdentifyableInterface
+trait ManageableTrait
 {
-    /**
-     * @param ManagerInterface $manager
-     *
-     * @return ManageableInterface
+     /**
+     * @var ManagerInterface
      */
-    public function setManager(ManagerInterface $manager): self;
+    protected $manager;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ManageableInterface::setManager()
+     */
+    public function setManager(ManagerInterface $manager): ManageableInterface
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
 }

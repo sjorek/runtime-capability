@@ -58,9 +58,8 @@ class FilesystemDetector extends AbstractDetector implements PathNormalizationDe
     public function setup(array &$configuration)
     {
         parent::setup($configuration);
-        $this->setFilesystemDriver(
-            $this->filesystemDriverManager->get($this->getConfiguration('filesystem-driver', 'string'))
-        );
+        $manager = $this->manager->getManagement()->getFilesystemDriverManager();
+        $this->setFilesystemDriver($manager->get($this->getConfiguration('filesystem-driver', 'string')));
         $this->filenameDetectionPattern = $this->getConfiguration('filename-detection-pattern', 'string');
     }
 
@@ -122,18 +121,6 @@ class FilesystemDetector extends AbstractDetector implements PathNormalizationDe
     protected function setFilesystemDriver(FilesystemDriverInterface $driver): PathNormalizationDetectorInterface
     {
         $this->filesystemDriver = $driver;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see PathNormalizationDetectorInterface::setFilesystemDriverManager()
-     */
-    public function setFilesystemDriverManager(FilesystemDriverManagerInterface $manager): PathNormalizationDetectorInterface
-    {
-        $this->filesystemDriverManager = $manager;
 
         return $this;
     }
