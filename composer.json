@@ -1,0 +1,32 @@
+{
+	"name" : "sjorek/runtime-capability",
+	"type" : "library",
+	"description" : "extensible library to detect runtime capabilities",
+	"keywords" : [
+		"capability",
+		"detection"
+	],
+	"license" : "BSD-3-Clause",
+	"homepage" : "https://sjorek.github.io/capability-detector",
+	"support" : {
+		"issues" : "https://github.com/sjorek/capability-detector/issues",
+		"source" : "https://github.com/sjorek/capability-detector"
+	},
+	"authors" : [{
+			"name" : "Stephan Jorek",
+			"email" : "stephan.jorek@gmail.com",
+			"homepage" : "https://sjorek.github.io/",
+			"role" : "Developer"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Sjorek\\CapabilityDetector\\" : "src/"
+		}
+	},
+	"require" : {
+		"php" : ">=7.0",
+		"symfony/filesystem" : "~4.0",
+		"sjorek/unicode-normalization" : "~0.2"
+	}
+}
