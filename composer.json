@@ -1,32 +1,108 @@
 {
-	"name" : "sjorek/runtime-capability",
-	"type" : "library",
-	"description" : "extensible library to detect runtime capabilities",
-	"keywords" : [
-		"capability",
-		"detection"
-	],
-	"license" : "BSD-3-Clause",
-	"homepage" : "https://sjorek.github.io/capability-detector",
-	"support" : {
-		"issues" : "https://github.com/sjorek/capability-detector/issues",
-		"source" : "https://github.com/sjorek/capability-detector"
-	},
-	"authors" : [{
-			"name" : "Stephan Jorek",
-			"email" : "stephan.jorek@gmail.com",
-			"homepage" : "https://sjorek.github.io/",
-			"role" : "Developer"
-		}
-	],
-	"autoload" : {
-		"psr-4" : {
-			"Sjorek\\CapabilityDetector\\" : "src/"
-		}
-	},
-	"require" : {
-		"php" : ">=7.0",
-		"symfony/filesystem" : "~4.0",
-		"sjorek/unicode-normalization" : "~0.2"
-	}
+    "name" : "sjorek/runtime-capability",
+    "type" : "library",
+    "description" : "extensible library to detect runtime capabilities",
+    "keywords" : [
+        "capability",
+        "detection"
+    ],
+    "license" : "BSD-3-Clause",
+    "homepage" : "https://sjorek.github.io/capability-detector",
+    "support" : {
+        "issues" : "https://github.com/sjorek/capability-detector/issues",
+        "source" : "https://github.com/sjorek/capability-detector"
+    },
+    "authors" : [{
+            "name" : "Stephan Jorek",
+            "email" : "stephan.jorek@gmail.com",
+            "homepage" : "https://sjorek.github.io/",
+            "role" : "Developer"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "Sjorek\\CapabilityDetector\\" : "src/"
+        }
+    },
+    "require" : {
+        "php" : ">=7.0",
+        "symfony/filesystem" : "~4.0",
+        "symfony/polyfill-php72": "^1.4",
+        "sjorek/unicode-normalization" : "~0.2"
+    },
+    "require-dev" : {
+        "friendsofphp/php-cs-fixer": "^2.7",
+        "mikey179/vfsStream": "^1.6",
+        "phpunit/phpunit": "^6.5",
+        "sensiolabs/security-checker": "^4.1"
+    },
+    "scripts": {
+        "run:build": [
+            "@run:clean",
+            "@run:cs-lint",
+            "@run:security-check",
+            "@run:report-coverage-html"
+        ],
+        "run:clean": [
+            "@composer run:alter-filesystem -- remove .build/coverage",
+            "@composer run:alter-filesystem -- remove .build/coverage.xml"
+        ],
+        "run:test": [
+            "phpunit -v --colors=always --exclude-group=runtime,large"
+        ],
+        "run:test-all": [
+            "phpunit -v --colors=always --exclude-group=runtime"
+        ],
+        "run:test-large": [
+            "phpunit -v --colors=always --exclude-group=runtime --group=large"
+        ],
+        "run:test-coverage": [
+            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-text"
+        ],
+        "run:test-coverage-all": [
+            "phpunit -v --colors=always --exclude-group=runtime --coverage-text"
+        ],
+        "run:report-coverage-html": [
+            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-html coverage"
+        ],
+        "run:report-coverage-clover": [
+            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-clover coverage.xml"
+        ],
+        "run:cs-lint": [
+            "@run:create-cache-dir",
+            "php-cs-fixer fix --ansi --diff --stop-on-violation --verbose --dry-run --cache-file=.build/cache/php_cs.cache.json"
+        ],
+        "run:cs-fix": [
+            "@run:create-cache-dir",
+            "php-cs-fixer fix -vv --ansi --cache-file=.build/cache/php_cs.cache.json"
+        ],
+        "run:security-check": [
+            "security-checker security:check --ansi"
+        ],
+        "run:security-check-bugfix-for-travis": [
+            "security-checker security:check --ansi --end-point=http://security.sensiolabs.org/check_lock"
+        ],
+        "run:create-cache-dir": [
+            "@composer run:alter-filesystem -- mkdir .build/cache"
+        ],
+        "run:alter-filesystem": [
+            "@php -r '$method=$_SERVER[\"argv\"][1];$args=array_map(function($v){return $v===\"EOL\"?PHP_EOL:$v;},array_slice($_SERVER[\"argv\"],2));require\".Build/vendor/autoload.php\";$fs=new Symfony\\Component\\Filesystem\\Filesystem();call_user_func([$fs,$method],...$args);'"
+        ],
+        "run:venv": [
+            "@run:venv-remove",
+            "@run:venv-deploy"
+        ],
+        "run:venv-deploy": [
+            "@composer venv:shell -v --lock",
+            "@composer venv:shell-hook -v --lock",
+            "@composer venv:link -v --lock",
+            "@composer venv:git-hook -v --lock"
+        ],
+        "run:venv-remove": [
+            "@composer venv:shell -v --remove",
+            "@composer venv:shell-hook -v --remove",
+            "@composer venv:link -v --remove",
+            "@composer venv:git-hook -v --remove"
+        ]
+    }
 }
