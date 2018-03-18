@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -12,7 +12,6 @@ declare(strict_types=1);
  */
 
 namespace Sjorek\RuntimeCapability\Capability\Detection;
-
 
 use Sjorek\RuntimeCapability\Management\AbstractManager;
 

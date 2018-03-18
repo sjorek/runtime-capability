@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -75,5 +75,4 @@ abstract class AbstractManager extends AbstractManageable implements ManagerInte
     {
         return $this->manager;
     }
-
 }

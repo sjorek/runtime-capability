@@ -1,14 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability;
 
-use Sjorek\RuntimeCapability\Management\AbstractManagement;
-use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManagerInterface;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverManagerInterface;
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManager;
-use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverManager;
 use Sjorek\RuntimeCapability\Capability\CapabilityManager;
+use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
+use Sjorek\RuntimeCapability\Capability\Detection\DetectorManager;
+use Sjorek\RuntimeCapability\Capability\Detection\DetectorManagerInterface;
+use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverManager;
+use Sjorek\RuntimeCapability\Capability\Filesystem\Driver\FilesystemDriverManagerInterface;
+use Sjorek\RuntimeCapability\Management\AbstractManagement;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -18,7 +29,7 @@ class RuntimeCapability extends AbstractManagement implements RuntimeCapabilityI
     /**
      * @return CapabilityManagerInterface
      */
-    public function getCapabilityManager() : CapabilityManagerInterface
+    public function getCapabilityManager(): CapabilityManagerInterface
     {
         return $this->get(CapabilityManager::class);
     }
@@ -26,7 +37,7 @@ class RuntimeCapability extends AbstractManagement implements RuntimeCapabilityI
     /**
      * @return DetectorManagerInterface
      */
-    public function getDetectorManager() : DetectorManagerInterface
+    public function getDetectorManager(): DetectorManagerInterface
     {
         return $this->get(DetectorManager::class);
     }
@@ -34,9 +45,8 @@ class RuntimeCapability extends AbstractManagement implements RuntimeCapabilityI
     /**
      * @return FilesystemDriverManagerInterface
      */
-    public function getFilesystemDriverManager() : FilesystemDriverManagerInterface
+    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface
     {
         return $this->get(FilesystemDriverManager::class);
     }
 }
-

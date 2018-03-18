@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -42,15 +42,15 @@ interface ManagementInterface extends ManagerInterface
     /**
      * @return CapabilityManagerInterface
      */
-    public function getCapabilityManager() : CapabilityManagerInterface;
+    public function getCapabilityManager(): CapabilityManagerInterface;
 
     /**
      * @return DetectorManagerInterface
      */
-    public function getDetectorManager() : DetectorManagerInterface;
+    public function getDetectorManager(): DetectorManagerInterface;
 
     /**
      * @return FilesystemDriverManagerInterface
      */
-    public function getFilesystemDriverManager() : FilesystemDriverManagerInterface;
+    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface;
 }

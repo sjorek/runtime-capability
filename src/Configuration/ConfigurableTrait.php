@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -32,38 +32,43 @@ trait ConfigurableTrait
     protected $configuration = [];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurableInterface::setConfiguration()
      */
-    public function setConfiguration(array & $configuration) : ConfigurableInterface
+    public function setConfiguration(array &$configuration): ConfigurableInterface
     {
-        $this->configuration = & $configuration;
+        $this->configuration = &$configuration;
+
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurableInterface::getConfiguration()
      */
-    public function & getConfiguration() : array
+    public function &getConfiguration(): array
     {
         return $this->configuration;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurableInterface::setUp()
      */
-    public function setup() : ConfigurableInterface
+    public function setup(): ConfigurableInterface
     {
         return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurableInterface::reset()
      */
-    public function reset() : ConfigurableInterface
+    public function reset(): ConfigurableInterface
     {
         $this->configuration = [];
     }
@@ -71,6 +76,7 @@ trait ConfigurableTrait
     /**
      * @param string[]    $keys
      * @param null|string $type
+     * @param mixed       $key
      *
      * @return mixed
      */

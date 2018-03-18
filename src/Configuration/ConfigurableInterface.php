@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -25,28 +25,29 @@ interface ConfigurableInterface
     /**
      * @param array $configuration
      */
-    public function setConfiguration(array & $configuration): self;
+    public function setConfiguration(array &$configuration): self;
 
     /**
      * @return array
      */
-    public function & getConfiguration() : array;
+    public function &getConfiguration(): array;
 
     /**
      * @return array
      */
-    public function setup() : self;
+    public function setup(): self;
 
     /**
      * @return array
      */
-    public function reset() : self;
+    public function reset(): self;
 
     /**
      * @param string[]    $keys
      * @param null|string $type
+     * @param mixed       $key
      *
      * @return mixed
      */
     public function config($key, $type = null, ...$payload);
- }
+}

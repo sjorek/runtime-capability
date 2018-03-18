@@ -1,10 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Utility;
 
 /**
- *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
- *
  */
 final class ConfigurationUtility
 {
@@ -21,7 +31,7 @@ final class ConfigurationUtility
      * "resource (closed)" .............. as of PHP 7.2.0
      * "NULL"
      * "unknown type"
-     * </pre>
+     * </pre>.
      *
      * Additional types:
      * <pre>
@@ -43,9 +53,12 @@ final class ConfigurationUtility
      * </pre>
      *
      * @param string $type
-     * @param mixed $value
+     * @param mixed  $value
+     *
      * @throws \InvalidArgumentException
+     *
      * @return string
+     *
      * @see http://php.net/manual/en/function.gettype.php
      */
     public static function getTypeForValue(string $type, $value)
@@ -55,7 +68,7 @@ final class ConfigurationUtility
             list($key, $payload) = explode(':', $type, 2);
         }
         $actual = gettype($value);
-        switch($key) {
+        switch ($key) {
             case 'match':
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
@@ -83,6 +96,7 @@ final class ConfigurationUtility
                     if (0 < $result) {
                         return $type;
                     }
+
                     return sprintf('%s:%s', $actual, $value);
                 }
                 break;
@@ -90,6 +104,7 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     break;
                 }
+                // no break
             case 'instance':
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
@@ -114,6 +129,7 @@ final class ConfigurationUtility
                     if (is_a($value, $payload, false)) {
                         return $type;
                     }
+
                     return 'object:' . get_class($value);
                 }
                 break;
@@ -143,12 +159,14 @@ final class ConfigurationUtility
                     if (is_subclass_of($value, $payload, false)) {
                         return $type;
                     }
+
                     return 'object:' . get_class($value);
                 }
                 if ('subclass' === $key && 'string' === $actual && class_exists($value, true)) {
                     if (is_subclass_of($value, $payload, true)) {
                         return $type;
                     }
+
                     return 'class:' . $value;
                 }
                 break;
@@ -176,6 +194,7 @@ final class ConfigurationUtility
                     if (is_a($value, $payload, true)) {
                         return $type;
                     }
+
                     return 'class:' . $value;
                 }
                 break;
@@ -203,6 +222,7 @@ final class ConfigurationUtility
                     if (is_subclass_of($value, $payload, false)) {
                         return $type;
                     }
+
                     return 'object:' . get_class($value);
                 }
                 break;
@@ -230,6 +250,7 @@ final class ConfigurationUtility
                     if (is_a($value, $payload, true)) {
                         return $type;
                     }
+
                     return 'interface:' . $value;
                 }
                 break;
@@ -248,4 +269,3 @@ final class ConfigurationUtility
         return $actual;
     }
 }
-
