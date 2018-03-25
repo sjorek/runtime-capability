@@ -26,7 +26,7 @@
     },
     "require" : {
         "php": ">=7.0",
-        "sjorek/unicode-normalization": "~0.2",
+        "sjorek/unicode-normalization": "~0.3",
         "symfony/filesystem": "~4.0",
         "symfony/polyfill-mbstring": "^1.4",
         "symfony/polyfill-php72": "^1.4"
