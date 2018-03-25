@@ -87,7 +87,7 @@ interface Utf8EncodingDetectorInterface extends FilesystemEncodingDetectorInterf
         NormalizationForms::NFD_MAC => '4fcc8865cc816fcc8841cca843cc815acc8745cca843cc8163cc8161cca87acc8765cca86fcc81ce98d0a9d7a9dd90e0b88be180a4e2929ce38182e18480e185a7e186aae4bda0efbfbde299a5efb88ee298baefb88e2e747874',
         // look right for difference to plain NFD =>                                                                                                                                   ^^^^^^
 
-        // Not supported for file names, as those forms are lossy or inappropriate
+        // Not supported for file names, as those forms are lossy and inappropriate for filesystem-paths
         NormalizationForms::NFKD => false,
         NormalizationForms::NFKC => false,
     ];
