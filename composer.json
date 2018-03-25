@@ -25,16 +25,23 @@
         }
     },
     "require" : {
-        "php" : ">=7.0",
-        "symfony/filesystem" : "~4.0",
-        "symfony/polyfill-php72": "^1.4",
-        "sjorek/unicode-normalization" : "~0.2"
+        "php": ">=7.0",
+        "sjorek/unicode-normalization": "~0.2",
+        "symfony/filesystem": "~4.0",
+        "symfony/polyfill-mbstring": "^1.4",
+        "symfony/polyfill-php72": "^1.4"
     },
     "require-dev" : {
         "friendsofphp/php-cs-fixer": "^2.7",
         "mikey179/vfsStream": "^1.6",
         "phpunit/phpunit": "^6.5",
         "sensiolabs/security-checker": "^4.1"
+    },
+    "suggest": {
+        "ext-mbstring": "For best performance"
+    },
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "run:build": [
