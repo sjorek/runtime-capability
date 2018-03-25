@@ -65,12 +65,16 @@ class HierarchicalFilesystemDetector extends FlatFilesystemDetector
      */
     protected function testFilesystem(array $tests): array
     {
+        $backupFilesystemPath = $this->filesystemPath;
+        $realFilesystemPath = $this->filesystemDriver->setPath($this->filesystemPath);
+
         $this->filesystemDriver->createFolder($this->detectionFolderName);
-        $this->filesystemDriver->setPath($this->detectionFolderName);
+        $this->filesystemPath = $this->detectionFolderName;
 
         $tests = parent::testFilesystem($tests);
 
-        $this->filesystemDriver->setPath($this->filesystemPath);
+        $this->filesystemPath = $backupFilesystemPath;
+        $this->filesystemDriver->setPath($realFilesystemPath);
         $this->filesystemDriver->remove($this->detectionFolderName);
 
         return $tests;

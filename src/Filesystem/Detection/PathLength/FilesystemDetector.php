@@ -27,7 +27,28 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FilesystemDriver::class,
+        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
     ];
+
+    /**
+     * @var string
+     */
+    protected $filenameDetectionPattern;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractFilesystemDetector::setup()
+     */
+    public function setup()
+    {
+        parent::setup();
+        $this->filenameDetectionPattern =
+            $this->config('filename-detection-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
+        ;
+
+        return $this;
+    }
 
     /**
      * {@inheritdoc}
@@ -36,6 +57,51 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function evaluate()
     {
-        return $this->filesystemDriver->getMaximumPathLength();
+        $maximumPathLength = $pathLength = $this->filesystemDriver->getMaximumPathLength();
+        $result = false;
+        while ($maximumPathLength > 0) {
+            $pathLength = $maximumPathLength;
+            --$maximumPathLength;
+            $fileName = $this->generateDetectionFileName($pathLength);
+            if (false === $fileName) {
+                return false;
+            }
+            if ($this->testFilesystem($fileName)) {
+                return $pathLength;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $fileName
+     * @return bool
+     */
+    protected function testFilesystem($fileName)
+    {
+        return
+            $this->filesystemDriver->create($fileName) &&
+            $this->filesystemDriver->exists($fileName) &&
+            $this->filesystemDriver->remove($fileName)
+        ;
+    }
+
+    /**
+     * @param int $pathLength
+     * @return boolean|string
+     */
+    protected function generateDetectionFileName($pathLength)
+    {
+        $pattern = $this->filenameDetectionPattern;
+        $length =
+            // $pattern - 2 x '%s'
+            strlen($pattern) - 4 +
+            strlen((string) $pathLength)
+        ;
+        if ($pathLength < ($length + 1)) {
+            return false;
+        }
+
+        return sprintf($pattern, $pathLength, str_pad('', $pathLength - $length, 'x'));
     }
 }

@@ -20,4 +20,18 @@ use Sjorek\RuntimeCapability\Detection\DetectorInterface;
  */
 interface FilesystemPathLengthDetectorInterface extends DetectorInterface
 {
+    /**
+     * We use a pattern to identify the test files that have been created.
+     *
+     * @var string
+     */
+    const DETECTION_FILENAME_PATTERN = '.filesystem-path-length-test-%s-%s.txt';
+
+    /**
+     * We should use a sub-folder, as the operating might alter the given filenames.
+     * A sub-folder is the only guaranteed chance to cleanup after detection.
+     *
+     * @var string
+     */
+    const DETECTION_FOLDER_NAME = '.filesystem-path-length-detection';
 }

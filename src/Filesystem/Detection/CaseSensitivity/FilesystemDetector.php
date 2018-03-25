@@ -72,7 +72,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
             $this->filesystemDriver->exists($fileName) &&
             $this->filesystemDriver->exists(strtolower($fileName)) &&
             $this->filesystemDriver->exists(strtoupper($fileName)) &&
-            $this->filesystemDriver->remove()
+            $this->filesystemDriver->remove($fileName)
         ;
     }
 }

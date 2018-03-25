@@ -26,12 +26,55 @@ class HierarchicalFilesystemDetector extends FlatFilesystemDetector
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => HierarchicalFilesystemDriver::class,
+        'filesystem-path' => '.',
+        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-folder-name' => self::DETECTION_FOLDER_NAME,
     ];
 
     /**
      * @var HierarchicalFilesystemDriverInterface
      */
     protected $filesystemDriver;
+
+    /**
+     * @var string
+     */
+    protected $detectionFolderName;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see FlatFilesystemDetector::setup()
+     */
+    public function setup()
+    {
+        parent::setup();
+        $this->detectionFolderName = $this->getConfiguration('detection-folder-name', 'match:^[A-Za-z0-9._-]+$');
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see FlatFilesystemDetector::evaluate()
+     */
+    protected function evaluate()
+    {
+        $backupFilesystemPath = $this->filesystemPath;
+        $realFilesystemPath = $this->filesystemDriver->setPath($this->filesystemPath);
+
+        $this->filesystemDriver->createFolder($this->detectionFolderName);
+        $this->filesystemPath = $this->detectionFolderName;
+
+        $result = parent::evaluate();
+
+        $this->filesystemPath = $backupFilesystemPath;
+        $this->filesystemDriver->setPath($realFilesystemPath);
+        $this->filesystemDriver->remove($this->detectionFolderName);
+
+        return $result;
+    }
 
     /**
      * @return HierarchicalFilesystemDriverInterface

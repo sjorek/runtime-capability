@@ -55,7 +55,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
      */
     public function getPath()
     {
-        return $this->path;
+        return realpath($this->path);
     }
 
     /**
@@ -82,8 +82,9 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
                 $path
             );
         }
+        $this->path = $path;
 
-        return $this->path = $path;
+        return $this->getPath();
     }
 
     /**
