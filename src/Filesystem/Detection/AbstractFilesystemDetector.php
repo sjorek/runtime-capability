@@ -15,7 +15,6 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection;
 
 use Sjorek\RuntimeCapability\Capability\Detection\AbstractDetector;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FilesystemDriver;
 
 /**
  * Class to detect unicode filesystem capabilities.
@@ -28,7 +27,7 @@ abstract class AbstractFilesystemDetector extends AbstractDetector
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FilesystemDriver::class,
+        'filesystem-driver' => FilesystemDriverInterface::class,
     ];
 
     /**
