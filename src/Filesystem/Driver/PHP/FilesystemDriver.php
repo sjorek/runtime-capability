@@ -50,4 +50,14 @@ class FilesystemDriver extends AbstractFilesystemDriver implements FilesystemDri
     {
         return unlink((string) $path);
     }
+
+    /**
+     * Get the maximum path (including filename) length.
+     *
+     * @return int
+     */
+    public function getMaximumPathLength()
+    {
+        return PHP_MAXPATHLEN;
+    }
 }

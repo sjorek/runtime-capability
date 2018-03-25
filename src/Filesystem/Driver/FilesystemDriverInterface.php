@@ -48,4 +48,11 @@ interface FilesystemDriverInterface extends ManageableInterface
      * @return bool false on failure
      */
     public function remove($path);
+
+    /**
+     * Get the maximum path (including filename) length.
+     *
+     * @return int
+     */
+    public function getMaximumPathLength();
 }
