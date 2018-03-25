@@ -31,6 +31,11 @@ class FlatFilesystemDetector extends FilesystemDetector
     ];
 
     /**
+     * @var FlatFilesystemDriverInterface
+     */
+    protected $filesystemDriver;
+
+    /**
      * @var string
      */
     protected $filesystemPath;
