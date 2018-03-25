@@ -61,6 +61,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
+     * @throws IOException for non-existing paths and path exceeding the driver's maximum path length
      * @see FlatFilesystemDriverInterface::setPath()
      */
     public function setPath($path = null)
@@ -69,10 +70,19 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
             $path = false !== ($path = getcwd()) ? $path : '.';
         }
         if (!$this->exists($path)) {
-            throw new IOException(sprintf('Can not enter non-existent path: %s', $path), 1521216071);
+            throw new IOException('Path does not exist.', 1521216071, null, $path);
+        }
+        $path = $this->concat($path);
+        if (!$this->hasValidPathLength($path)) {
+            throw new IOException(
+                sprintf('Path length exceeds %d bytes.', $this->getMaximumPathLength()),
+                1521216064,
+                null,
+                $path
+            );
         }
 
-        return $this->path = $this->concat($path);
+        return $this->path = $path;
     }
 
     /**
@@ -95,7 +105,6 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     public function exists($path)
     {
         $path = $this->canonical($path);
-
         $this->clearstatcache($path);
 
         return $this->fs->exists($path) || is_link($path);
@@ -148,7 +157,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
      */
     protected function canonical(string $path)
     {
-        return $this->concat(null !== $this->path ? $this->path : $this->enter(), $path);
+        return $this->concat(null !== $this->path ? $this->path : $this->setPath(), $path);
     }
 
     /**

@@ -33,10 +33,10 @@ class HierarchicalFilesystemDriver extends FlatFilesystemDriver implements Hiera
     public function setPath($path = null)
     {
         $oldPath = $this->path;
-        $newPath = parent::enter($path);
+        $newPath = parent::setPath($path);
         if (!$this->isFolder($path)) {
             $this->path = $oldPath;
-            throw new IOException(sprintf('Can not enter non-directory path: %s', $path), 1521216078);
+            throw new IOException('Can not enter non-directory path.', 1521216078, null, $path);
         }
 
         return $newPath;
@@ -50,7 +50,7 @@ class HierarchicalFilesystemDriver extends FlatFilesystemDriver implements Hiera
     public function createFolder($path)
     {
         if ($this->exists($path)) {
-            throw new IOException('Can not create folder, as it\'s path already exists.', 1521172856);
+            throw new IOException('Can not create folder, as the path already exists.', 1521172856, null, $path);
         }
         $this->fs->mkdir($this->canonical($path));
 

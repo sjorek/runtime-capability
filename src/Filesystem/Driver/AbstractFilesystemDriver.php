@@ -18,7 +18,7 @@ use Sjorek\RuntimeCapability\Management\AbstractManageable;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractFilesystemDriver extends AbstractManageable
+abstract class AbstractFilesystemDriver extends AbstractManageable implements FilesystemDriverInterface
 {
     /**
      * @var FilesystemDriverManagerInterface
@@ -38,4 +38,26 @@ abstract class AbstractFilesystemDriver extends AbstractManageable
     {
         return parent::setManager($manager);
     }
+
+    /**
+     * Get the maximum path (including filename) length.
+     *
+     * @return int
+     */
+    public function getMaximumPathLength()
+    {
+        return PHP_MAXPATHLEN - 2;
+    }
+
+    /**
+     * Validate the given path (including filename) against the driver's maximum path length.
+     *
+     * @param string $path
+     * @return bool
+     */
+    protected function hasValidPathLength($path)
+    {
+        return strlen($path) > $this->getMaximumPathLength();
+    }
+
 }

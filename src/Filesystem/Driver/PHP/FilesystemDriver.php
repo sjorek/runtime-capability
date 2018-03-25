@@ -19,7 +19,7 @@ use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDriver extends AbstractFilesystemDriver implements FilesystemDriverInterface
+class FilesystemDriver extends AbstractFilesystemDriver
 {
     /**
      * {@inheritdoc}
@@ -49,15 +49,5 @@ class FilesystemDriver extends AbstractFilesystemDriver implements FilesystemDri
     public function remove($path)
     {
         return unlink((string) $path);
-    }
-
-    /**
-     * Get the maximum path (including filename) length.
-     *
-     * @return int
-     */
-    public function getMaximumPathLength()
-    {
-        return PHP_MAXPATHLEN;
     }
 }
