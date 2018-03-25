@@ -11,31 +11,21 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Detection;
+namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
+use Sjorek\RuntimeCapability\Dependence\DependableInterface;
 use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
- * Facade to filesystem specific functionality, providing a reduced interface to what is needed.
- *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
- *
- * @todo Check if we need to implement chdir() to circumvent exceeding maximum path length
  */
-interface DetectorInterface extends ManageableInterface, ConfigurableInterface
+interface DetectorInterface extends ManageableInterface, ConfigurableInterface, DependableInterface
 {
     /**
-     * @return string[]
-     */
-    public function depends();
-
-    /**
-     * @param array[bool[]]|bool[]|bool ...$dependencies
-     *
      * @return array[bool[]]|bool[]|bool
      */
-    public function detect(...$dependencies);
+    public function detect();
 
     /**
      * @param DetectorManagerInterface $manager

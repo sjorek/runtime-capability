@@ -13,18 +13,22 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
+use Sjorek\RuntimeCapability\Dependence\DependencyInterface;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class DefaultCharsetDetector extends AbstractDetector
+interface DependingDetectorInterface extends DetectorInterface, DependencyInterface
 {
     /**
-     * {@inheritdoc}
-     *
-     * @see AbstractDetector::evaluate()
+     * @return string[]
      */
-    protected function evaluate()
-    {
-        return ($charset = ini_get('default_charset')) ? strtoupper(strtr($charset, '-', '')) : null;
-    }
+    public function depends();
+
+    /**
+     * @param array[bool[]]|bool[]|bool ...$dependencies
+     *
+     * @return array[bool[]]|bool[]|bool
+     */
+    public function detect(...$dependencies);
 }

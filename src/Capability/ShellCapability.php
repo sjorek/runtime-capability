@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Capability\Detection\ShellEscapeDetector;
+use Sjorek\RuntimeCapability\Detection\ShellEscapeDetector;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorInterface;
+use Sjorek\RuntimeCapability\Detection\DetectorInterface;
+use Sjorek\RuntimeCapability\Detection\DependingDetectorInterface;
 use Sjorek\RuntimeCapability\Exception\CapabilityDetectionFailure;
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
 
@@ -51,7 +52,7 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
         $instances = [];
         $results = [];
         foreach ($detectors as $detector) {
-            foreach ($this->resolve($detector) as $id => $detector) {
+            foreach ($this->resolve($detector)() as $id => $detector) {
                 if (in_array($id, $identifiers, true)) {
                     throw new CapabilityDetectionFailure(
                         sprintf('Circular detector dependency for id: %s', $id),
@@ -107,13 +108,22 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
     }
 
     /**
-     * @param DetectorInterface $detector
+     * {@inheritDoc}
+     * @see CapabilityInterface::resolve()
      */
-    protected function resolve($detector)
+    public function resolve(DetectorInterface $detector) : \Generator
     {
-        foreach ($detector->depends() as $id) {
-            yield from $this->resolve($this->detectorManager->get($id));
+        if ($detector instanceof DependingDetectorInterface) {
+            return function() use($detector) {
+                foreach ($detector->depends() as $id) {
+                    yield from $this->resolve($this->detectorManager->get($id));
+                }
+                yield $detector->identify() => $detector;
+            };
+        } else {
+            return function() use($detector) {
+                yield $detector->identify() => $detector;
+            };
         }
-        yield $detector->identify() => $detector;
     }
 }

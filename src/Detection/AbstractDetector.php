@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Detection;
+namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableTrait;
@@ -35,21 +35,6 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     protected $compactResult = false;
 
     /**
-     * @var string[]
-     */
-    const DEPENDENCIES = [];
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see DetectorInterface::depends()
-     */
-    public function depends()
-    {
-        return static::DEPENDENCIES;
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @see ConfigurableInterface::setup()
@@ -66,9 +51,9 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
      *
      * @see DetectorInterface::detect()
      */
-    public function detect(...$dependencies)
+    public function detect()
     {
-        $capabilities = $this->evaluate(...$dependencies);
+        $capabilities = $this->evaluate();
         if ($this->compactResult) {
             $capabilities = $this->reduceResult($capabilities);
         }
@@ -77,8 +62,6 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     }
 
     /**
-     * @param array[bool[]]|bool[]|bool ...$dependencies
-     *
      * @return array[bool[]]|bool[]|bool
      *
      * @see AbstractDetector::detect()

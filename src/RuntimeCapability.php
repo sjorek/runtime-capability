@@ -15,8 +15,8 @@ namespace Sjorek\RuntimeCapability;
 
 use Sjorek\RuntimeCapability\Capability\CapabilityManager;
 use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManager;
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManagerInterface;
+use Sjorek\RuntimeCapability\Detection\DetectorManager;
+use Sjorek\RuntimeCapability\Detection\DetectorManagerInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManager;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManagerInterface;
 use Sjorek\RuntimeCapability\Management\AbstractManagement;

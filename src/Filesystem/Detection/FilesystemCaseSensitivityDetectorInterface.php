@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection;
 
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorInterface;
+use Sjorek\RuntimeCapability\Detection\DetectorInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

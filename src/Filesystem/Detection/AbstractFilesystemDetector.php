@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection;
 
-use Sjorek\RuntimeCapability\Capability\Detection\AbstractDetector;
+use Sjorek\RuntimeCapability\Detection\AbstractDetector;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Detection\AbstractDependingDetector;
 
 /**
  * Class to detect unicode filesystem capabilities.
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractFilesystemDetector extends AbstractDetector
+abstract class AbstractFilesystemDetector extends AbstractDependingDetector
 {
     /**
      * @var int[]

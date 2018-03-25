@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\FlatFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FlatFilesystemDriver;
@@ -30,6 +30,8 @@ class FlatFilesystemDetector extends FilesystemDetector
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FlatFilesystemDriver::class,
         'filesystem-path' => '.',
+        'filesystem-encoding' => 'UTF8',
+        'filename-tests' => self::UTF8_FILENAME_TESTS,
         'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
     ];
 
@@ -61,11 +63,11 @@ class FlatFilesystemDetector extends FilesystemDetector
      *
      * @see FilesystemDetector::evaluate()
      */
-    protected function evaluate()
+    protected function evaluate(array $localeCharset, string $defaultCharset)
     {
         $this->filesystemDriver->setPath($this->filesystemPath);
 
-        return parent::evaluate();
+        return parent::evaluate($localeCharset, $defaultCharset);
     }
 
     /**
@@ -126,28 +128,28 @@ class FlatFilesystemDetector extends FilesystemDetector
      *
      * @see FilesystemDetector::testFilesystem()
      */
-    protected function testFilesystem(array $normalizations, array $tests): array
+    protected function testFilesystem(array $tests): array
     {
         $fileNames = [];
-        foreach ($tests as $form => $fileName) {
-            if (false === $fileName || !isset($normalizations[$form])) {
+        foreach ($this->filenameTests as $index => $testString) {
+            if (false === $testString || !isset($tests[$index])) {
                 continue;
             }
-            $normalizations[$form] = [
+            $tests[$index] = [
                 'read' => false,
                 'write' => true,
             ];
-            $fileName = sprintf($this->filenameDetectionPattern, $form, hex2bin($fileName));
-            $fileNames[$form] = $fileName;
+            $fileName = $this->generateDetectionFileNameForIndex($index, hex2bin($testString));
+            $fileNames[$index] = $fileName;
             try {
                 $this->filesystemDriver->create($fileName);
             } catch (IOExceptionInterface $e) {
-                $normalizations[$form]['write'] = false;
+                $tests[$index]['write'] = false;
             }
         }
         foreach ($this->filesystemDriver as $fileName) {
-            foreach ($fileNames as $form => $candidate) {
-                if ($normalizations[$form]['read'] === true) {
+            foreach ($fileNames as $index => $candidate) {
+                if ($tests[$index]['read'] === true) {
                     continue;
                 }
                 // If all files exist then the filesystem does not normalize unicode. If
@@ -155,13 +157,13 @@ class FlatFilesystemDetector extends FilesystemDetector
                 // or it denies access to not-normalized paths or it simply does not support
                 // unicode at all, at least not those normalization forms we test.
                 if ($fileName === $candidate) {
-                    $normalizations[$form]['read'] = true;
+                    $tests[$index]['read'] = true;
                 }
             }
             $this->filesystemDriver->remove($fileName);
         }
 
-        return $normalizations;
+        return $tests;
     }
 
     /**

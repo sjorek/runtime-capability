@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\HierarchicalFilesystemDriver;
@@ -29,6 +29,8 @@ class HierarchicalFilesystemDetector extends FlatFilesystemDetector
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => HierarchicalFilesystemDriver::class,
         'filesystem-path' => '.',
+        'filesystem-encoding' => 'UTF8',
+        'filename-tests' => self::UTF8_FILENAME_TESTS,
         'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
         'detection-folder-name' => self::DETECTION_FOLDER_NAME,
     ];
@@ -61,17 +63,17 @@ class HierarchicalFilesystemDetector extends FlatFilesystemDetector
      *
      * @see FlatFilesystemDetector::testFilesystem()
      */
-    protected function testFilesystem(array $normalizations, array $tests): array
+    protected function testFilesystem(array $tests): array
     {
         $this->filesystemDriver->createFolder($this->detectionFolderName);
         $this->filesystemDriver->setPath($this->detectionFolderName);
 
-        $normalizations = parent::testFilesystem($normalizations, $tests);
+        $tests = parent::testFilesystem($tests);
 
         $this->filesystemDriver->setPath($this->filesystemPath);
         $this->filesystemDriver->remove($this->detectionFolderName);
 
-        return $normalizations;
+        return $tests;
     }
 
     /**

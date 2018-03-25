@@ -32,7 +32,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     /**
      * {@inheritdoc}
      *
-     * @see \Sjorek\RuntimeCapability\Capability\Detection\AbstractDetector::evaluate()
+     * @see \Sjorek\RuntimeCapability\Detection\AbstractDetector::evaluate()
      */
     protected function evaluate()
     {

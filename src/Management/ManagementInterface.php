@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Management;
 
 use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
-use Sjorek\RuntimeCapability\Capability\Detection\DetectorManagerInterface;
+use Sjorek\RuntimeCapability\Detection\DetectorManagerInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManagerInterface;
 
 /**

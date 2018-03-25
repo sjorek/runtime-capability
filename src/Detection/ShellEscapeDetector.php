@@ -11,18 +11,22 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Detection;
+namespace Sjorek\RuntimeCapability\Detection;
+
+use Sjorek\RuntimeCapability\Utility\CharsetUtility;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class ShellEscapeDetector extends AbstractDetector
+class ShellEscapeDetector extends AbstractDependingDetector
 {
     /**
      * @var string[]
      */
     const DEPENDENCIES = [
         PlatformDetector::class,
+        LocaleCharsetDetector::class,
         DefaultCharsetDetector::class,
     ];
 
@@ -32,6 +36,41 @@ class ShellEscapeDetector extends AbstractDetector
      * @var string
      */
     const TEST_STRING = 'c3a4c3b6c3bc';
+
+    /**
+     * @var int[]
+     */
+    protected static $DEFAULT_CONFIGURATION = [
+        'charset' => 'UTF8',
+    ];
+
+    /**
+     * @var string
+     */
+    protected $charset = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws ConfigurationFailure
+     *
+     * @see AbstractDetector::setup()
+     */
+    public function setup()
+    {
+        parent::setup();
+
+        $charset = $this->config('charset', 'string');
+        if (!in_array($charset, CharsetUtility::getEncodings(), true)) {
+            throw new ConfigurationFailure(
+                sprintf('Invalid configuration value for key "charset": %s', $charset),
+                1521291497
+            );
+        }
+        $this->charset = $charset;
+
+        return $this;
+    }
 
     /**
      * Escapeshellarg uses the 'default_charset' configuration on platforms lacking a 'mblen'-implementation,
@@ -56,13 +95,16 @@ class ShellEscapeDetector extends AbstractDetector
      * @see https://developer.apple.com/library/content/documentation/General/Reference/APIDiffsMacOSX10_10SeedDiff/modules/Darwin.html
      * @see https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/mbclen-mblen-mblen-l
      */
-    protected function evaluate(array $platform, string $defaultCharset)
+    protected function evaluate(array $platform, array $localeCharset, string $defaultCharset)
     {
         $testString = hex2bin(self::TEST_STRING);
         $quote = 'Windows' === $platform['os-family'] ? '"' : '\'';
 
         return
-            ('UTF8' === $defaultCharset || version_compare($platform['version'], '5.6.0', '<')) &&
+            (
+                $this->charset === $localeCharset[LC_CTYPE] ||
+                ($this->charset === $defaultCharset || $platform['version-id'] < 50600)
+            ) &&
             escapeshellarg($testString) === $quote . $testString . $quote
         ;
     }
