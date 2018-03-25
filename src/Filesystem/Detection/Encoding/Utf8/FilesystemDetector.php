@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemEncodingDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\Utf8EncodingDetectorInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FilesystemDriver;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemEncodingDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDetector implements Utf8EncodingDetectorInterface
 {
     /**
      * @var int[]
