@@ -19,7 +19,7 @@ use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDriver extends AbstractFilesystemDriver
+class FilesystemDriver extends AbstractFilesystemDriver implements PhpDrivenFilesystemDriverInterface
 {
     /**
      * {@inheritdoc}

@@ -15,12 +15,13 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding;
 
 use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
 use Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemEncodingDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PhpDrivenFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FilesystemDriver;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
-use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Class to detect unicode filesystem capabilities.
@@ -38,11 +39,22 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
+     * {@inheritdoc}
+     *
+     * @see \Sjorek\RuntimeCapability\Detection\AbstractDependingDetector::depends()
+     */
+    public function depends()
+    {
+        return $this->filesystemDriver instanceof PhpDrivenFilesystemDriverInterface ? static::DEPENDENCIES : [];
+    }
+
+
+    /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FilesystemDriver::class,
-        'filesystem-encoding' => 'UTF8',
+        'filesystem-encoding' => 'BINARY',
         'filename-tests' => self::UTF8_FILENAME_TESTS,
         'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
     ];
@@ -50,7 +62,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     /**
      * @var string
      */
-    protected $filesystemEncoding = null;
+    protected $filesystemEncoding = 'binary';
 
     /**
      * @var string[]|bool[]
@@ -71,7 +83,8 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     {
         parent::setup();
         $filesystemEncoding = $this->config('filesystem-encoding', 'string');
-        if (!in_array($filesystemEncoding, CharsetUtility::getEncodings(), true)) {
+        if ('BINARY' !== $filesystemEncoding &&
+            !in_array($filesystemEncoding, CharsetUtility::getEncodings(), true)) {
             throw new ConfigurationFailure(
                 sprintf('Invalid configuration value for key "filesystem-encoding": %s', $filesystemEncoding),
                 1521291497
@@ -113,10 +126,14 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      * @return array[]|boolean[]|boolean[]
      * @see \Sjorek\RuntimeCapability\Detection\AbstractDetector::evaluate()
      */
-    protected function evaluate(array $localeCharset, string $defaultCharset)
+    protected function evaluate(array $localeCharset = null, string $defaultCharset = null)
     {
         $charset = $this->filesystemEncoding;
-        if ($charset === $localeCharset[LC_CTYPE] || $charset === $defaultCharset) {
+        if ($charset === 'BINARY' ||
+            (null === $localeCharset && null === $defaultCharset) ||
+            $charset === $localeCharset[LC_CTYPE] ||
+            $charset === $defaultCharset)
+        {
             return [
                 $charset => $this->testFilesystem(array_map(function () { return null; }, $this->filenameTests))
             ];
@@ -160,7 +177,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     protected function generateDetectionFileNameForIndex($index, $testString)
     {
         $fileName = sprintf($this->filenameDetectionPattern, $index, $testString);
-        if (null === $this->filesystemEncoding && 'UTF8' === $this->filesystemEncoding) {
+        if (in_array($this->filesystemEncoding, [null, 'BINARY', 'UTF8'], true)) {
             return $fileName;
         }
 
