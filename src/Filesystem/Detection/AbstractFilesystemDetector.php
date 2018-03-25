@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection;
 
+use Sjorek\RuntimeCapability\Detection\AbstractDependingDetector;
 use Sjorek\RuntimeCapability\Detection\AbstractDetector;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
-use Sjorek\RuntimeCapability\Detection\AbstractDependingDetector;
 
 /**
  * Class to detect unicode filesystem capabilities.

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\Encoding;
 
-use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
 use Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector;
+use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemEncodingDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PhpDrivenFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\FilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PhpDrivenFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -48,7 +48,6 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
         return $this->filesystemDriver instanceof PhpDrivenFilesystemDriverInterface ? static::DEPENDENCIES : [];
     }
 
-
     /**
      * @var int[]
      */
@@ -65,7 +64,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     protected $filesystemEncoding = 'binary';
 
     /**
-     * @var string[]|bool[]
+     * @var bool[]|string[]
      */
     protected $filenameTests = [];
 
@@ -121,21 +120,22 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      *
      * {@inheritdoc}
      *
-     * @param array $localeCharset
+     * @param array  $localeCharset
      * @param string $defaultCharset
-     * @return array[]|boolean[]|boolean[]
+     *
+     * @return array[]|bool[]|bool[]
+     *
      * @see \Sjorek\RuntimeCapability\Detection\AbstractDetector::evaluate()
      */
     protected function evaluate(array $localeCharset = null, string $defaultCharset = null)
     {
         $charset = $this->filesystemEncoding;
-        if ($charset === 'BINARY' ||
+        if ('BINARY' === $charset ||
             (null === $localeCharset && null === $defaultCharset) ||
             $charset === $localeCharset[LC_CTYPE] ||
-            $charset === $defaultCharset)
-        {
+            $charset === $defaultCharset) {
             return [
-                $charset => $this->testFilesystem(array_map(function () { return null; }, $this->filenameTests))
+                $charset => $this->testFilesystem(array_map(function () { return null; }, $this->filenameTests)),
             ];
         }
 
@@ -172,6 +172,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     /**
      * @param int    $index
      * @param string $testString
+     *
      * @return string
      */
     protected function generateDetectionFileNameForIndex($index, $testString)

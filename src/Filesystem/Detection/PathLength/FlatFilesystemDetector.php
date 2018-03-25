@@ -25,7 +25,7 @@ class FlatFilesystemDetector extends FilesystemDetector
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FlatFilesystemDriver::class
+        'filesystem-driver' => FlatFilesystemDriver::class,
     ];
 
     /**

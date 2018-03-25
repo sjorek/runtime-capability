@@ -53,11 +53,11 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
      * Validate the given path (including filename) against the driver's maximum path length.
      *
      * @param string $path
+     *
      * @return bool
      */
     protected function hasValidPathLength($path)
     {
         return strlen($path) > $this->getMaximumPathLength();
     }
-
 }

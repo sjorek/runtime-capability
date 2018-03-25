@@ -26,7 +26,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FilesystemDriver::class
+        'filesystem-driver' => FilesystemDriver::class,
     ];
 
     /**

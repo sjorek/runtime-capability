@@ -24,7 +24,7 @@ final class CharsetUtility
     public static function getEncodings()
     {
         $encodings = mb_list_encodings();
-        foreach(array_filter(array_map('mb_encoding_aliases', $encodings)) as $aliases) {
+        foreach (array_filter(array_map('mb_encoding_aliases', $encodings)) as $aliases) {
             $encodings = array_merge($encodings, $aliases);
         }
 
@@ -44,13 +44,15 @@ final class CharsetUtility
     const WINDOWS_CODEPAGE_UTF8 = '65001';
 
     /**
-     * Scrape via:
+     * List of known Windows code-pages.
      *
+     * Scrape via:
      * <pre>
      * $('td[data-th="Identifier"]').each(function(){console.log("'" + $(this).text() + "',");});
      * </pre>
      *
      * @var string[]
+     *
      * @see https://msdn.microsoft.com/de-de/library/windows/desktop/dd317756(v=vs.85).aspx
      */
     const WINDOWS_CODEPAGES = [

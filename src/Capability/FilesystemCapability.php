@@ -30,6 +30,7 @@ class FilesystemCapability extends AbstractCapability
     public function get()
     {
         $manager = $this->manager->getManagement()->getDetectorManager();
+
         return $this->evaluate(
             $manager->get(CaseSensitivityDetector::class),
             $manager->get(PathLengthDetector::class),

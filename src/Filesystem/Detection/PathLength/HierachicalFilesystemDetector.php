@@ -25,7 +25,7 @@ class HierachicalFilesystemDetector extends FlatFilesystemDetector
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => HierarchicalFilesystemDriver::class
+        'filesystem-driver' => HierarchicalFilesystemDriver::class,
     ];
 
     /**

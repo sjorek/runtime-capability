@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
-use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
+use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

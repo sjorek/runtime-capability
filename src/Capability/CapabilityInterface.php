@@ -39,8 +39,10 @@ interface CapabilityInterface extends DependencyResolverInterface
      * Return a generator yielding DetectorInterface::identify() => DetectorInterface.
      *
      * @param DetectorInterface $detector
+     *
      * @return \Generator
+     *
      * @see DependencyResolverInterface::resolve()
      */
-    public function resolve(DetectorInterface $detector) : \Generator;
+    public function resolve(DetectorInterface $detector): \Generator;
 }

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Detection\DetectorInterface;
 use Sjorek\RuntimeCapability\Detection\DependingDetectorInterface;
+use Sjorek\RuntimeCapability\Detection\DetectorInterface;
 use Sjorek\RuntimeCapability\Exception\CapabilityDetectionFailure;
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
 
@@ -74,7 +74,7 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
         }
         $limit = count($instances) * static::MAXIMIMUM_EVALUATION_RETRIES + 1;
         while (0 < $limit && !empty($instances)) {
-            $limit -= 1;
+            --$limit;
             $detector = array_shift($instances);
             if (isset($results[$detector->identify()])) {
                 continue;
@@ -108,20 +108,21 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see CapabilityInterface::resolve()
      */
-    public function resolve(DetectorInterface $detector) : \Generator
+    public function resolve(DetectorInterface $detector): \Generator
     {
         if ($detector instanceof DependingDetectorInterface) {
-            return function() use($detector) {
+            return function () use ($detector) {
                 foreach ($detector->depends() as $id) {
                     yield from $this->resolve($this->detectorManager->get($id));
                 }
                 yield $detector->identify() => $detector;
             };
         } else {
-            return function() use($detector) {
+            return function () use ($detector) {
                 yield $detector->identify() => $detector;
             };
         }

@@ -62,6 +62,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
      * {@inheritdoc}
      *
      * @throws IOException for non-existing paths and path exceeding the driver's maximum path length
+     *
      * @see FlatFilesystemDriverInterface::setPath()
      */
     public function setPath($path = null)
