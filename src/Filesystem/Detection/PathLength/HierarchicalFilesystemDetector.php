@@ -19,7 +19,7 @@ use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\HierarchicalFilesystemDriver;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class HierachicalFilesystemDetector extends FlatFilesystemDetector
+class HierarchicalFilesystemDetector extends FlatFilesystemDetector
 {
     /**
      * @var int[]
