@@ -14,11 +14,7 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Capability\Configuration;
 
 /**
- * Facade to filesystem specific functionality, providing a reduced interface to what is needed.
- *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
- *
- * @todo Check if we need to implement chdir() to circumvent exceeding maximum path length
  */
 interface ConfigurableInterface
 {

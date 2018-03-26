@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Configuration;
 
+use Sjorek\RuntimeCapability\Identification\IdentifiableTrait;
+use Sjorek\RuntimeCapability\Identification\IdentifiableInterface;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractConfigurable implements ConfigurableInterface
+abstract class AbstractConfigurable implements ConfigurableInterface, IdentifiableInterface
 {
+    use IdentifiableTrait;
     use ConfigurableTrait;
 }

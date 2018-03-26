@@ -84,7 +84,7 @@ trait ConfigurableTrait
      */
     public function config($key, $type = null)
     {
-        $key = $this->normalizeId($key);
+        $key = $this->normalizeIdentifier($key);
         $id = strtolower(sprintf('%s.%s', $this->identify(), $key));
         $value = null;
         $found = false;

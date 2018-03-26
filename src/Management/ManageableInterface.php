@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Management;
 
-use Sjorek\RuntimeCapability\Identification\IdentifyableInterface;
+use Sjorek\RuntimeCapability\Identification\IdentifiableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ManageableInterface extends IdentifyableInterface
+interface ManageableInterface extends IdentifiableInterface
 {
     /**
      * @param ManagerInterface $manager

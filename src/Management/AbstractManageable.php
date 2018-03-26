@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Management;
 
-use Sjorek\RuntimeCapability\Identification\AbstractIdentifyable;
+use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractManageable extends AbstractIdentifyable implements ManageableInterface
+abstract class AbstractManageable extends AbstractIdentifiable implements ManageableInterface
 {
     use ManageableTrait;
 }

@@ -16,7 +16,7 @@ namespace Sjorek\RuntimeCapability\Identification;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractIdentifyable implements IdentifyableInterface
+abstract class AbstractIdentifiable implements IdentifiableInterface
 {
-    use IdentifyableTrait;
+    use IdentifiableTrait;
 }
