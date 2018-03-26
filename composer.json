@@ -61,27 +61,27 @@
             "@composer run:alter-filesystem -- remove .build/coverage.xml"
         ],
         "run:test": [
-            "phpunit -v --colors=always --exclude-group=runtime,large"
+            "phpunit -v --colors=always --exclude-group=large"
         ],
         "run:test-all": [
-            "phpunit -v --colors=always --exclude-group=runtime"
+            "phpunit -v --colors=always"
         ],
         "run:test-large": [
-            "phpunit -v --colors=always --exclude-group=runtime --group=large"
+            "phpunit -v --colors=always --group=large"
         ],
         "run:test-coverage": [
-            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-text"
+            "phpunit -v --colors=always --exclude-group=large --coverage-text"
         ],
         "run:test-coverage-all": [
-            "phpunit -v --colors=always --exclude-group=runtime --coverage-text"
+            "phpunit -v --colors=always --coverage-text"
         ],
         "run:report-coverage-html": [
             "@run:setup-build-dir",
-            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-html .build/coverage"
+            "phpunit -v --colors=always --exclude-group=large --coverage-html .build/coverage"
         ],
         "run:report-coverage-clover": [
             "@run:setup-build-dir",
-            "phpunit -v --colors=always --exclude-group=runtime,large --coverage-clover .build/coverage.xml"
+            "phpunit -v --colors=always --exclude-group=large --coverage-clover .build/coverage.xml"
         ],
         "run:cs-lint": [
             "@run:setup-build-dir",
