@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 
 use Sjorek\RuntimeCapability\Management\ManagerInterface;
+use Sjorek\RuntimeCapability\RuntimeCapabilityInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -41,4 +42,13 @@ interface FilesystemDriverManagerInterface extends ManagerInterface
      * @see ManagerInterface::get()
      */
     public function get(string $idOrFilesystemDriverClass): FilesystemDriverInterface;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return RuntimeCapabilityInterface
+     *
+     * @see ManagerInterface::getManagement()
+     */
+    public function getManagement(): RuntimeCapabilityInterface;
 }

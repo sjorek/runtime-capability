@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Capability;
 
 use Sjorek\RuntimeCapability\Management\AbstractManager;
+use Sjorek\RuntimeCapability\RuntimeCapabilityInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -44,5 +45,17 @@ class CapabilityManager extends AbstractManager implements CapabilityManagerInte
     public function get(string $idOrCapabilityClass): CapabilityInterface
     {
         return parent::get($idOrCapabilityClass);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return RuntimeCapabilityInterface
+     *
+     * @see AbstractManager::getManagement()
+     */
+    public function getManagement(): RuntimeCapabilityInterface
+    {
+        return parent::getManagement();
     }
 }
