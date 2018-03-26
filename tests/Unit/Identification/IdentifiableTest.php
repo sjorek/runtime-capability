@@ -2,8 +2,8 @@
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Identification;
 
+use Sjorek\RuntimeCapability\Tests\Fixtures\Identification\IdentifiableTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\IdentifiableTestFixture;
 
 /**
  * Identifiable test case.

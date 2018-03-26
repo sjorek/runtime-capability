@@ -1,5 +1,5 @@
 <?php
-namespace Sjorek\RuntimeCapability\Tests\Unit\Fixtures;
+namespace Sjorek\RuntimeCapability\Tests\Fixtures\Identification;
 
 use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
 

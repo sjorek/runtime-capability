@@ -4,10 +4,10 @@ namespace Sjorek\RuntimeCapability\Tests\Unit\Utility;
 
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\ConfigurationUtilityTestFixtureClass1 as FixtureClass1;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\ConfigurationUtilityTestFixtureClass2 as FixtureClass2;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\ConfigurationUtilityTestFixtureInterface1 as FixtureInterface1;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\ConfigurationUtilityTestFixtureInterface2 as FixtureInterface2;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureClass1 as FixtureClass1;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureClass2 as FixtureClass2;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureInterface1 as FixtureInterface1;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureInterface2 as FixtureInterface2;
 
 /**
  * ConfigurationUtility test case.
