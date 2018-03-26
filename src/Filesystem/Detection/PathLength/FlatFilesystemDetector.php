@@ -67,7 +67,8 @@ class FlatFilesystemDetector extends FilesystemDetector
 
     /**
      * @param int $pathLength
-     * @return boolean|string
+     *
+     * @return bool|string
      */
     protected function generateDetectionFileName($pathLength)
     {

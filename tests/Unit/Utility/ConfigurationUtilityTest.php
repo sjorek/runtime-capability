@@ -1,13 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Tests\Unit\Utility;
 
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureClass1 as FixtureClass1;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureClass2 as FixtureClass2;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureInterface1 as FixtureInterface1;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Utility\ConfigurationUtilityTestFixtureInterface2 as FixtureInterface2;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
+use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
 
 /**
  * ConfigurationUtility test case.
@@ -19,6 +30,8 @@ class ConfigurationUtilityTest extends AbstractTestCase
     /**
      * @covers       ::getTypeForValue
      * @dataProvider provideTestGetTypeForValueData
+     *
+     * @param mixed $value
      */
     public function testGetTypeForValue(string $expect, string $type, $value)
     {
@@ -78,7 +91,10 @@ class ConfigurationUtilityTest extends AbstractTestCase
                 'null', 'resource', null,
             ],
             '"resource (closed)" as of PHP 7.2.0' => [
-                'resource', 'resource', (function($r){fclose($r);return $r;})(fopen('php://memory', 'r+')),
+                'resource', 'resource', (function ($r) {
+                    fclose($r);
+                    return $r;
+                })(fopen('php://memory', 'r+')),
             ],
             'null' => [
                 'null', 'null', null,
@@ -153,10 +169,10 @@ class ConfigurationUtilityTest extends AbstractTestCase
                 'object:' . FixtureClass1::class, 'inherit:' . FixtureClass2::class, new FixtureClass1(),
             ],
             'implement:InterfaceName' => [
-                'implement:' . FixtureInterface1::class, 'implement:' . FixtureInterface1::class, new FixtureClass2()
+                'implement:' . FixtureInterface1::class, 'implement:' . FixtureInterface1::class, new FixtureClass2(),
             ],
             'not implement:InterfaceName' => [
-                'object:' . FixtureClass1::class, 'implement:' . FixtureInterface2::class, new FixtureClass1()
+                'object:' . FixtureClass1::class, 'implement:' . FixtureInterface2::class, new FixtureClass1(),
             ],
             'class:ClassName' => [
                 'class:' . FixtureClass1::class, 'class:' . FixtureClass1::class, FixtureClass1::class,
@@ -171,10 +187,10 @@ class ConfigurationUtilityTest extends AbstractTestCase
                 'class:' . FixtureClass1::class, 'subclass:' . FixtureClass1::class, FixtureClass1::class,
             ],
             'interface:InterfaceName' => [
-                'interface:' . FixtureInterface1::class, 'interface:' . FixtureInterface1::class, FixtureInterface2::class
+                'interface:' . FixtureInterface1::class, 'interface:' . FixtureInterface1::class, FixtureInterface2::class,
             ],
             'not interface:InterfaceName' => [
-                'interface:' . FixtureInterface1::class, 'interface:' . FixtureInterface2::class, FixtureInterface1::class
+                'interface:' . FixtureInterface1::class, 'interface:' . FixtureInterface2::class, FixtureInterface1::class,
             ],
             // "unknown type" ?
         ];
@@ -330,12 +346,12 @@ class ConfigurationUtilityTest extends AbstractTestCase
     public function provideTestGetTypeForValueWithNonExistingArgumentThrowsInvalidArgumentExceptionData()
     {
         return array_map(
-            function($value) {
+            function ($value) {
                 $value[1] = strtolower($value[1]);
+
                 return $value;
             },
             $this->provideTestGetTypeForValueRequiredArgumentThrowsInvalidArgumentExceptionData()
         );
     }
 }
-

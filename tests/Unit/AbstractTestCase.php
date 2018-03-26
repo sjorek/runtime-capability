@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Unicode Normalization project.
+ * This file is part of the Runtime Capability project.
  *
  * (c) Stephan Jorek <stephan.jorek@gmail.com>
  *
@@ -33,6 +33,7 @@ class AbstractTestCase extends TestCase
 
     /**
      * @param string $docComment
+     *
      * @return string[]
      */
     protected function extractTestDataFromDocComment(string $docComment): array

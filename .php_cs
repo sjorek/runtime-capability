@@ -10,11 +10,11 @@ file that was distributed with this source code.
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('Fixtures')
+    // ->exclude('Fixtures')
     ->exclude('vendor')
-//     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'build')
+    // ->in(__DIR__ . DIRECTORY_SEPARATOR . 'build')
     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'src')
-//     ->in(__DIR__ . DIRECTORY_SEPARATOR . 'tests')
+    ->in(__DIR__ . DIRECTORY_SEPARATOR . 'tests')
 ;
 
 return PhpCsFixer\Config::create()

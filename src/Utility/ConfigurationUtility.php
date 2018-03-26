@@ -94,7 +94,7 @@ final class ConfigurationUtility
                     $match = 'match:' . $payload;
                     $value = array_filter(
                         $value,
-                        function($value) use($match) {
+                        function ($value) use ($match) {
                             return $match !== ConfigurationUtility::getTypeForValue($match, $value);
                         }
                     );

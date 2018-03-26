@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability\Configuration;
 
-use Sjorek\RuntimeCapability\Identification\IdentifiableTrait;
 use Sjorek\RuntimeCapability\Identification\IdentifiableInterface;
+use Sjorek\RuntimeCapability\Identification\IdentifiableTrait;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

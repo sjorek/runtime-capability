@@ -70,11 +70,13 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
                 return $pathLength;
             }
         }
+
         return $result;
     }
 
     /**
      * @param string $fileName
+     *
      * @return bool
      */
     protected function testFilesystem($fileName)
@@ -88,7 +90,8 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
 
     /**
      * @param int $pathLength
-     * @return boolean|string
+     *
+     * @return bool|string
      */
     protected function generateDetectionFileName($pathLength)
     {
