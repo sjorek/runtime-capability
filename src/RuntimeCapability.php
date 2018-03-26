@@ -14,11 +14,8 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability;
 
 use Sjorek\RuntimeCapability\Capability\CapabilityManager;
-use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
 use Sjorek\RuntimeCapability\Detection\DetectorManager;
-use Sjorek\RuntimeCapability\Detection\DetectorManagerInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManager;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManagerInterface;
 use Sjorek\RuntimeCapability\Management\AbstractManagement;
 
 /**
@@ -27,26 +24,53 @@ use Sjorek\RuntimeCapability\Management\AbstractManagement;
 class RuntimeCapability extends AbstractManagement implements RuntimeCapabilityInterface
 {
     /**
-     * @return CapabilityManagerInterface
+     * @var CapabilityManager
      */
-    public function getCapabilityManager(): CapabilityManagerInterface
+    protected $capabilityManager = null;
+
+    /**
+     * @var DetectorManager
+     */
+    protected $detectorManager = null;
+
+    /**
+     * @var FilesystemDriverManager
+     */
+    protected $filesystemDriverManager = null;
+
+    /**
+     * @return CapabilityManager
+     */
+    public function getCapabilityManager(): CapabilityManager
     {
-        return $this->get(CapabilityManager::class);
+        if (null !== $this->capabilityManager) {
+            return $this->capabilityManager;
+        }
+
+        return $this->capabilityManager = $this->createManager(CapabilityManager::class);
     }
 
     /**
-     * @return DetectorManagerInterface
+     * @return DetectorManager
      */
-    public function getDetectorManager(): DetectorManagerInterface
+    public function getDetectorManager(): DetectorManager
     {
-        return $this->get(DetectorManager::class);
+        if (null !== $this->detectorManager) {
+            return $this->detectorManager;
+        }
+
+        return $this->detectorManager = $this->createManager(DetectorManager::class);
     }
 
     /**
-     * @return FilesystemDriverManagerInterface
+     * @return FilesystemDriverManager
      */
-    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface
+    public function getFilesystemDriverManager(): FilesystemDriverManager
     {
-        return $this->get(FilesystemDriverManager::class);
+        if (null !== $this->filesystemDriverManager) {
+            return $this->filesystemDriverManager;
+        }
+
+        return $this->filesystemDriverManager = $this->createManager(FilesystemDriverManager::class);
     }
 }

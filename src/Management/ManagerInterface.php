@@ -21,17 +21,12 @@ interface ManagerInterface
     /**
      * @param ManageableInterface $instance
      */
-    public function register(ManageableInterface $instance): ManageableInterface;
+    public function registerManageable(ManageableInterface $instance): ManageableInterface;
 
     /**
      * @param string $idOrManagableClass
      *
      * @return ManageableInterface
      */
-    public function get(string $idOrManagableClass): ManageableInterface;
-
-    /**
-     * @return ManagementInterface
-     */
-    public function getManagement(): ManagementInterface;
+    public function createManageable(string $idOrManagableClass): ManageableInterface;
 }

@@ -26,4 +26,14 @@ interface ManageableInterface extends IdentifiableInterface
      * @return ManageableInterface
      */
     public function setManager(ManagerInterface $manager): self;
+
+    /**
+     * @return ManagerInterface
+     */
+    public function getManager(): ManagerInterface;
+
+    /**
+     * @return ManagementInterface
+     */
+    public function getManagement(): ManagementInterface;
 }

@@ -19,40 +19,22 @@ namespace Sjorek\RuntimeCapability\Management;
 abstract class AbstractManagement extends AbstractManager implements ManagementInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
-     * @param ManagerInterface $manager
-     *
-     * @return ManagerInterface
-     *
-     * @see AbstractManager::register()
+     * @see ManagementInterface::registerManager()
      */
-    public function register(ManagerInterface $manager): ManagerInterface
+    public function registerManager(ManagerInterface $instance): ManagerInterface
     {
-        return parent::register($manager);
+        return $this->registerManageable($instance);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
-     * @param string $idOrManagerClass
-     *
-     * @return ManagerInterface
-     *
-     * @see AbstractManager::get()
+     * @see ManagementInterface::createManager()
      */
-    public function get(string $idOrManagerClass): ManagerInterface
+    public function createManager(string $idOrManagerClass): ManagerInterface
     {
-        return parent::get($idOrManagerClass);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see AbstractManager::getManagement()
-     */
-    public function getManagement(): ManagementInterface
-    {
-        return $this;
+        return $this->createManageable($idOrManagerClass);
     }
 }

@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability;
 
-use Sjorek\RuntimeCapability\Capability\CapabilityManagerInterface;
-use Sjorek\RuntimeCapability\Detection\DetectorManagerInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManagerInterface;
+use Sjorek\RuntimeCapability\Capability\CapabilityManager;
+use Sjorek\RuntimeCapability\Detection\DetectorManager;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManager;
 use Sjorek\RuntimeCapability\Management\ManagementInterface;
 
 
@@ -25,17 +25,17 @@ use Sjorek\RuntimeCapability\Management\ManagementInterface;
 interface RuntimeCapabilityInterface extends ManagementInterface
 {
     /**
-     * @return CapabilityManagerInterface
+     * @return CapabilityManager
      */
-    public function getCapabilityManager(): CapabilityManagerInterface;
+    public function getCapabilityManager(): CapabilityManager;
 
     /**
-     * @return DetectorManagerInterface
+     * @return DetectorManager
      */
-    public function getDetectorManager(): DetectorManagerInterface;
+    public function getDetectorManager(): DetectorManager;
 
     /**
-     * @return FilesystemDriverManagerInterface
+     * @return FilesystemDriverManager
      */
-    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface;
+    public function getFilesystemDriverManager(): FilesystemDriverManager;
 }

@@ -16,22 +16,17 @@ namespace Sjorek\RuntimeCapability\Management;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ManagementInterface extends ManagerInterface
+interface ManagementInterface
 {
     /**
-     * @param ManagerInterface $manager
+     * @param ManagerInterface $instance
      */
-    public function register(ManagerInterface $manager): ManagerInterface;
+    public function registerManager(ManagerInterface $instance): ManagerInterface;
 
     /**
      * @param string $idOrManagableClass
      *
      * @return ManagerInterface
      */
-    public function get(string $idOrManagerClass): ManagerInterface;
-
-    /**
-     * @return ManagementInterface
-     */
-    public function getManagement(): self;
+    public function createManager(string $idOrManagerClass): ManagerInterface;
 }
