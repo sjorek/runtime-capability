@@ -3,10 +3,10 @@
 namespace Sjorek\RuntimeCapability\Tests\Unit\Identification;
 
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\IdentifiableFixture;
+use Sjorek\RuntimeCapability\Tests\Unit\Fixtures\IdentifiableTestFixture;
 
 /**
- * IdentifiableFixture test case.
+ * Identifiable test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Identification\AbstractIdentifiable
  */
@@ -14,7 +14,7 @@ class IdentifiableTest extends AbstractTestCase
 {
     /**
      *
-     * @var IdentifiableFixture
+     * @var IdentifiableTestFixture
      */
     private $subject;
 
@@ -25,7 +25,7 @@ class IdentifiableTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->subject = new IdentifiableFixture();
+        $this->subject = new IdentifiableTestFixture();
     }
 
     /**
@@ -38,12 +38,16 @@ class IdentifiableTest extends AbstractTestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers ::identify
+     */
     public function testIdentify()
     {
-        $this->assertSame('identifiable', $this->subject->identify());
+        $this->assertSame('identifiable-test', $this->subject->identify());
     }
 
     /**
+     * @covers       ::extractIdentifier
      * @dataProvider provideTestExtractIdentifierData
      *
      * @param string $expect
@@ -63,11 +67,12 @@ class IdentifiableTest extends AbstractTestCase
     public function provideTestExtractIdentifierData()
     {
         return $this->extractTestDataFromDocComment(
-            (new \ReflectionMethod(IdentifiableFixture::class, 'extractIdentifier'))->getDocComment()
+            (new \ReflectionMethod(IdentifiableTestFixture::class, 'extractIdentifier'))->getDocComment()
         );
     }
 
     /**
+     * @covers       ::normalizeIdentifier
      * @dataProvider provideTestNormalizeIdentifierData
      *
      * @param string $expect
@@ -87,7 +92,7 @@ class IdentifiableTest extends AbstractTestCase
     public function provideTestNormalizeIdentifierData()
     {
         return $this->extractTestDataFromDocComment(
-            (new \ReflectionMethod(IdentifiableFixture::class, 'normalizeIdentifier'))->getDocComment()
+            (new \ReflectionMethod(IdentifiableTestFixture::class, 'normalizeIdentifier'))->getDocComment()
         );
     }
 

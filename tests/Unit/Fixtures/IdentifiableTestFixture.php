@@ -6,7 +6,7 @@ use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class IdentifiableFixture extends AbstractIdentifiable
+class IdentifiableTestFixture extends AbstractIdentifiable
 {
 }
 
