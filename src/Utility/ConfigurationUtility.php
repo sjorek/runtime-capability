@@ -63,12 +63,46 @@ final class ConfigurationUtility
      */
     public static function getTypeForValue(string $type, $value)
     {
-        $payload = null;
         if (false !== strpos($type, ':')) {
             list($key, $payload) = explode(':', $type, 2);
+            if ('' === $payload) {
+                throw new \InvalidArgumentException(
+                    'Invalid payload given, it must not be empty.',
+                    1521388630
+                );
+            }
+        } else {
+            $key = $type;
+            $payload = null;
         }
-        $actual = gettype($value);
+        $actual = strtolower(gettype($value));
         switch ($key) {
+            case 'integer':
+            case 'double':
+            case 'string':
+                if (null !== $payload) {
+                    $match = 'match:' . $payload;
+                    if ($match === self::getTypeForValue($match, $value)) {
+                        return $type;
+                    }
+
+                    return sprintf('%s:%s', $actual, $value);
+                }
+                break;
+            case 'array':
+                if (null !== $payload) {
+                    $match = 'match:' . $payload;
+                    $value = array_filter(
+                        $value,
+                        function($value) use($match) {
+                            return $match !== ConfigurationUtility::getTypeForValue($match, $value);
+                        }
+                    );
+                    if (empty($value)) {
+                        return $type;
+                    }
+                }
+                break;
             case 'match':
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
@@ -79,16 +113,19 @@ final class ConfigurationUtility
                         1521388632
                     );
                 }
-                if (in_array($actual, 'string', 'integer', 'double', 'object')) {
+                if (in_array($actual, ['string', 'integer', 'double', 'object'], true)) {
                     if ('object' === $actual) {
                         $value = get_class($value);
                     }
-                    $result = preg_match(sprintf('/%s/u', $payload), (string) $value);
+                    $result = @preg_match(sprintf('/%s/u', $payload), (string) $value);
                     if (false === $result) {
                         throw new \InvalidArgumentException(
                             sprintf(
-                                'Invalid payload for given type: %s. The format is: "match:PATTERN". Hint: The pattern must not be enclosed in delimiters.',
-                                $key
+                                'Invalid payload for given type: %s. The format is: "match:PATTERN". '
+                                . 'Code: %s. '
+                                . 'Hint: The pattern must not be enclosed with the "/" delimiter.',
+                                $key,
+                                preg_last_error()
                             ),
                             1521388642
                         );
@@ -109,7 +146,8 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Missing payload for given type: %s. The format is: "instance:Namespace\\Class".',
+                            'Missing payload for given type: %s. The format is: "%s:Namespace\\Class".',
+                            $key,
                             $key
                         ),
                         1521388634
@@ -130,7 +168,7 @@ final class ConfigurationUtility
                         return $type;
                     }
 
-                    return 'object:' . get_class($value);
+                    return $key . ':' . get_class($value);
                 }
                 break;
             case 'inherit':
@@ -138,7 +176,7 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Missing payload for given type: %s. The format is "%s:Namespace\\Class".',
+                            'Missing payload for given type: %s. The format is: "%s:Namespace\\Class".',
                             $key,
                             $key
                         ),
@@ -174,10 +212,11 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Missing payload for given type: %s. The format is "class:Namespace\\Class".',
+                            'Missing payload for given type: %s. The format is: "%s:Namespace\\Class".',
+                            $key,
                             $key
                         ),
-                        1521388635
+                        1521388634
                     );
                 }
                 if (!class_exists($payload, true)) {
@@ -202,10 +241,11 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Missing payload for given type: %s. The format is "implement:Namespace\\Interface".',
+                            'Missing payload for given type: %s. The format is: "%s:Namespace\\Interface".',
+                            $key,
                             $key
                         ),
-                        1521388636
+                        1521388634
                     );
                 }
                 if (!interface_exists($payload, true)) {
@@ -215,7 +255,7 @@ final class ConfigurationUtility
                             $payload,
                             $key
                         ),
-                        1521388646
+                        1521388644
                     );
                 }
                 if ('object' === $actual) {
@@ -230,10 +270,11 @@ final class ConfigurationUtility
                 if (null === $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Missing payload for given type: %s. The format is "interface:Namespace\\Interface".',
+                            'Missing payload for given type: %s. The format is: "%s:Namespace\\Interface".',
+                            $key,
                             $key
                         ),
-                        1521388637
+                        1521388634
                     );
                 }
                 if (!interface_exists($payload, true)) {
@@ -243,7 +284,7 @@ final class ConfigurationUtility
                             $payload,
                             $key
                         ),
-                        1521388646
+                        1521388644
                     );
                 }
                 if ('string' === $actual && interface_exists($value, true)) {
@@ -254,14 +295,20 @@ final class ConfigurationUtility
                     return 'interface:' . $value;
                 }
                 break;
+            case 'resource':
+                if ('resource' === $key && 'resource (closed)' === $actual) {
+                    $actual = 'resource';
+                }
+                // no break here!
             default:
                 if (null !== $payload) {
                     throw new \InvalidArgumentException(
                         sprintf(
-                            'Got unexpected payload for given type: %s.',
+                            'Unexpected payload for given type: %s. The format is: "%s".',
+                            $key,
                             $key
                         ),
-                        1521388639
+                        1521388631
                     );
                 }
         }
