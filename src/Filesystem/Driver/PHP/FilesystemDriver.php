@@ -122,9 +122,9 @@ class FilesystemDriver extends AbstractFilesystemDriver implements PhpDrivenFile
                     // @see http://php.net/manual/en/function.fileperms.php#example-2671
                     ($perms = (@fileperms($path) ?: 0)) &&
                     (
-                        ($perms & 0x0040) && !($perms & 0x0800) ||
-                        ($perms & 0x0008) && !($perms & 0x0400) ||
-                        ($perms & 0x0001) && !($perms & 0x0200)
+                        ($perms & 0x0040) && !($perms & 0x0800) || // owner executable flag - [u]ser
+                        ($perms & 0x0008) && !($perms & 0x0400) || // group executable flag - [g]roup
+                        ($perms & 0x0001) && !($perms & 0x0200)    // world executable flag - [o]ther
                     )
                 )
             )
