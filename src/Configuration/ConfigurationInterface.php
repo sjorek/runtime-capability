@@ -30,13 +30,15 @@ interface ConfigurationInterface extends \ArrayAccess
 
     /**
      * @param ConfigurationInterface $configuration
+     *
      * @return self
      */
-    public function import(ConfigurationInterface $configuration): self;
+    public function import(self $configuration): self;
 
     /**
      * @param ConfigurationInterface $configuration
+     *
      * @return self
      */
-    public function merge(ConfigurationInterface $configuration): self;
+    public function merge(self $configuration): self;
 }

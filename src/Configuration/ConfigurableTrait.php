@@ -56,8 +56,8 @@ trait ConfigurableTrait
     /**
      * {@inheritdoc}
      *
-     * @param string $key
-     * @param string|null $type
+     * @param string      $key
+     * @param null|string $type
      *
      * @throws ConfigurationFailure
      *
@@ -137,5 +137,4 @@ trait ConfigurableTrait
 
         return $this;
     }
-
 }

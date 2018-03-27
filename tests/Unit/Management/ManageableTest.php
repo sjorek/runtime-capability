@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Management;
 
-use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManageableTestFixture;
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManagerTestFixture;
-use Sjorek\RuntimeCapability\Management\ManagerInterface;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManagementTestFixture;
 use Sjorek\RuntimeCapability\Management\ManagementInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManageableTestFixture;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManagementTestFixture;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManagerTestFixture;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
  * Manageable test case.
@@ -59,7 +59,7 @@ class ManageableTest extends AbstractTestCase
     {
         $instance = new ManagerTestFixture();
         $this->assertSame($this->subject, $this->subject->setManager($instance));
-        $this->assertAttributeEquals($instance, 'manager', $this->subject);
+        $this->assertAttributeSame($instance, 'manager', $this->subject);
         $this->assertAttributeInstanceOf(ManagerInterface::class, 'manager', $this->subject);
         $this->assertAttributeInstanceOf(ManagerTestFixture::class, 'manager', $this->subject);
     }
@@ -92,7 +92,7 @@ class ManageableTest extends AbstractTestCase
         $management = new ManagementTestFixture();
         $manager = (new ManagerTestFixture())->setManager($management);
         $this->assertSame($management, $this->subject->setManager($manager)->getManagement());
-        $this->assertAttributeEquals($management, 'management', $this->subject);
+        $this->assertAttributeSame($management, 'management', $this->subject);
         $this->assertAttributeInstanceOf(ManagementInterface::class, 'management', $this->subject);
         $this->assertAttributeInstanceOf(ManagementTestFixture::class, 'management', $this->subject);
     }

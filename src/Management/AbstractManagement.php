@@ -19,7 +19,7 @@ namespace Sjorek\RuntimeCapability\Management;
 abstract class AbstractManagement extends AbstractManager implements ManagementInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see ManagementInterface::registerManager()
      */
@@ -29,7 +29,7 @@ abstract class AbstractManagement extends AbstractManager implements ManagementI
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see ManagementInterface::createManager()
      */

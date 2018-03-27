@@ -50,7 +50,7 @@ class DetectorManager extends AbstractManager implements DetectorManagerInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @return RuntimeCapabilityInterface
      *

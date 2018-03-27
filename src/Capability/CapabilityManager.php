@@ -48,7 +48,7 @@ class CapabilityManager extends AbstractManager implements CapabilityManagerInte
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @return RuntimeCapabilityInterface
      *

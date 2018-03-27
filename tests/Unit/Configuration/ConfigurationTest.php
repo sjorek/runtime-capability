@@ -48,6 +48,7 @@ class ConfigurationTest extends AbstractTestCase
 
     /**
      * @covers ::__construct
+     *
      * @return ConfigurationTestFixture
      */
     public function testConstruct(): ConfigurationTestFixture
@@ -71,7 +72,7 @@ class ConfigurationTest extends AbstractTestCase
         $this->expectExceptionMessage('Invalid array given. Only keys of type string are allowed.');
         $this->expectExceptionCode(1522138977);
 
-        new ConfigurationTestFixture(range(0,9));
+        new ConfigurationTestFixture(range(0, 9));
     }
 
     /**
@@ -79,6 +80,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testConstruct
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testExport(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -94,6 +96,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testExport
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testImport(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -114,6 +117,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testImport
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testMerge(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -134,6 +138,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testMerge
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testOffsetExists(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -149,6 +154,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testOffsetExists
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testOffsetGet(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -163,6 +169,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testOffsetGet
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testOffsetSet(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -192,6 +199,7 @@ class ConfigurationTest extends AbstractTestCase
      * @depends testOffsetSet
      *
      * @param ConfigurationTestFixture $actual
+     *
      * @return ConfigurationTestFixture
      */
     public function testOffsetUnset(ConfigurationTestFixture $actual): ConfigurationTestFixture
@@ -201,5 +209,4 @@ class ConfigurationTest extends AbstractTestCase
 
         return $actual;
     }
-
 }

@@ -46,7 +46,9 @@ abstract class AbstractManageable extends AbstractIdentifiable implements Manage
      * {@inheritdoc}
      *
      * @throws \RuntimeException
+     *
      * @return ManagerInterface
+     *
      * @see ManageableInterface::getManager()
      */
     public function getManager(): ManagerInterface
@@ -62,6 +64,7 @@ abstract class AbstractManageable extends AbstractIdentifiable implements Manage
      * {@inheritdoc}
      *
      * @throws \RuntimeException
+     *
      * @return ManagementInterface
      */
     public function getManagement(): ManagementInterface

@@ -21,7 +21,7 @@ use Sjorek\RuntimeCapability\Management\AbstractManager;
 class ConfigurationManager extends AbstractManager implements ConfigurationManagerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see ConfigurationManagerInterface::registerConfiguration()
      */
@@ -31,7 +31,7 @@ class ConfigurationManager extends AbstractManager implements ConfigurationManag
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see ConfigurationManagerInterface::createConfiguration()
      */

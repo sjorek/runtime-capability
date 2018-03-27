@@ -18,7 +18,6 @@ use Sjorek\RuntimeCapability\Detection\DetectorManager;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManager;
 use Sjorek\RuntimeCapability\Management\ManagementInterface;
 
-
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */

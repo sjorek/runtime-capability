@@ -26,13 +26,15 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     protected $data;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @param array $configuration
+     *
      * @see ConfigurationInterface::__construct()
      */
     public function __construct(array $configuration = [])
     {
-        if (!empty(array_filter(array_keys($configuration), function($key) { return !is_string($key); }))) {
+        if (!empty(array_filter(array_keys($configuration), function ($key) { return !is_string($key); }))) {
             throw new \InvalidArgumentException(
                 'Invalid array given. Only keys of type string are allowed.',
                 1522138977
@@ -42,7 +44,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurationInterface::export()
      */
     public function export(): array
@@ -51,7 +54,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurationInterface::import()
      */
     public function import(ConfigurationInterface $configuration): ConfigurationInterface
@@ -62,7 +66,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see ConfigurationInterface::merge()
      */
     public function merge(ConfigurationInterface $configuration): ConfigurationInterface
@@ -73,7 +78,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \ArrayAccess::offsetExists()
      */
     public function offsetExists($offset)
@@ -82,7 +88,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \ArrayAccess::offsetGet()
      */
     public function offsetGet($offset)
@@ -91,7 +98,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \ArrayAccess::offsetSet()
      */
     public function offsetSet($offset, $value)
@@ -106,7 +114,8 @@ abstract class AbstractConfiguration extends AbstractManageable implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)

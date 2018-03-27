@@ -30,6 +30,7 @@ abstract class AbstractManager extends AbstractManageable implements ManagerInte
 
     /**
      * @param ManageableInterface $instance
+     *
      * @return ManageableInterface
      */
     public function registerManageable(ManageableInterface $instance): ManageableInterface
@@ -42,7 +43,9 @@ abstract class AbstractManager extends AbstractManageable implements ManagerInte
 
     /**
      * @param string $idOrManagableClass
+     *
      * @throws \InvalidArgumentException
+     *
      * @return ManageableInterface
      */
     public function createManageable(string $idOrManagableClass): ManageableInterface

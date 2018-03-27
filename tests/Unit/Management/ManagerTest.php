@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Management;
 
+use Sjorek\RuntimeCapability\Management\ManageableInterface;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManageableTestFixture;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManagerTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Management\ManageableTestFixture;
-use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
  * Manager test case.
@@ -57,7 +57,7 @@ class ManagerTest extends AbstractTestCase
     {
         $instance = new ManageableTestFixture();
         $this->assertSame($instance, $this->subject->registerManageable($instance));
-        $this->assertAttributeEquals($this->subject, 'manager', $instance);
+        $this->assertAttributeSame($this->subject, 'manager', $instance);
         $this->assertAttributeContains($instance, 'instances', $this->subject);
         $this->assertAttributeContainsOnly(ManageableInterface::class, 'instances', $this->subject);
         $this->assertAttributeContainsOnly(ManageableTestFixture::class, 'instances', $this->subject);
@@ -70,7 +70,7 @@ class ManagerTest extends AbstractTestCase
     {
         $instance = $this->subject->createManageable(ManageableTestFixture::class);
         $this->assertSame($instance, $this->subject->createManageable($instance->identify()));
-        $this->assertAttributeEquals($this->subject, 'manager', $instance);
+        $this->assertAttributeSame($this->subject, 'manager', $instance);
         $this->assertAttributeContains($instance, 'instances', $this->subject);
         $this->assertAttributeContainsOnly(ManageableInterface::class, 'instances', $this->subject);
         $this->assertAttributeContainsOnly(ManageableTestFixture::class, 'instances', $this->subject);

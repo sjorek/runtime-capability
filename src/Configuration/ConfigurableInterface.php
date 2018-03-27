@@ -29,8 +29,9 @@ interface ConfigurableInterface
     public function getConfiguration(): ConfigurationInterface;
 
     /**
-     * @param string $key
-     * @param string|null $type
+     * @param string      $key
+     * @param null|string $type
+     *
      * @return mixed
      */
     public function config(string $key, string $type = null);

@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Configuration;
 
-use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurableTestFixture;
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 use Sjorek\RuntimeCapability\Configuration\AbstractConfigurable;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
 use Sjorek\RuntimeCapability\Configuration\ConfigurationInterface;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurableTestFixture;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
  * Configurable test case.
@@ -79,8 +79,9 @@ class ConfigurableTest extends AbstractTestCase
      * @depends getConfigurableTestFixture
      * @depends getConfigurationTestFixture
      *
-     * @param ConfigurableTestFixture $actual
+     * @param ConfigurableTestFixture  $actual
      * @param ConfigurationTestFixture $expect
+     *
      * @return ConfigurableTestFixture
      */
     public function testSetConfiguration(ConfigurableTestFixture $actual, ConfigurationTestFixture $expect): ConfigurableTestFixture
@@ -98,8 +99,9 @@ class ConfigurableTest extends AbstractTestCase
      * @depends testSetConfiguration
      * @depends getConfigurationTestFixture
      *
-     * @param ConfigurableTestFixture $actual
+     * @param ConfigurableTestFixture  $actual
      * @param ConfigurationTestFixture $expect
+     *
      * @return ConfigurableTestFixture
      */
     public function testGetConfiguration(ConfigurableTestFixture $actual, ConfigurationTestFixture $expect): ConfigurableTestFixture
@@ -114,6 +116,7 @@ class ConfigurableTest extends AbstractTestCase
      * @depends testGetConfiguration
      *
      * @param ConfigurableTestFixture $actual
+     *
      * @return ConfigurableTestFixture
      */
     public function testConfig(ConfigurableTestFixture $actual): ConfigurableTestFixture
@@ -134,6 +137,7 @@ class ConfigurableTest extends AbstractTestCase
      * @depends testConfig
      *
      * @param ConfigurableTestFixture $actual
+     *
      * @return ConfigurableTestFixture
      */
     public function testSetup(ConfigurableTestFixture $actual): ConfigurableTestFixture
@@ -148,6 +152,7 @@ class ConfigurableTest extends AbstractTestCase
      * @depends testSetup
      *
      * @param ConfigurableTestFixture $actual
+     *
      * @return ConfigurableTestFixture
      */
     public function testReset(ConfigurableTestFixture $actual): ConfigurableTestFixture
@@ -157,5 +162,4 @@ class ConfigurableTest extends AbstractTestCase
 
         return $actual;
     }
-
 }
