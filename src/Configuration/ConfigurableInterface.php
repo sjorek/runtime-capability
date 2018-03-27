@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Configuration;
+namespace Sjorek\RuntimeCapability\Configuration;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -19,14 +19,21 @@ namespace Sjorek\RuntimeCapability\Capability\Configuration;
 interface ConfigurableInterface
 {
     /**
-     * @param array $configuration
+     * @param ConfigurationInterface $configuration
      */
-    public function setConfiguration(array &$configuration): self;
+    public function setConfiguration(ConfigurationInterface $configuration): self;
 
     /**
-     * @return array
+     * @return ConfigurationInterface
      */
-    public function &getConfiguration(): array;
+    public function getConfiguration(): ConfigurationInterface;
+
+    /**
+     * @param string $key
+     * @param string|null $type
+     * @return mixed
+     */
+    public function config(string $key, string $type = null);
 
     /**
      * @return ConfigurableInterface
@@ -37,13 +44,4 @@ interface ConfigurableInterface
      * @return ConfigurableInterface
      */
     public function reset(): self;
-
-    /**
-     * @param string[]    $keys
-     * @param null|string $type
-     * @param mixed       $key
-     *
-     * @return mixed
-     */
-    public function config($key, $type = null, ...$payload);
 }

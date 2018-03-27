@@ -11,16 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Configuration;
+namespace Sjorek\RuntimeCapability\Tests\Fixtures\Configuration;
 
-use Sjorek\RuntimeCapability\Identification\IdentifiableInterface;
-use Sjorek\RuntimeCapability\Identification\IdentifiableTrait;
+use Sjorek\RuntimeCapability\Configuration\AbstractConfigurable;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractConfigurable implements ConfigurableInterface, IdentifiableInterface
+class ConfigurableTestFixture extends AbstractConfigurable
 {
-    use IdentifiableTrait;
-    use ConfigurableTrait;
+    /**
+     * @var array
+     */
+    protected static $DEFAULT_CONFIGURATION = ['fixture' => 'fixture'];
 }

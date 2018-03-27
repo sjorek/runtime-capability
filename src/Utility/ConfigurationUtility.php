@@ -63,6 +63,8 @@ final class ConfigurationUtility
      */
     public static function getTypeForValue(string $type, $value)
     {
+        $key = $type;
+        $payload = null;
         if (false !== strpos($type, ':')) {
             list($key, $payload) = explode(':', $type, 2);
             if ('' === $payload) {
@@ -71,9 +73,6 @@ final class ConfigurationUtility
                     1521388630
                 );
             }
-        } else {
-            $key = $type;
-            $payload = null;
         }
         $actual = strtolower(gettype($value));
         switch ($key) {

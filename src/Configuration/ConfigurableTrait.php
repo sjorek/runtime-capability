@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Capability\Configuration;
+namespace Sjorek\RuntimeCapability\Configuration;
 
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
@@ -27,18 +27,18 @@ trait ConfigurableTrait
     protected static $DEFAULT_CONFIGURATION = [];
 
     /**
-     * @var array
+     * @var ConfigurationInterface
      */
-    protected $configuration = [];
+    protected $configuration;
 
     /**
      * {@inheritdoc}
      *
      * @see ConfigurableInterface::setConfiguration()
      */
-    public function setConfiguration(array &$configuration): ConfigurableInterface
+    public function setConfiguration(ConfigurationInterface $configuration): ConfigurableInterface
     {
-        $this->configuration = &$configuration;
+        $this->configuration = $configuration;
 
         return $this;
     }
@@ -48,7 +48,7 @@ trait ConfigurableTrait
      *
      * @see ConfigurableInterface::getConfiguration()
      */
-    public function &getConfiguration(): array
+    public function getConfiguration(): ConfigurationInterface
     {
         return $this->configuration;
     }
@@ -56,38 +56,22 @@ trait ConfigurableTrait
     /**
      * {@inheritdoc}
      *
-     * @see ConfigurableInterface::setUp()
-     */
-    public function setup(): ConfigurableInterface
-    {
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see ConfigurableInterface::reset()
-     */
-    public function reset(): ConfigurableInterface
-    {
-        $this->configuration = [];
-    }
-
-    /**
-     * @param string[]    $keys
-     * @param null|string $type
-     * @param mixed       $key
+     * @param string $key
+     * @param string|null $type
      *
      * @throws ConfigurationFailure
      *
      * @return mixed
+     *
+     * @see ConfigurableInterface::setup()
      */
-    public function config($key, $type = null)
+    public function config(string $key, string $type = null)
     {
         $key = $this->normalizeIdentifier($key);
         $id = strtolower(sprintf('%s.%s', $this->identify(), $key));
         $value = null;
         $found = false;
+
         foreach ([$id, $key] as $lookup) {
             if (isset($this->configuration[$lookup])) {
                 $value = $this->configuration[$lookup];
@@ -105,13 +89,19 @@ trait ConfigurableTrait
                 break;
             }
         }
+
         if (!$found) {
             throw new ConfigurationFailure(
                 sprintf('Missing configuration for key: %s (%s).', $key, $id),
                 1521291482
             );
         }
-        if (null !== $type && $type !== ($actual = ConfigurationUtility::getTypeForValue($type, $value))) {
+
+        if (null === $type) {
+            return $value;
+        }
+
+        if ($type !== ($actual = ConfigurationUtility::getTypeForValue($type, $value))) {
             throw new ConfigurationFailure(
                 sprintf(
                     'Invalid configuration value type for key "%s", expected type "%s", but got type "%s".',
@@ -125,4 +115,27 @@ trait ConfigurableTrait
 
         return $value;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ConfigurableInterface::setup()
+     */
+    public function setup(): ConfigurableInterface
+    {
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see ConfigurableInterface::reset()
+     */
+    public function reset(): ConfigurableInterface
+    {
+        $this->configuration = null;
+
+        return $this;
+    }
+
 }
