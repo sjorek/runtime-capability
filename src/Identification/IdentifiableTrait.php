@@ -34,8 +34,8 @@ trait IdentifiableTrait
             return $this->id;
         }
         $className = static::class;
-        if (defined($className . '::CAPABILITY_ID')) {
-            return $this->id = (string) static::CAPABILITY_ID;
+        if (defined($className . '::IDENTIFIER')) {
+            return $this->id = (string) static::IDENTIFIER;
         }
         $id = $this->extractIdentifier($className);
 

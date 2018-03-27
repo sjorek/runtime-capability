@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Identification;
 
-use Sjorek\RuntimeCapability\Tests\Fixtures\Identification\IdentifiableTestFixture;
+use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Identification\IdentifiableTestFixture1;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Identification\IdentifiableTestFixture2;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
@@ -24,7 +26,7 @@ use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 class IdentifiableTest extends AbstractTestCase
 {
     /**
-     * @var IdentifiableTestFixture
+     * @var \Sjorek\RuntimeCapability\Identification\AbstractIdentifiable
      */
     private $subject;
 
@@ -35,7 +37,7 @@ class IdentifiableTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->subject = new IdentifiableTestFixture();
+        $this->subject = new IdentifiableTestFixture1();
     }
 
     /**
@@ -54,6 +56,7 @@ class IdentifiableTest extends AbstractTestCase
     public function testIdentify()
     {
         $this->assertSame('identifiable-test', $this->subject->identify());
+        $this->assertSame('custom-identifier', (new IdentifiableTestFixture2())->identify());
     }
 
     /**
@@ -77,7 +80,7 @@ class IdentifiableTest extends AbstractTestCase
     public function provideTestExtractIdentifierData()
     {
         return $this->extractTestDataFromDocComment(
-            (new \ReflectionMethod(IdentifiableTestFixture::class, 'extractIdentifier'))->getDocComment()
+            (new \ReflectionMethod(AbstractIdentifiable::class, 'extractIdentifier'))->getDocComment()
         );
     }
 
@@ -102,7 +105,7 @@ class IdentifiableTest extends AbstractTestCase
     public function provideTestNormalizeIdentifierData()
     {
         return $this->extractTestDataFromDocComment(
-            (new \ReflectionMethod(IdentifiableTestFixture::class, 'normalizeIdentifier'))->getDocComment()
+            (new \ReflectionMethod(AbstractIdentifiable::class, 'normalizeIdentifier'))->getDocComment()
         );
     }
 }

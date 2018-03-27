@@ -18,6 +18,10 @@ use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class IdentifiableTestFixture extends AbstractIdentifiable
+class IdentifiableTestFixture2 extends AbstractIdentifiable
 {
+    /**
+     * @var string
+     */
+    const IDENTIFIER = 'custom-identifier';
 }
