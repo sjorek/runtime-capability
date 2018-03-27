@@ -28,23 +28,9 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
     /**
      * {@inheritdoc}
      *
-     * @param FilesystemDriverManagerInterface $manager
-     *
-     * @return FilesystemDriverInterface
-     *
-     * @see FilesystemDriverInterface::setManager()
+     * @see FilesystemDriverInterface::getMaximumPathLength()
      */
-    public function setManager(FilesystemDriverManagerInterface $manager): FilesystemDriverInterface
-    {
-        return parent::setManager($manager);
-    }
-
-    /**
-     * Get the maximum path (including filename) length.
-     *
-     * @return int
-     */
-    public function getMaximumPathLength()
+    public function getMaximumPathLength(): int
     {
         return PHP_MAXPATHLEN - 2;
     }
@@ -56,8 +42,8 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
      *
      * @return bool
      */
-    protected function hasValidPathLength($path)
+    protected function hasValidPathLength(string $path): bool
     {
-        return strlen($path) > $this->getMaximumPathLength();
+        return !('' === $path || strlen($path) > $this->getMaximumPathLength());
     }
 }

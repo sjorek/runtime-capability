@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 
 use Sjorek\RuntimeCapability\Management\AbstractManager;
-use Sjorek\RuntimeCapability\RuntimeCapabilityInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -28,11 +27,11 @@ class FilesystemDriverManager extends AbstractManager implements FilesystemDrive
      *
      * @return FilesystemDriverInterface
      *
-     * @see AbstractManager::register()
+     * @see FilesystemDriverManagerInterface::registerFilesystemDriver()
      */
-    public function register(FilesystemDriverInterface $driver): FilesystemDriverInterface
+    public function registerFilesystemDriver(FilesystemDriverInterface $driver): FilesystemDriverInterface
     {
-        return parent::register($driver);
+        return $this->registerManageable($driver);
     }
 
     /**
@@ -42,22 +41,10 @@ class FilesystemDriverManager extends AbstractManager implements FilesystemDrive
      *
      * @return FilesystemDriverInterface
      *
-     * @see AbstractManager::get()
+     * @see FilesystemDriverManagerInterface::createFilesystemDriver()
      */
-    public function get(string $idOrFilesystemDriverClass): FilesystemDriverInterface
+    public function createFilesystemDriver(string $idOrFilesystemDriverClass): FilesystemDriverInterface
     {
-        return parent::get($idOrFilesystemDriverClass);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return RuntimeCapabilityInterface
-     *
-     * @see AbstractManager::getManagement()
-     */
-    public function getManagement(): RuntimeCapabilityInterface
-    {
-        return parent::getManagement();
+        return $this->createManageable($idOrFilesystemDriverClass);
     }
 }
