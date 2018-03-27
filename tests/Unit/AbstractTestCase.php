@@ -40,7 +40,7 @@ class AbstractTestCase extends TestCase
     {
         $data = [];
         $matches = null;
-        preg_match_all(self::EXTRACT_TEST_DATA_FROM_DOCSTRING_PATTERN, $docComment, $matches, PREG_SET_ORDER);
+        preg_match_all(static::EXTRACT_TEST_DATA_FROM_DOCSTRING_PATTERN, $docComment, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             list(, $input, $expect, $caption) = $match;
             $data[$caption] = [$expect, $input];
