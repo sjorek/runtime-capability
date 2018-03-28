@@ -11,10 +11,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
+namespace Sjorek\RuntimeCapability\Filesystem\Driver\Symfony;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\AbstractFilesystemDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FlatFilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PathFilesystemDriverInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFilesystemDriverInterface, \IteratorAggregate
+class PathFilesystemDriver extends AbstractFilesystemDriver implements PathFilesystemDriverInterface, \IteratorAggregate
 {
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
@@ -51,7 +51,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::getPath()
+     * @see PathFilesystemDriverInterface::getPath()
      */
     public function getPath()
     {
@@ -63,7 +63,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
      *
      * @throws IOException for non-existing paths and path exceeding the driver's maximum path length
      *
-     * @see FlatFilesystemDriverInterface::setPath()
+     * @see PathFilesystemDriverInterface::setPath()
      */
     public function setPath($path = null)
     {
@@ -90,7 +90,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::create()
+     * @see PathFilesystemDriverInterface::create()
      */
     public function create($path)
     {
@@ -102,7 +102,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::exists()
+     * @see PathFilesystemDriverInterface::exists()
      */
     public function exists($path)
     {
@@ -115,7 +115,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::remove()
+     * @see PathFilesystemDriverInterface::remove()
      */
     public function remove($path)
     {
@@ -129,7 +129,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::setIteratorPattern()
+     * @see PathFilesystemDriverInterface::setIteratorPattern()
      */
     public function setIteratorPattern($pattern)
     {
@@ -139,7 +139,7 @@ class FlatFilesystemDriver extends AbstractFilesystemDriver implements FlatFiles
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriverInterface::getIterator()
+     * @see PathFilesystemDriverInterface::getIterator()
      */
     public function getIterator()
     {

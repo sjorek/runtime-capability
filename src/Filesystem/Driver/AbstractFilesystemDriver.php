@@ -21,6 +21,11 @@ use Sjorek\RuntimeCapability\Management\AbstractManageable;
 abstract class AbstractFilesystemDriver extends AbstractManageable implements FilesystemDriverInterface
 {
     /**
+     * @var integer
+     */
+    const MAXIMUM_PATH_LENGTH = PHP_MAXPATHLEN;
+
+    /**
      * @var FilesystemDriverManagerInterface
      */
     protected $manager = null;
@@ -32,7 +37,8 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
      */
     public function getMaximumPathLength(): int
     {
-        return PHP_MAXPATHLEN - 2;
+        // subtract 2 for windows drive letter plus double colon, like 'c:'
+        return static::MAXIMUM_PATH_LENGTH - 2;
     }
 
     /**
@@ -45,5 +51,23 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
     protected function hasValidPathLength(string $path): bool
     {
         return !('' === $path || strlen($path) > $this->getMaximumPathLength());
+    }
+
+    /**
+     * @param string $path
+     * @throws \InvalidArgumentException if the path exceeds the maximum path length
+     */
+    protected function validatePathLength(string $path)
+    {
+        if (!$this->hasValidPathLength($path)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid path given: %s. The path exceeds the maximum path length of %s bytes.',
+                    $path,
+                    $this->getMaximumPathLength()
+                ),
+                1522171138
+            );
+        }
     }
 }

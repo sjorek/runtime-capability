@@ -18,23 +18,30 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface HierarchicalFilesystemDriverInterface extends FlatFilesystemDriverInterface
+interface HierarchicalFilesystemDriverInterface extends PathFilesystemDriverInterface
 {
     /**
      * Creates a directory recursively.
      *
      * @param string      $path   A filename, -path or url
-     * @param null|string $parent A optional path to prepend, while operating with the given path
      *
      * @return mixed The path created
      */
     public function createFolder($path);
 
     /**
+     * Removes a directory recursively.
+     *
+     * @param string      $path   A filename, -path or url
+     *
+     * @return mixed The path created
+     */
+    public function removeFolder($path);
+
+    /**
      * Returns whether the path points to a folder.
      *
      * @param string      $path   A filename, -path or url
-     * @param null|string $parent A optional path to prepend, while operating with the given path
      *
      * @return bool
      */

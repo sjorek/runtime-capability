@@ -18,12 +18,12 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface FlatFilesystemDriverInterface extends FilesystemDriverInterface
+interface PathFilesystemDriverInterface extends FilesystemDriverInterface
 {
     /**
      * Get path to operate on.
      *
-     * @return string
+     * @return string|mixed
      */
     public function getPath();
 
@@ -32,7 +32,7 @@ interface FlatFilesystemDriverInterface extends FilesystemDriverInterface
      *
      * @param null|mixed $path
      *
-     * @return mixed The path to operate on
+     * @return string|bool|mixed The path to operate on or false on failure
      */
     public function setPath($path = null);
 

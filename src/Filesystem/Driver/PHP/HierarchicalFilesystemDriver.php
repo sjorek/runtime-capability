@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\HierarchicalFilesystemDriverInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * Facade to filesystem specific functionality, providing a reduced interface to what is needed.
@@ -23,23 +22,23 @@ use Symfony\Component\Filesystem\Exception\IOException;
  *
  * @todo Check if we need to implement chdir() to circumvent exceeding maximum path length
  */
-class HierarchicalFilesystemDriver extends FlatFilesystemDriver implements HierarchicalFilesystemDriverInterface
+class HierarchicalFilesystemDriver extends PathFilesystemDriver implements HierarchicalFilesystemDriverInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @see FlatFilesystemDriver::setPath()
+     * @see PathFilesystemDriver::setPath()
      */
     public function setPath($path = null)
     {
         $oldPath = $this->path;
         $newPath = parent::setPath($path);
-        if (!$this->isFolder($path)) {
-            $this->path = $oldPath;
-            throw new IOException('Can not enter non-directory path.', 1521216078, null, $path);
+        if ($this->isFolder($path)) {
+            return $newPath;
         }
 
-        return $newPath;
+        $this->path = $oldPath;
+        return false;
     }
 
     /**
@@ -49,12 +48,34 @@ class HierarchicalFilesystemDriver extends FlatFilesystemDriver implements Hiera
      */
     public function createFolder($path)
     {
-        if ($this->exists($path)) {
-            throw new IOException('Can not create folder, as the path already exists.', 1521172856, null, $path);
-        }
-        $this->fs->mkdir($this->canonical($path));
+        $path = $this->prependPath($path);
+        $path = $this->normalizePath($path);
+        $this->validatePathLength($path);
 
-        return $path;
+        if (!$this->exists($path) && $this->hasWritableParentDirectory($path) && mkdir($path, true)) {
+            return $path;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see HierarchicalFilesystemDriverInterface::createFolder()
+     */
+    public function removeFolder($path)
+    {
+        $path = $this->prependPath($path);
+        $path = $this->normalizePath($path);
+        $this->validatePathLength($path);
+
+        if ($this->exists($path) && is_dir($path) && $this->hasWritableParentDirectory($path) && rmdir($path)) {
+            $this->cleanup($path);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -66,6 +87,6 @@ class HierarchicalFilesystemDriver extends FlatFilesystemDriver implements Hiera
     {
         $path = $this->canonical($path);
 
-        return $this->fs->exists($path) && is_dir($path) && !is_link($path);
+        return $this->exists($path) && is_dir($path) && !is_link($path);
     }
 }
