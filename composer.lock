@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "26bbaee5e455098d592d19fd1d591b39",
+    "content-hash": "9e49f523aada18539a751b4d96bb8419",
     "packages": [
         {
             "name": "sjorek/unicode-normalization",
