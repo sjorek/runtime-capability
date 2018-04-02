@@ -11,14 +11,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver;
+namespace Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\AbstractFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDriverTestFixture extends AbstractFilesystemDriver
+class PHPFilesystemDriverTestFixture extends AbstractPHPFilesystemDriver
 {
     /**
      * {@inheritdoc}

@@ -23,36 +23,36 @@ use Sjorek\RuntimeCapability\Management\ManageableInterface;
 interface FilesystemDriverInterface extends ManageableInterface
 {
     /**
-     * Create an empty or touch an existing file.
+     * Create an filesystem entry.
      *
-     * @param string $path A filename, -path or url
+     * @param string $path path of target to create or just its name
      *
-     * @return bool false on failure
+     * @return bool true on success
      */
-    public function create($path);
+    public function createTarget($path): bool;
 
     /**
-     * Returns whether the path already exists.
+     * Returns whether the target exists.
      *
-     * @param string $path A filename, -path or url
+     * @param string $path path of target to check or just its name
      *
      * @return bool
      */
-    public function exists($path);
+    public function targetExists($path): bool;
 
     /**
-     * Removes given filename, -path or url.
+     * Removes given target.
      *
-     * @param string $path A path to remove
+     * @param string $path path of target to remove or just its name
      *
-     * @return bool false on failure
+     * @return bool true on success
      */
-    public function remove($path);
+    public function removeTarget($path): bool;
 
     /**
-     * Get the maximum path (including filename) length.
+     * Get the maximum path length.
      *
      * @return int
      */
-    public function getMaximumPathLength();
+    public function getMaximumPathLength(): int;
 }

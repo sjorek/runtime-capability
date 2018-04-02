@@ -21,9 +21,14 @@ use Sjorek\RuntimeCapability\Management\AbstractManageable;
 abstract class AbstractFilesystemDriver extends AbstractManageable implements FilesystemDriverInterface
 {
     /**
-     * @var integer
+     * @var int
      */
     const MAXIMUM_PATH_LENGTH = PHP_MAXPATHLEN;
+
+    /**
+     * @var string
+     */
+    const DETECT_PATH_TRAVERSAL_PATTERN = '#(?:^|[/\\\\])\.\.(?:[/\\\\]|$)#u';
 
     /**
      * @var FilesystemDriverManagerInterface
@@ -37,8 +42,13 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
      */
     public function getMaximumPathLength(): int
     {
-        // subtract 2 for windows drive letter plus double colon, like 'c:'
-        return static::MAXIMUM_PATH_LENGTH - 2;
+        $pathLength = static::MAXIMUM_PATH_LENGTH;
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            // subtract 2 for windows drive letter plus double colon, like 'c:'
+            $pathLength -= 2;
+        }
+
+        return $pathLength;
     }
 
     /**
@@ -54,11 +64,21 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
     }
 
     /**
+     * Validate path-length and -integrity.
+     *
      * @param string $path
-     * @throws \InvalidArgumentException if the path exceeds the maximum path length
+     *
+     * @throws \InvalidArgumentException if path is empty, exceeds maximum length or contains traversals ("..")
      */
-    protected function validatePathLength(string $path)
+    protected function validatePath(string $path): bool
     {
+        if ('' === $path) {
+            throw new \InvalidArgumentException(
+                'Invalid path given. The path is empty ("").',
+                1522171135
+            );
+        }
+
         if (!$this->hasValidPathLength($path)) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -69,5 +89,14 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
                 1522171138
             );
         }
+
+        if (preg_match(self::DETECT_PATH_TRAVERSAL_PATTERN, $path)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid path given: %s. Path traversal ("..") is not allowed.', $path),
+                1522171140
+            );
+        }
+
+        return true;
     }
 }

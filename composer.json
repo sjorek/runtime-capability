@@ -31,9 +31,10 @@
         }
     },
     "require" : {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "sjorek/unicode-normalization": "~0.3",
         "symfony/polyfill-mbstring": "^1.4",
+        "symfony/polyfill-php71": "^1.4",
         "symfony/polyfill-php72": "^1.4"
     },
     "require-dev" : {

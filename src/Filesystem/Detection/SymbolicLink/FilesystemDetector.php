@@ -11,28 +11,28 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLink;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemCaseSensitivityDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDriverInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemSymbolicLinkDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDriver;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemCaseSensitivityDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemSymbolicLinkDetectorInterface
 {
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FileTargetDriver::class,
+        'filesystem-driver' => LinkTargetDriver::class,
         'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
     ];
 
     /**
-     * @var FilesystemFileTargetDriverInterface
+     * @var FilesystemLinkTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -63,7 +63,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function evaluate()
     {
-        return $this->testFilesystem(sprintf($this->filenameDetectionPattern, 'aAbB'));
+        return $this->testFilesystem(sprintf($this->filenameDetectionPattern, (string) time()));
     }
 
     /**
@@ -76,19 +76,17 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
         return
             $this->filesystemDriver->createTarget($fileName) &&
             $this->filesystemDriver->existsTarget($fileName) &&
-            $this->filesystemDriver->existsTarget(strtolower($fileName)) &&
-            $this->filesystemDriver->existsTarget(strtoupper($fileName)) &&
             $this->filesystemDriver->removeTarget($fileName)
         ;
     }
 
     /**
-     * @return FilesystemFileTargetDriverInterface
+     * @return FilesystemLinkTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDriverInterface
+    protected function setupFilesystemDriver(): FilesystemLinkTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FilesystemLinkTargetDriverInterface::class)
         );
     }
 }
