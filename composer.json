@@ -38,6 +38,7 @@
         "symfony/polyfill-php72": "^1.4"
     },
     "require-dev" : {
+        "ext-posix": "*",
         "friendsofphp/php-cs-fixer": "^2.7",
         "mikey179/vfsStream": "^1.6",
         "phpunit/phpunit": "^6.5",
@@ -45,7 +46,8 @@
         "symfony/filesystem": "~3.4 || ~4.0"
     },
     "suggest": {
-        "ext-mbstring": "For best performance"
+        "ext-mbstring": "For best performance",
+        "ext-posix": "For correct filesystem-permission handling"
     },
     "config": {
         "sort-packages": true
