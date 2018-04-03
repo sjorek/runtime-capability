@@ -45,7 +45,20 @@ final class FilesystemUtility
     }
 
     /**
-     * Check for file existence - which means only files.
+     * Check for symbolic link existence - which means only symlinks.
+     * Uses is_link() to check for symlink existence.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isSymbolicLink(string $path): bool
+    {
+        return is_link($path);
+    }
+
+    /**
+     * Check for directory existence - which means only directories.
      * Uses an additional is_link() check to exclude symlinks.
      *
      * @param string $path
@@ -58,42 +71,13 @@ final class FilesystemUtility
     }
 
     /**
-     * Check for symbolic link existence - which means only files.
-     * Uses an additional is_link() check to exclude symlinks.
-     *
-     * @param string $path
-     *
-     * @return bool
-     */
-    public static function isSymbolicLink(string $path): bool
-    {
-        return file_exists($path) && is_link($path);
-    }
-
-    /**
      * @param string $path
      *
      * @return bool
      */
     public static function isAccessibleDirectory(string $path): bool
     {
-        return
-            self::isDirectory($path) &&
-            (
-                // TODO Find out why is_executable() fails for some vfs-directories
-                is_executable($path) ||
-                (
-                    // TODO Remove the fileperms() workaround for vfs-directories
-                    // @see http://php.net/manual/en/function.fileperms.php#example-2671
-                    ($permissions = (@fileperms($path) ?: 0)) &&
-                    (
-                        ($permissions & 0x0040) && !($permissions & 0x0800) || // owner executable flag - [u]ser
-                        ($permissions & 0x0008) && !($permissions & 0x0400) || // group executable flag - [g]roup
-                        ($permissions & 0x0001) && !($permissions & 0x0200)    // world executable flag - [o]ther
-                    )
-                )
-            )
-        ;
+        return self::isDirectory($path) && PosixUtility::isExecutablePath($path);
     }
 
     /**
@@ -103,20 +87,20 @@ final class FilesystemUtility
      */
     public static function isWritableDirectory(string $path): bool
     {
-        return self::isDirectory($path) && is_writable($path);
+        return self::isDirectory($path) && PosixUtility::isWritablePath($path);
     }
 
     /**
      * Normalize the given path.
      *
-     * Hint: CWD = getcwd();
+     * Hint: EMPTY = ''
      *
      * <pre>
-     * .            =>  CWD             # replace single dot with current working directory
-     * ./test       =>  CWD/test        # replace leading dot with current working directory in path
-     * .\test       =>  CWD/test        # replace leading dot with current working directory in windows path
-     * test/file    =>  CWD/test/file   # prepend current working directory to relative path
-     * test\file    =>  CWD/test/file   # prepend current working directory to relative windows path
+     * .            =>  EMPTY       # replace single dot with current working directory
+     * ./test       =>  test        # replace leading dot with current working directory in path
+     * .\test       =>  test        # replace leading dot with current working directory in windows path
+     * test/file    =>  test/file   # prepend current working directory to relative path
+     * test\file    =>  test/file   # prepend current working directory to relative windows path
      * </pre>
      *
      * @param string $path
@@ -125,6 +109,10 @@ final class FilesystemUtility
      */
     public static function normalizePath(string $path): string
     {
+        if ('.' === $path) {
+            $path = '';
+        }
+
         if ('' === $path) {
             return $path;
         }
@@ -139,7 +127,9 @@ final class FilesystemUtility
             return $path;
         }
 
-        if ('.' === $path || (1 < strlen($path) && '.' === $path[0] && '/' === $path[1])) {
+        if ('.' === $path) {
+            $path = '';
+        } elseif (1 < strlen($path) && '.' === $path[0] && '/' === $path[1]) {
             $path = substr($path, 2);
         }
 
@@ -158,6 +148,10 @@ final class FilesystemUtility
         }
         $cwd = rtrim(strtr($cwd, '\\', '/'), '/');
 
+        if (self::useWindowsPaths() && 2 === strlen($cwd) && self::hasWindowsDrivePrefix($cwd)) {
+            $cwd .= '/';
+        }
+
         return '' !== $cwd ? $cwd : '/';
     }
 
@@ -172,8 +166,8 @@ final class FilesystemUtility
             return false;
         }
 
-        if ('\\' === DIRECTORY_SEPARATOR) {
-            return in_array(['/', '\\'], $path[self::hasWindowsDrivePrefix($path) ? 2 : 0] ?? null, true);
+        if (self::useWindowsPaths()) {
+            return in_array($path[self::hasWindowsDrivePrefix($path) ? 2 : 0] ?? null, ['/', '\\'], true);
         }
 
         return '/' === $path[0];
@@ -188,7 +182,44 @@ final class FilesystemUtility
      */
     public static function isUrl(string $path): bool
     {
-        return '' !== $path && filter_var($path, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
+        return
+            false !== strpos($path, '://') ||
+            $path === filter_var($path, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)
+        ;
+    }
+
+    /**
+     * @var int
+     */
+    const LOCAL_URL_VALIDATION = (FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
+
+    /**
+     * @var string[]
+     */
+    const LOCAL_URL_SCHEMES = ['file', 'vfs'];
+
+    /**
+     * Check if the path represents a local filesystem path.
+     * A local filesystem path includes urls starting with "file:" or "vfs:" .
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isLocalPath(string $path): bool
+    {
+
+        return
+            '' !== $path && (
+                (
+                    false === strpos($path, '://') &&
+                    false === self::isUrl($path)
+                ) || (
+                    $path === filter_var($path, FILTER_VALIDATE_URL, self::LOCAL_URL_VALIDATION) &&
+                    in_array(parse_url($path, PHP_URL_SCHEME), self::LOCAL_URL_SCHEMES, true)
+                )
+            )
+        ;
     }
 
     /**
@@ -200,7 +231,7 @@ final class FilesystemUtility
      */
     public static function hasWindowsDrivePrefix(string $path)
     {
-        return 1 < strlen($path) && ':' === $path[1] && ctype_alpha($path[0]);
+        return 1 < strlen($path) && ':' === $path[1] && self::isWindowsDriveLetter($path[0]);
     }
 
     /**
@@ -210,6 +241,27 @@ final class FilesystemUtility
      */
     public static function cleanup(string $path)
     {
-        clearstatcache(true, $path);
+        if (self::isLocalPath($path)) {
+            clearstatcache(true, $path);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected static function useWindowsPaths(): bool
+    {
+        return '\\' === DIRECTORY_SEPARATOR || '\\' === constant('DIRECTORY_SEPARATOR');
+    }
+
+    /**
+     * @param string $letter
+     * @return bool
+     */
+    protected static function isWindowsDriveLetter(string $letter): bool
+    {
+        // ctype_alpha() is locale LC_CTYPE dependent, therefore we do not use it here!
+        // return ctype_alpha($letter[0]);
+        return 1 === preg_match('/^[a-zA-Z]$/u', $letter);
     }
 }
