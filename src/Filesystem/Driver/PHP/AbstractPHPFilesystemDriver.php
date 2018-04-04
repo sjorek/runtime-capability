@@ -37,6 +37,8 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
      * .\test       =>  CWD/test        # replace leading dot with current working directory in windows path
      * test/file    =>  CWD/test/file   # prepend current working directory to relative path
      * test\file    =>  CWD/test/file   # prepend current working directory to relative windows path
+     * /test        =>  /test           # keep absolute posix path absolute
+     * c:\test      =>  c:/test         # keep absolute windows path absolute
      * </pre>
      *
      * @param string $path
@@ -49,10 +51,12 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
 
         $path = FilesystemUtility::normalizePath($path);
 
-        if ('' === $path) {
-            $path = $this->getWorkingDirectory();
-        } else {
-            $path = $this->getWorkingDirectory() . '/' . $path;
+        if (!FilesystemUtility::isAbsolutePath($path)) {
+            if ('' === $path) {
+                $path = $this->getWorkingDirectory();
+            } else {
+                $path = $this->getWorkingDirectory() . '/' . $path;
+            }
         }
 
         $this->validatePath($path);
@@ -90,10 +94,10 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
      */
     protected function validatePath(string $path): bool
     {
-        if (FilesystemUtility::isUrl($path)) {
+        if (!FilesystemUtility::isLocalPath($path)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Invalid path given: %s. The driver does not support urls.',
+                    'Invalid path given: %s. The driver supports local paths and urls with file- or vfs-scheme only.',
                     $path
                 ),
                 1522171543

@@ -16,6 +16,7 @@ namespace Sjorek\RuntimeCapability\Tests\Unit;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * Filesystem test case.
@@ -54,11 +55,14 @@ abstract class AbstractFilesystemTestCase extends AbstractTestCase
     {
         parent::setUp();
 
+        unset($GLOBALS[$this->getFilesystemUtilityNamespace()]);
+
         require_once str_replace(
             ['/Unit/', 'AbstractFilesystemTestCase.php'],
             ['/Fixtures/', 'FilesystemTestFixture.php'],
             __FILE__
         );
+
     }
 
     /**
@@ -66,8 +70,8 @@ abstract class AbstractFilesystemTestCase extends AbstractTestCase
      */
     protected function tearDown()
     {
-        $this->subject = null;
         vfsStreamWrapper::unregister();
+        unset($GLOBALS[$this->getFilesystemUtilityNamespace()]);
 
         parent::tearDown();
     }
@@ -86,5 +90,13 @@ abstract class AbstractFilesystemTestCase extends AbstractTestCase
     {
         vfsStreamWrapper::unregister();
         return vfsStream::setup(sprintf('root-%o', $mode), $mode, $structure);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFilesystemUtilityNamespace(): string
+    {
+        return implode('\\', array_slice(explode('\\', FilesystemUtility::class), 0, -1));
     }
 }

@@ -24,26 +24,6 @@ use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 class FilesystemUtilityTest extends AbstractFilesystemTestCase
 {
     /**
-     * Prepares the environment before running a test.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        unset($GLOBALS[$this->getUtilityNamespace()]);
-    }
-
-    /**
-     * Cleans up the environment after running a test.
-     */
-    protected function tearDown()
-    {
-        unset($GLOBALS[$this->getUtilityNamespace()]);
-
-        parent::tearDown();
-    }
-
-    /**
      * @covers ::pathExists
      * @testWith [true, "file"]
      *           [true, "folder"]
@@ -140,16 +120,16 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
     }
 
     /**
-     * @covers ::isAccessibleDirectory
+     * @covers ::isExecutableDirectory
      * @testWith [true, "0777", "folder"]
      *           [true, "0766", "folder"]
      *           [true, "0676", "folder"]
      *           [true, "0667", "folder"]
      *           [false, "0666", "folder"]
      *           [false, "0777", "file"]
-     *           [false, "0777", "non-existent"]
+     *           [false, "0000", "non-existent"]
      */
-    public function testIsAccessibleDirectory(bool $expect, string $mode, string $path)
+    public function testIsExecutableDirectory(bool $expect, string $mode, string $path)
     {
         $fs = $this->getFilesystem();
         if ($fs->hasChild($path)) {
@@ -157,7 +137,33 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
         } else {
             $path = $fs->url() . '/' . $path;
         }
-        $actual = FilesystemUtility::isAccessibleDirectory($path);
+        $actual = FilesystemUtility::isExecutableDirectory($path);
+        if ($expect) {
+            $this->assertTrue($actual);
+        } else {
+            $this->assertFalse($actual);
+        }
+    }
+
+    /**
+     * @covers ::isExecutablePath
+     * @testWith [true, "0777", "folder"]
+     *           [true, "0766", "folder"]
+     *           [true, "0676", "folder"]
+     *           [true, "0667", "folder"]
+     *           [false, "0666", "folder"]
+     *           [true, "0777", "file"]
+     *           [false, "0000", "non-existent"]
+     */
+    public function testIsExecutablePath(bool $expect, string $mode, string $path)
+    {
+        $fs = $this->getFilesystem();
+        if ($fs->hasChild($path)) {
+            $path = $fs->getChild($path)->chmod(octdec($mode))->url();
+        } else {
+            $path = $fs->url() . '/' . $path;
+        }
+        $actual = FilesystemUtility::isExecutablePath($path);
         if ($expect) {
             $this->assertTrue($actual);
         } else {
@@ -173,7 +179,7 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
      *           [true, "0557", "folder"]
      *           [false, "0555", "folder"]
      *           [false, "0777", "file"]
-     *           [false, "0777", "non-existent"]
+     *           [false, "0000", "non-existent"]
      */
     public function testIsWritableDirectory(bool $expect, string $mode, string $path)
     {
@@ -184,6 +190,32 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
             $path = $fs->url() . '/' . $path;
         }
         $actual = FilesystemUtility::isWritableDirectory($path);
+        if ($expect) {
+            $this->assertTrue($actual);
+        } else {
+            $this->assertFalse($actual);
+        }
+    }
+
+    /**
+     * @covers ::isWritablePath
+     * @testWith [true, "0777", "folder"]
+     *           [true, "0755", "folder"]
+     *           [true, "0575", "folder"]
+     *           [true, "0557", "folder"]
+     *           [false, "0555", "folder"]
+     *           [true, "0777", "file"]
+     *           [false, "0000", "non-existent"]
+     */
+    public function testIsWritablePath(bool $expect, string $mode, string $path)
+    {
+        $fs = $this->getFilesystem();
+        if ($fs->hasChild($path)) {
+            $path = $fs->getChild($path)->chmod(octdec($mode))->url();
+        } else {
+            $path = $fs->url() . '/' . $path;
+        }
+        $actual = FilesystemUtility::isWritablePath($path);
         if ($expect) {
             $this->assertTrue($actual);
         } else {
@@ -222,7 +254,7 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
      */
     public function testGetCurrentWorkingDirectory()
     {
-        $ns = $this->getUtilityNamespace();
+        $ns = $this->getFilesystemUtilityNamespace();
 
         $GLOBALS[$ns]['getcwd'] = false;
         $GLOBALS[$ns]['realpath']['.'] = false;
@@ -260,7 +292,7 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
      */
     public function testIsAbsolutePath()
     {
-        $ns = $this->getUtilityNamespace();
+        $ns = $this->getFilesystemUtilityNamespace();
 
         $this->assertFalse(FilesystemUtility::isAbsolutePath(''));
         $this->assertFalse(FilesystemUtility::isAbsolutePath('.'));
@@ -371,17 +403,5 @@ class FilesystemUtilityTest extends AbstractFilesystemTestCase
         } else {
             $this->assertFalse($actual);
         }
-    }
-
-    // ////////////////////////////////////////////////////////////////
-    // utility methods
-    // ////////////////////////////////////////////////////////////////
-
-    /**
-     * @return string
-     */
-    protected function getUtilityNamespace(): string
-    {
-        return implode('\\', array_slice(explode('\\', FilesystemUtility::class), 0, -1));
     }
 }

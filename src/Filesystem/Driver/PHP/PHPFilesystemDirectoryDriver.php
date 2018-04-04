@@ -122,7 +122,7 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
         }
 
         // any existence-checks are reliable in accessible (executable) directories only
-        if (!FilesystemUtility::isAccessibleDirectory($path)) {
+        if (!FilesystemUtility::isExecutableDirectory($path)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Invalid path given: %s. The directory accessible (executable).',

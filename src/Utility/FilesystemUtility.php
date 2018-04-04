@@ -75,9 +75,42 @@ final class FilesystemUtility
      *
      * @return bool
      */
-    public static function isAccessibleDirectory(string $path): bool
+    public static function isExecutableDirectory(string $path): bool
     {
-        return self::isDirectory($path) && PosixUtility::isExecutablePath($path);
+        return self::isDirectory($path) && self::isExecutablePath($path);
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isExecutablePath(string $path): bool
+    {
+        return
+            self::isLocalPath($path) && self::pathExists($path) &&
+            (
+                // TODO Find out why is_executable() fails for some vfs-directories
+                is_executable($path) ||
+                (
+                    !self::useWindowsPaths() &&
+                    // TODO Remove the fileperms() workaround for vfs-directories
+                    // @see http://php.net/manual/en/function.fileperms.php#example-2671
+                    0 !== ($perms = (@fileperms($path) ?: 0)) &&
+                    (
+                        (
+                            ($perms & 0x0040) && !($perms & 0x0800) &&          // owner executable flag - [u]ser
+                            posix_geteuid() === @fileowner($path)
+                        ) || (
+                            ($perms & 0x0008) && !($perms & 0x0400) &&          // group executable flag - [g]roup
+                            in_array(@filegroup($path), PosixUtility::getUserGroups(), true)
+                        ) || (
+                            ($perms & 0x0001) && !($perms & 0x0200)             // world executable flag - [o]ther
+                        )
+                    )
+                )
+            )
+        ;
     }
 
     /**
@@ -87,7 +120,40 @@ final class FilesystemUtility
      */
     public static function isWritableDirectory(string $path): bool
     {
-        return self::isDirectory($path) && PosixUtility::isWritablePath($path);
+        return self::isDirectory($path) && self::isWritablePath($path);
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isWritablePath(string $path): bool
+    {
+        return
+            self::isLocalPath($path) && self::pathExists($path) &&
+            (
+                // TODO Find out why is_writable() fails for some vfs-directories
+                is_writable($path) ||
+                (
+                    !FilesystemUtility::useWindowsPaths() &&
+                    // TODO Remove the fileperms() workaround for vfs-directories
+                    // @see http://php.net/manual/en/function.fileperms.php#example-2671
+                    0 !== ($perms = (@fileperms($path) ?: 0)) &&
+                    (
+                        (
+                            ($perms & 0x0080) &&                                  // owner writable flag - [u]ser
+                            posix_geteuid() === @fileowner($path)
+                        ) || (
+                            ($perms & 0x0010) &&                                  // group writable flag - [g]roup
+                            in_array(@filegroup($path), PosixUtility::getUserGroups(), true)
+                        ) || (
+                            ($perms & 0x0002)                                     // world writable flag - [o]ther
+                        )
+                    )
+                )
+            )
+        ;
     }
 
     /**
@@ -231,11 +297,14 @@ final class FilesystemUtility
      */
     public static function hasWindowsDrivePrefix(string $path)
     {
-        return 1 < strlen($path) && ':' === $path[1] && self::isWindowsDriveLetter($path[0]);
+        // ctype_alpha() is locale LC_CTYPE dependent, therefore we do not use it here!
+        // return 1 < strlen($path) && ':' === $path[1] && ctype_alpha($letter[0]);
+        return 1 === preg_match('/^[a-zA-Z]:/u', $path);
     }
 
     /**
-     * Calls clearstatcache to clear the realpath-cache for the given path.
+     * Calls clearstatcache to clear the realpath-cache for the given local path.
+     * @codeCoverageIgnore
      *
      * @param string $path
      */
@@ -249,19 +318,12 @@ final class FilesystemUtility
     /**
      * @return bool
      */
-    protected static function useWindowsPaths(): bool
+    public static function useWindowsPaths(): bool
     {
-        return '\\' === DIRECTORY_SEPARATOR || '\\' === constant('DIRECTORY_SEPARATOR');
-    }
-
-    /**
-     * @param string $letter
-     * @return bool
-     */
-    protected static function isWindowsDriveLetter(string $letter): bool
-    {
-        // ctype_alpha() is locale LC_CTYPE dependent, therefore we do not use it here!
-        // return ctype_alpha($letter[0]);
-        return 1 === preg_match('/^[a-zA-Z]$/u', $letter);
+        return
+            '\\' === DIRECTORY_SEPARATOR ||
+            // this allows overloading
+            '\\' === constant('DIRECTORY_SEPARATOR')
+        ;
     }
 }
