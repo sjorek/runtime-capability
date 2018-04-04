@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetHierarchyDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetHierarchyDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetHierarchyDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     ];
 
     /**
-     * @var FilesystemFileTargetHierarchyDriverInterface
+     * @var FileTargetHierarchyDriverInterface
      */
     protected $filesystemDriver;
 
@@ -61,7 +61,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
      */
     protected function evaluate()
     {
-        $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $backupFilesystemPath = $this->filesystemPath;
 
         $this->filesystemDriver->createDirectory($this->detectionFolderName);
@@ -70,19 +70,19 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
         $result = parent::evaluate();
 
         $this->filesystemPath = $backupFilesystemPath;
-        $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $this->filesystemDriver->removeDirectory($this->detectionFolderName);
 
         return $result;
     }
 
     /**
-     * @return FilesystemFileTargetHierarchyDriverInterface
+     * @return FileTargetHierarchyDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetHierarchyDriverInterface
+    protected function setupFilesystemDriver(): FileTargetHierarchyDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetHierarchyDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetHierarchyDriverInterface::class)
         );
     }
 }

@@ -15,7 +15,7 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemCaseSensitivityDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
-     * @var FilesystemFileTargetDriverInterface
+     * @var FileTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -73,22 +73,26 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function testFilesystem(string $fileName): bool
     {
-        return
-            $this->filesystemDriver->createTarget($fileName) &&
-            $this->filesystemDriver->existsTarget($fileName) &&
-            $this->filesystemDriver->existsTarget(strtolower($fileName)) &&
-            $this->filesystemDriver->existsTarget(strtoupper($fileName)) &&
-            $this->filesystemDriver->removeTarget($fileName)
-        ;
+        $result = false;
+        if ($this->filesystemDriver->createTarget($fileName)) {
+            $result =
+                $this->filesystemDriver->existsTarget($fileName) &&
+                $this->filesystemDriver->existsTarget(strtolower($fileName)) &&
+                $this->filesystemDriver->existsTarget(strtoupper($fileName))
+            ;
+            $this->filesystemDriver->removeTarget($fileName);
+        }
+
+        return $result;
     }
 
     /**
-     * @return FilesystemFileTargetDriverInterface
+     * @return FileTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDriverInterface
+    protected function setupFilesystemDriver(): FileTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
         );
     }
 }

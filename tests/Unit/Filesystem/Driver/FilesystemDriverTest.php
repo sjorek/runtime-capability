@@ -108,7 +108,7 @@ class FilesystemDriverTest extends AbstractTestCase
     /**
      * @covers ::validatePath
      */
-    public function testValidatePathWithEmptyPathThrowsException(): string
+    public function testValidatePathWithEmptyPathThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid path given. The path is empty ("").');
@@ -121,10 +121,10 @@ class FilesystemDriverTest extends AbstractTestCase
      * @depends testGetMaximumPathLength
      * @depends testHasValidPathLength
      *
-     * @param int    $maximumPathLength
+     * @param int    $length
      * @param string $path
      */
-    public function testValidatePathWithExceededMaximumPathLengthThrowsException(int $maximumPathLength, string $path)
+    public function testValidatePathWithExceededMaximumPathLengthThrowsException(int $length, string $path)
     {
         $path .= 'x';
 
@@ -133,7 +133,7 @@ class FilesystemDriverTest extends AbstractTestCase
             sprintf(
                 'Invalid path given: %s. The path exceeds the maximum path length of %s bytes.',
                 $path,
-                $maximumPathLength
+                $length
             )
         );
         $this->expectExceptionCode(1522171138);

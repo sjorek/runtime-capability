@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class LinkTargetDriver extends AbstractPHPFilesystemDriver implements FilesystemLinkTargetDriverInterface
+class LinkTargetDriver extends AbstractPHPFilesystemDriver implements LinkTargetDriverInterface
 {
     /**
      * {@inheritdoc}
@@ -39,7 +39,7 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
      */
     public function targetExists($path): bool
     {
-        return $this->isSymbolicLink((string) $path);
+        return $this->symbolicLinkExists((string) $path);
     }
 
     /**
@@ -49,7 +49,7 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
      */
     public function removeTarget($path): bool
     {
-        return $this->removeFile((string) $path);
+        return $this->removeSymbolicLink((string) $path);
     }
 
     /**
@@ -66,7 +66,7 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
     {
         $path = $this->normalizePath($path);
 
-        if ($this->pathExists($path)) {
+        if (FilesystemUtility::pathExists($path)) {
             throw new \InvalidArgumentException(
                 sprintf('The path already exists: %s.', $path),
                 1522314570
@@ -80,8 +80,8 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
                 error_clear_last();
             }
             throw new \RuntimeException(
-                sprintf('Failed to create symlink: %s', $message),
-                1522314576
+                sprintf('Failed to create symlink %s: %s', $path, $message),
+                1522314776
             );
         }
 
@@ -95,7 +95,7 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
      *
      * @return bool
      */
-    protected function isSymbolicLink(string $path): bool
+    protected function symbolicLinkExists(string $path): bool
     {
         $path = $this->normalizePath($path);
         FilesystemUtility::cleanup($path);
@@ -117,7 +117,7 @@ class LinkTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
 
         if (!FilesystemUtility::pathExists($path)) {
             throw new \InvalidArgumentException(
-                sprintf('The file does not exist: %s.', $path),
+                sprintf('The symlink does not exist: %s.', $path),
                 1522314870
             );
         }

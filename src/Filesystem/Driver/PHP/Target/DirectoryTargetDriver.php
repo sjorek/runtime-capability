@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class DirectoryTargetDriver extends AbstractPHPFilesystemDriver implements FilesystemDirectoryTargetDriverInterface
+class DirectoryTargetDriver extends AbstractPHPFilesystemDriver implements DirectoryTargetDriverInterface
 {
     /**
      * {@inheritdoc}
@@ -78,8 +78,8 @@ class DirectoryTargetDriver extends AbstractPHPFilesystemDriver implements Files
                 error_clear_last();
             }
             throw new \RuntimeException(
-                sprintf('Failed to create directory: %s', $message),
-                1522314576
+                sprintf('Failed to create directory %s: %s', $path, $message),
+                1522314976
             );
         }
 
@@ -115,15 +115,15 @@ class DirectoryTargetDriver extends AbstractPHPFilesystemDriver implements Files
 
         if (!FilesystemUtility::pathExists($path)) {
             throw new \InvalidArgumentException(
-                sprintf('The file does not exist: %s.', $path),
-                1522314670
+                sprintf('The directory does not exist: %s.', $path),
+                1522315070
             );
         }
 
         if (!FilesystemUtility::isDirectory($path)) {
             throw new \InvalidArgumentException(
                 sprintf('The given path is not a directory: %s.', $path),
-                1522314673
+                1522315073
             );
         }
 
@@ -135,7 +135,7 @@ class DirectoryTargetDriver extends AbstractPHPFilesystemDriver implements Files
             }
             throw new \RuntimeException(
                 sprintf('Failed to remove directory: %s', $message),
-                1522314676
+                1522315076
             );
         }
         FilesystemUtility::cleanup($path);

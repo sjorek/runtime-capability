@@ -16,6 +16,6 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface FilesystemFileTargetHierarchyDriverInterface extends FilesystemFileTargetDriverInterface, FilesystemHierarchyDriverInterface
+interface FileTargetHierarchyDriverInterface extends FileTargetDriverInterface, FilesystemHierarchyDriverInterface
 {
 }

@@ -25,7 +25,7 @@ interface FilesystemDirectoryDriverInterface extends FilesystemDriverInterface, 
      *
      * @return mixed
      */
-    public function getWorkingDirectory();
+    public function getDirectory();
 
     /**
      * Set path to operate on.
@@ -34,7 +34,7 @@ interface FilesystemDirectoryDriverInterface extends FilesystemDriverInterface, 
      *
      * @return bool|mixed The path to operate on or false on failure
      */
-    public function setWorkingDirectory($path = null);
+    public function setDirectory($path = null);
 
     /**
      * @param string $pattern

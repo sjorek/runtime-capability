@@ -15,7 +15,7 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLink;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemSymbolicLinkDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
-     * @var FilesystemLinkTargetDriverInterface
+     * @var LinkTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -73,20 +73,22 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function testFilesystem(string $fileName): bool
     {
-        return
-            $this->filesystemDriver->createTarget($fileName) &&
-            $this->filesystemDriver->existsTarget($fileName) &&
-            $this->filesystemDriver->removeTarget($fileName)
-        ;
+        $result = false;
+        if ($this->filesystemDriver->createTarget($fileName)) {
+            $result = $this->filesystemDriver->existsTarget($fileName);
+            $this->filesystemDriver->removeTarget($fileName);
+        }
+
+        return $result;
     }
 
     /**
-     * @return FilesystemLinkTargetDriverInterface
+     * @return LinkTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemLinkTargetDriverInterface
+    protected function setupFilesystemDriver(): LinkTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemLinkTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . LinkTargetDriverInterface::class)
         );
     }
 }

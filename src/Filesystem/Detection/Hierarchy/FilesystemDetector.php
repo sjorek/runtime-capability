@@ -15,7 +15,7 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\Hierarchy;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemHierarchyDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
-     * @var FilesystemDirectoryTargetDriverInterface
+     * @var DirectoryTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -73,20 +73,22 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function testFilesystem(string $directoryName): bool
     {
-        return
-            $this->filesystemDriver->createTarget($directoryName) &&
-            $this->filesystemDriver->existsTarget($directoryName) &&
-            $this->filesystemDriver->removeTarget($directoryName)
-        ;
+        $result = false;
+        if ($this->filesystemDriver->createTarget($directoryName)) {
+            $result = $this->filesystemDriver->existsTarget($directoryName);
+            $this->filesystemDriver->removeTarget($directoryName);
+        }
+
+        return $result;
     }
 
     /**
-     * @return FilesystemDirectoryTargetDriverInterface
+     * @return DirectoryTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemDirectoryTargetDriverInterface
+    protected function setupFilesystemDriver(): DirectoryTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemDirectoryTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . DirectoryTargetDriverInterface::class)
         );
     }
 }

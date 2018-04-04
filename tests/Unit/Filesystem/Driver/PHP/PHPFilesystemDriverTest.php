@@ -125,4 +125,25 @@ class PHPFilesystemDriverTest extends AbstractFilesystemTestCase
             $this->callProtectedMethod($this->subject, 'getWorkingDirectory'), 'workingDirectory', $this->subject
         );
     }
+
+    /**
+     * @covers ::validatePath
+     * @testWith ["http://localhost/"]
+     *           ["https://localhost/"]
+     *           ["ftp://localhost/"]
+     *           ["ftps://localhost/"]
+     *           ["sftp://localhost/"]
+     */
+    public function testValidatePathWithNonLocalPathThrowsException(string $path): string
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Invalid path given: %s. The driver supports local paths and urls with file- or vfs-scheme only.',
+                $path
+            )
+        );
+        $this->expectExceptionCode(1522171543);
+        $this->callProtectedMethod($this->subject, 'validatePath', $path);
+    }
 }

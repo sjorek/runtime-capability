@@ -179,8 +179,8 @@ final class FilesystemUtility
             $path = '';
         }
 
-        if ('' === $path) {
-            return $path;
+        if ('' === $path || self::isUrl($path)) {
+            return rtrim($path, '/');
         }
 
         $path = rtrim(strtr($path, '\\', '/'), '/');
@@ -189,7 +189,6 @@ final class FilesystemUtility
         }
 
         if (self::isAbsolutePath($path)) {
-            // TODO throw exception for absolute paths during path normalization? I think so …
             return $path;
         }
 
@@ -257,7 +256,12 @@ final class FilesystemUtility
     /**
      * @var int
      */
-    const LOCAL_URL_VALIDATION = (FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
+    const LOCAL_URL_VALIDATION_HOST = (FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+
+    /**
+     * @var int
+     */
+    const LOCAL_URL_VALIDATION_PATH = (FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_PATH_REQUIRED);
 
     /**
      * @var string[]
@@ -276,12 +280,16 @@ final class FilesystemUtility
     {
 
         return
-            '' !== $path && (
+            !in_array($path, ['', 'file:', 'vfs:'], true) &&
+            (
                 (
                     false === strpos($path, '://') &&
                     false === self::isUrl($path)
                 ) || (
-                    $path === filter_var($path, FILTER_VALIDATE_URL, self::LOCAL_URL_VALIDATION) &&
+                    (
+                        $path === filter_var($path, FILTER_VALIDATE_URL, self::LOCAL_URL_VALIDATION_HOST) ||
+                        $path === filter_var($path, FILTER_VALIDATE_URL, self::LOCAL_URL_VALIDATION_PATH)
+                    ) &&
                     in_array(parse_url($path, PHP_URL_SCHEME), self::LOCAL_URL_SCHEMES, true)
                 )
             )

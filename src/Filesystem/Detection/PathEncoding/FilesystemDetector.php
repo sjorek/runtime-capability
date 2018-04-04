@@ -18,7 +18,7 @@ use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemPathEncodingDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
@@ -59,7 +59,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
-     * @var FilesystemFileTargetDriverInterface
+     * @var FileTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -138,7 +138,8 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
         if ('BINARY' === $charset ||
             (null === $localeCharset && null === $defaultCharset) ||
             $charset === $localeCharset[LC_CTYPE] ||
-            $charset === $defaultCharset) {
+            $charset === $defaultCharset)
+        {
             return [
                 $charset => $this->testFilesystem(array_map(function () { return null; }, $this->filenameTests)),
             ];
@@ -161,11 +162,10 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
             }
             $fileName = $this->generateDetectionFileNameForIndex($index, hex2bin($testString));
             try {
-                $tests[$index] =
-                    $this->filesystemDriver->createTarget($fileName) &&
-                    $this->filesystemDriver->existsTarget($fileName) &&
-                    $this->filesystemDriver->removeTarget($fileName)
-                ;
+                if ($this->filesystemDriver->createTarget($fileName)) {
+                    $tests[$index] = $this->filesystemDriver->existsTarget($fileName);
+                    $this->filesystemDriver->removeTarget($fileName);
+                }
             } catch (\Exception $e) {
                 $tests[$index] = false;
             }
@@ -191,12 +191,12 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     }
 
     /**
-     * @return FilesystemFileTargetDriverInterface
+     * @return FileTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDriverInterface
+    protected function setupFilesystemDriver(): FileTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
         );
     }
 }

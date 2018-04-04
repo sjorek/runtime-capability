@@ -16,6 +16,10 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface FilesystemLinkTargetHierarchyDriverInterface extends FilesystemLinkTargetDriverInterface, FilesystemHierarchyDriverInterface
+interface LinkTargetDriverInterface extends FilesystemDriverInterface
 {
+    /**
+     * @var string
+     */
+    const SYMBOLIC_LINK_TARGET = '.test-symbolic-link-target';
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetHierarchyDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetHierarchyDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetHierarchyDriver;
 
 /**
@@ -36,7 +36,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     ];
 
     /**
-     * @var FilesystemFileTargetHierarchyDriverInterface
+     * @var FileTargetHierarchyDriverInterface
      */
     protected $filesystemDriver;
 
@@ -59,34 +59,34 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
-     * @see FilesystemDirectoryDetector::testFilesystem()
+     * @see FilesystemDirectoryDetector::evaluate()
      */
-    protected function testFilesystem(array $tests): array
+    protected function evaluate(array $localeCharset, string $defaultCharset)
     {
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $backupFilesystemPath = $this->filesystemPath;
-        $backupWorkingDirectory = $this->filesystemDriver->getWorkingDirectory();
 
         $this->filesystemDriver->createDirectory($this->detectionFolderName);
-        $this->filesystemDriver->setWorkingDirectory($this->detectionFolderName);
+        $this->filesystemPath = $this->detectionFolderName;
 
-        $tests = parent::testFilesystem($tests);
+        $result = parent::evaluate($localeCharset, $defaultCharset);
 
         $this->filesystemPath = $backupFilesystemPath;
-        $this->filesystemDriver->setWorkingDirectory($backupWorkingDirectory);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $this->filesystemDriver->removeDirectory($this->detectionFolderName);
 
-        return $tests;
+        return $result;
     }
 
     /**
-     * @return FilesystemFileTargetHierarchyDriverInterface
+     * @return FileTargetHierarchyDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetHierarchyDriverInterface
+    protected function setupFilesystemDriver(): FileTargetHierarchyDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetHierarchyDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetHierarchyDriverInterface::class)
         );
     }
 }

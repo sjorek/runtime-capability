@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\Hierarchy;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDirectoryDriver;
 
 /**
@@ -31,7 +31,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
     ];
 
     /**
-     * @var FilesystemDirectoryTargetDirectoryDriverInterface
+     * @var DirectoryTargetDirectoryDriverInterface
      */
     protected $filesystemDriver;
 
@@ -60,18 +60,18 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      */
     protected function evaluate()
     {
-        $this->filesystemPath = $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemPath = $this->filesystemDriver->setDirectory($this->filesystemPath);
 
         return parent::evaluate();
     }
 
     /**
-     * @return FilesystemDirectoryTargetDirectoryDriverInterface
+     * @return DirectoryTargetDirectoryDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemDirectoryTargetDirectoryDriverInterface
+    protected function setupFilesystemDriver(): DirectoryTargetDirectoryDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemDirectoryTargetDirectoryDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . DirectoryTargetDirectoryDriverInterface::class)
         );
     }
 }

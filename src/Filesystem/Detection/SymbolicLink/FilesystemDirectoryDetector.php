@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLink;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDirectoryDriver;
 
 /**
@@ -31,7 +31,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
     ];
 
     /**
-     * @var FilesystemLinkTargetDirectoryDriverInterface
+     * @var LinkTargetDirectoryDriverInterface
      */
     protected $filesystemDriver;
 
@@ -60,18 +60,18 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      */
     protected function evaluate()
     {
-        $this->filesystemPath = $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemPath = $this->filesystemDriver->setDirectory($this->filesystemPath);
 
         return parent::evaluate();
     }
 
     /**
-     * @return FilesystemLinkTargetDirectoryDriverInterface
+     * @return LinkTargetDirectoryDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemLinkTargetDirectoryDriverInterface
+    protected function setupFilesystemDriver(): LinkTargetDirectoryDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemLinkTargetDirectoryDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . LinkTargetDirectoryDriverInterface::class)
         );
     }
 }

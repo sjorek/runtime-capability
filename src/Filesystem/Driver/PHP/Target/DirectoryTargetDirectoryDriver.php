@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDirectoryDriver;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class DirectoryTargetDirectoryDriver extends PHPFilesystemDirectoryDriver implements FilesystemDirectoryTargetDirectoryDriverInterface
+class DirectoryTargetDirectoryDriver extends PHPFilesystemDirectoryDriver implements DirectoryTargetDirectoryDriverInterface
 {
     public function __construct()
     {

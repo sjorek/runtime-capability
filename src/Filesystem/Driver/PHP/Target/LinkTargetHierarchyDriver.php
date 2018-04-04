@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetHierarchyDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetHierarchyDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemHierarchyDriver;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class LinkTargetHierarchyDriver extends PHPFilesystemHierarchyDriver implements FilesystemLinkTargetHierarchyDriverInterface
+class LinkTargetHierarchyDriver extends PHPFilesystemHierarchyDriver implements LinkTargetHierarchyDriverInterface
 {
     public function __construct()
     {

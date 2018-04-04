@@ -47,11 +47,12 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
      */
     protected function normalizePath(string $path): string
     {
+
         $this->validatePath($path);
 
         $path = FilesystemUtility::normalizePath($path);
 
-        if (!FilesystemUtility::isAbsolutePath($path)) {
+        if (!(FilesystemUtility::isAbsolutePath($path) || FilesystemUtility::isUrl($path))) {
             if ('' === $path) {
                 $path = $this->getWorkingDirectory();
             } else {

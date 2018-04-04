@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLink;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemLinkTargetHierarchyDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetHierarchyDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetHierarchyDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     ];
 
     /**
-     * @var FilesystemLinkTargetHierarchyDriverInterface
+     * @var LinkTargetHierarchyDriverInterface
      */
     protected $filesystemDriver;
 
@@ -61,7 +61,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
      */
     protected function evaluate()
     {
-        $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $backupFilesystemPath = $this->filesystemPath;
 
         $this->filesystemDriver->createDirectory($this->detectionFolderName);
@@ -70,19 +70,19 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
         $result = parent::evaluate();
 
         $this->filesystemPath = $backupFilesystemPath;
-        $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
         $this->filesystemDriver->removeDirectory($this->detectionFolderName);
 
         return $result;
     }
 
     /**
-     * @return FilesystemLinkTargetHierarchyDriverInterface
+     * @return LinkTargetHierarchyDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemLinkTargetHierarchyDriverInterface
+    protected function setupFilesystemDriver(): LinkTargetHierarchyDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemLinkTargetHierarchyDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . LinkTargetHierarchyDriverInterface::class)
         );
     }
 }

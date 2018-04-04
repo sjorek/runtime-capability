@@ -15,7 +15,7 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemPathLengthDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
 
 /**
@@ -32,7 +32,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     ];
 
     /**
-     * @var FilesystemFileTargetDriverInterface
+     * @var FileTargetDriverInterface
      */
     protected $filesystemDriver;
 
@@ -85,13 +85,15 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      *
      * @return bool
      */
-    protected function testFilesystem($fileName)
+    protected function testFilesystem(string $fileName): bool
     {
-        return
-            $this->filesystemDriver->createTarget($fileName) &&
-            $this->filesystemDriver->existsTarget($fileName) &&
-            $this->filesystemDriver->removeTarget($fileName)
-        ;
+        $result = false;
+        if ($this->filesystemDriver->createTarget($fileName)) {
+            $result = $this->filesystemDriver->existsTarget($fileName);
+            $this->filesystemDriver->removeTarget($fileName);
+        }
+
+        return $result;
     }
 
     /**
@@ -115,12 +117,12 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     }
 
     /**
-     * @return FilesystemFileTargetDriverInterface
+     * @return FileTargetDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDriverInterface
+    protected function setupFilesystemDriver(): FileTargetDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
         );
     }
 }

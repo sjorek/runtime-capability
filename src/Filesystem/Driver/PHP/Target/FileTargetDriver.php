@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FileTargetDriver extends AbstractPHPFilesystemDriver implements FilesystemFileTargetDriverInterface
+class FileTargetDriver extends AbstractPHPFilesystemDriver implements FileTargetDriverInterface
 {
     /**
      * {@inheritdoc}
@@ -78,7 +78,7 @@ class FileTargetDriver extends AbstractPHPFilesystemDriver implements Filesystem
                 error_clear_last();
             }
             throw new \RuntimeException(
-                sprintf('Failed to create file: %s', $message),
+                sprintf('Failed to create file %s: %s', $path, $message),
                 1522314576
             );
         }

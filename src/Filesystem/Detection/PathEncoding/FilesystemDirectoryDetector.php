@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
 
 /**
@@ -35,7 +35,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
     ];
 
     /**
-     * @var FilesystemFileTargetDirectoryDriverInterface
+     * @var FileTargetDirectoryDriverInterface
      */
     protected $filesystemDriver;
 
@@ -64,7 +64,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      */
     protected function evaluate(array $localeCharset, string $defaultCharset)
     {
-        $this->filesystemDriver->setPath($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
 
         return parent::evaluate($localeCharset, $defaultCharset);
     }
@@ -146,7 +146,9 @@ class FilesystemDirectoryDetector extends FilesystemDetector
                 $tests[$index]['write'] = false;
             }
         }
-        foreach ($this->filesystemDriver as $fileName) {
+        /** @var \SplFileInfo $fileInfo */
+        foreach ($this->filesystemDriver as $filePath => $fileInfo) {
+            $fileName = $fileInfo->getFilename();
             foreach ($fileNames as $index => $candidate) {
                 if ($tests[$index]['read'] === true) {
                     continue;
@@ -159,19 +161,19 @@ class FilesystemDirectoryDetector extends FilesystemDetector
                     $tests[$index]['read'] = true;
                 }
             }
-            $this->filesystemDriver->removeTarget($fileName);
+            $this->filesystemDriver->removeTarget($filePath);
         }
 
         return $tests;
     }
 
     /**
-     * @return FilesystemFileTargetDirectoryDriverInterface
+     * @return FileTargetDirectoryDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDirectoryDriverInterface
+    protected function setupFilesystemDriver(): FileTargetDirectoryDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDirectoryDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetDirectoryDriverInterface::class)
         );
     }
 }

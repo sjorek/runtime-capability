@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemFileTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
 
 /**
@@ -31,7 +31,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
     ];
 
     /**
-     * @var FilesystemFileTargetDirectoryDriverInterface
+     * @var FileTargetDirectoryDriverInterface
      */
     protected $filesystemDriver;
 
@@ -60,18 +60,18 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      */
     protected function evaluate()
     {
-        $this->filesystemPath = $this->filesystemDriver->setWorkingDirectory($this->filesystemPath);
+        $this->filesystemDriver->setDirectory($this->filesystemPath);
 
         return parent::evaluate();
     }
 
     /**
-     * @return FilesystemFileTargetDirectoryDriverInterface
+     * @return FileTargetDirectoryDriverInterface
      */
-    protected function setupFilesystemDriver(): FilesystemFileTargetDirectoryDriverInterface
+    protected function setupFilesystemDriver(): FileTargetDirectoryDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FilesystemFileTargetDirectoryDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetDirectoryDriverInterface::class)
         );
     }
 }
