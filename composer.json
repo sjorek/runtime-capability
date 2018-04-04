@@ -23,7 +23,10 @@
     "autoload" : {
         "psr-4" : {
             "Sjorek\\RuntimeCapability\\" : "src/"
-        }
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
     },
     "autoload-dev" : {
         "psr-4" : {
