@@ -138,8 +138,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
         if ('BINARY' === $charset ||
             (null === $localeCharset && null === $defaultCharset) ||
             $charset === $localeCharset[LC_CTYPE] ||
-            $charset === $defaultCharset)
-        {
+            $charset === $defaultCharset) {
             return [
                 $charset => $this->testFilesystem(array_map(function () { return null; }, $this->filenameTests)),
             ];

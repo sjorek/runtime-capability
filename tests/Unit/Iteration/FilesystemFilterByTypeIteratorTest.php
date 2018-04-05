@@ -1,4 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Unit\Iteration;
 
 use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
@@ -13,7 +25,7 @@ use Sjorek\RuntimeCapability\Tests\Unit\AbstractFilesystemTestCase;
 class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
 {
     /**
-     * @var integer
+     * @var int
      */
     const FILESYSTEM_ITERATOR_COMMON_FLAGS =
         \FilesystemIterator::KEY_AS_PATHNAME |
@@ -22,7 +34,7 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
     ;
 
     /**
-     * @var integer
+     * @var int
      */
     const FILESYSTEM_ITERATOR_USE_PATHNAME_FLAGS =
         self::FILESYSTEM_ITERATOR_COMMON_FLAGS |
@@ -30,7 +42,7 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
     ;
 
     /**
-     * @var integer
+     * @var int
      */
     const FILESYSTEM_ITERATOR_USE_FILEINFO_FLAGS =
         self::FILESYSTEM_ITERATOR_COMMON_FLAGS |
@@ -38,7 +50,7 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
     ;
 
     /**
-     * @var integer
+     * @var int
      */
     const FILESYSTEM_ITERATOR_USE_SELF_FLAGS =
         self::FILESYSTEM_ITERATOR_COMMON_FLAGS |
@@ -67,6 +79,7 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
      * @depends testConstruct
      *
      * @param FilesystemFilterByTypeIterator $iterator
+     *
      * @return FilesystemFilterByTypeIterator
      */
     public function testGetFlags(FilesystemFilterByTypeIterator $iterator): FilesystemFilterByTypeIterator
@@ -125,8 +138,8 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
      * @depends testConstruct
      * @dataProvider provideTestAcceptData
      *
-     * @param array $expect
-     * @param int $flags
+     * @param array                          $expect
+     * @param int                            $flags
      * @param FilesystemFilterByTypeIterator $iterator
      */
     public function testAccept(array $expect, int $flags, FilesystemFilterByTypeIterator $iterator)
@@ -178,7 +191,6 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
             ],
         ];
     }
-
 
     /**
      * @covers ::createGetFileTypeClosure
@@ -240,6 +252,7 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
      * @param bool $file
      * @param bool $dir
      * @param bool $link
+     *
      * @return bool[]
      */
     protected function createTypes(bool $file, bool $dir, bool $link): array
@@ -247,4 +260,3 @@ class FilesystemFilterByTypeIteratorTest extends AbstractFilesystemTestCase
         return ['file' => $file, 'dir' => $dir, 'link' => $link];
     }
 }
-

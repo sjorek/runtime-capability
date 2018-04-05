@@ -59,7 +59,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see FilesystemDirectoryDetector::evaluate()
      */

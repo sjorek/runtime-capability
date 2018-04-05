@@ -47,7 +47,6 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
      */
     protected function normalizePath(string $path): string
     {
-
         $this->validatePath($path);
 
         $path = FilesystemUtility::normalizePath($path);

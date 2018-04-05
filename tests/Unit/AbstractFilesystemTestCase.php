@@ -62,7 +62,6 @@ abstract class AbstractFilesystemTestCase extends AbstractTestCase
             ['/Fixtures/', 'FilesystemTestFixture.php'],
             __FILE__
         );
-
     }
 
     /**
@@ -81,14 +80,16 @@ abstract class AbstractFilesystemTestCase extends AbstractTestCase
     // ////////////////////////////////////////////////////////////////
 
     /**
-     * @param int $mode
+     * @param int   $mode
      * @param array $structure
+     *
      * @return vfsStreamDirectory
      */
     protected function getFilesystem(int $mode = self::FILESYSTEM_MODE_FULL_ACCESS,
                                      array $structure = self::FILESYSTEM_STRUCTURE): vfsStreamDirectory
     {
         vfsStreamWrapper::unregister();
+
         return vfsStream::setup(sprintf('root-%o', $mode), $mode, $structure);
     }
 

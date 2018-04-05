@@ -15,7 +15,8 @@ namespace Sjorek\RuntimeCapability\Utility;
 
 /**
  * @param string $filename
- * @return boolean
+ *
+ * @return bool
  */
 function file_exists($filename)
 {
@@ -26,7 +27,8 @@ function file_exists($filename)
 
 /**
  * @param string $filename
- * @return boolean
+ *
+ * @return bool
  */
 function is_dir($filename)
 {
@@ -37,7 +39,8 @@ function is_dir($filename)
 
 /**
  * @param string $filename
- * @return boolean
+ *
+ * @return bool
  */
 function is_file($filename)
 {
@@ -48,7 +51,8 @@ function is_file($filename)
 
 /**
  * @param string $filename
- * @return boolean
+ *
+ * @return bool
  */
 function is_link($filename)
 {
@@ -58,7 +62,7 @@ function is_link($filename)
 }
 
 /**
- * @return string|boolean
+ * @return bool|string
  */
 function getcwd()
 {
@@ -67,7 +71,8 @@ function getcwd()
 
 /**
  * @param string $filename
- * @return string|boolean
+ *
+ * @return bool|string
  */
 function realpath($filename)
 {
@@ -76,6 +81,7 @@ function realpath($filename)
 
 /**
  * @param string $name
+ *
  * @return mixed
  */
 function constant($name)

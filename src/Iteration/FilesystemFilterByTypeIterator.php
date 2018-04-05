@@ -1,4 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Iteration;
 
 /**
@@ -7,22 +19,22 @@ namespace Sjorek\RuntimeCapability\Iteration;
 class FilesystemFilterByTypeIterator extends \FilterIterator
 {
     /**
-     * @var integer
+     * @var int
      */
     const ACCEPT_NONE = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     const ACCEPT_FILE = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     const ACCEPT_DIRECTORY = 2;
 
     /**
-     * @var integer
+     * @var int
      */
     const ACCEPT_LINK = 4;
 
@@ -57,7 +69,7 @@ class FilesystemFilterByTypeIterator extends \FilterIterator
 
     /**
      * @param \FilesystemIterator $iterator
-     * @param int $flags
+     * @param int                 $flags
      */
     public function __construct(\FilesystemIterator $iterator, int $flags = self::ACCEPT_ALL)
     {
@@ -89,9 +101,10 @@ class FilesystemFilterByTypeIterator extends \FilterIterator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws \RuntimeException
+     *
      * @see \FilterIterator::accept()
      */
     public function accept()
@@ -103,27 +116,29 @@ class FilesystemFilterByTypeIterator extends \FilterIterator
 
     /**
      * @param int $flags
+     *
      * @throws \RuntimeException
+     *
      * @return \Closure
      */
     protected function createGetFileTypeClosure(int $flags): \Closure
     {
         $mode = $flags & \FileSystemIterator::CURRENT_MODE_MASK;
 
-        if(\FilesystemIterator::CURRENT_AS_PATHNAME === $mode) {
-            return function(string $path): string {
+        if (\FilesystemIterator::CURRENT_AS_PATHNAME === $mode) {
+            return function (string $path): string {
                 return (new \SplFileInfo($path))->getType();
             };
         }
 
         if (\FilesystemIterator::CURRENT_AS_FILEINFO === $mode) {
-            return function(\SplFileInfo $fileInfo): string {
+            return function (\SplFileInfo $fileInfo): string {
                 return $fileInfo->getType();
             };
         }
 
-        if(\FilesystemIterator::CURRENT_AS_SELF === $mode) {
-            return function(\FilesystemIterator $iterator): string {
+        if (\FilesystemIterator::CURRENT_AS_SELF === $mode) {
+            return function (\FilesystemIterator $iterator): string {
                 return $iterator->getType();
             };
         }

@@ -1,4 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Iteration;
 
 /**
@@ -27,8 +39,8 @@ class GlobFilterIterator extends \FilterIterator
 
     /**
      * @param \Iterator $iterator
-     * @param string $pattern
-     * @param int $flags
+     * @param string    $pattern
+     * @param int       $flags
      */
     public function __construct(\Iterator $iterator, string $pattern, int $flags = self::DEFAULT_FLAGS)
     {
@@ -39,7 +51,8 @@ class GlobFilterIterator extends \FilterIterator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \FilterIterator::accept()
      */
     public function accept()

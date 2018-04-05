@@ -19,12 +19,12 @@ namespace Sjorek\RuntimeCapability\Utility;
 final class PosixUtility
 {
     /**
-     * @var integer
+     * @var int
      */
     const ROOT_UID = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     const ROOT_GID = 0;
 
@@ -34,11 +34,11 @@ final class PosixUtility
     const USER_GROUPS = [];
 
     /**
-     * returns current process owner's effective user id
+     * returns current process owner's effective user id.
      *
      * If the system does not support posix_geteuid() the user will be root (0).
      *
-     * @return  int
+     * @return int
      */
     public static function getEffectiveUser(): int
     {
@@ -46,11 +46,11 @@ final class PosixUtility
     }
 
     /**
-     * returns current process owner's effective group id
+     * returns current process owner's effective group id.
      *
      * If the system does not support posix_getegid() the group will be root (0).
      *
-     * @return  int
+     * @return int
      */
     public static function getEffectiveGroup(): int
     {
@@ -58,15 +58,14 @@ final class PosixUtility
     }
 
     /**
-     * returns a list of current process owner's effective group id plus it's other group ids
+     * returns a list of current process owner's effective group id plus it's other group ids.
      *
      * If the system does not support posix_getgroups() the list of groups will contain root (0) only.
      *
-     * @return  array
+     * @return array
      */
     public static function getUserGroups(): array
     {
         return array_merge([posix_getegid()], posix_getgroups());
     }
-
 }

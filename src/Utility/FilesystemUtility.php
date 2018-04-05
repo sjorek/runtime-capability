@@ -136,7 +136,7 @@ final class FilesystemUtility
                 // TODO Find out why is_writable() fails for some vfs-directories
                 is_writable($path) ||
                 (
-                    !FilesystemUtility::useWindowsPaths() &&
+                    !self::useWindowsPaths() &&
                     // TODO Remove the fileperms() workaround for vfs-directories
                     // @see http://php.net/manual/en/function.fileperms.php#example-2671
                     0 !== ($perms = (@fileperms($path) ?: 0)) &&
@@ -278,7 +278,6 @@ final class FilesystemUtility
      */
     public static function isLocalPath(string $path): bool
     {
-
         return
             !in_array($path, ['', 'file:', 'vfs:'], true) &&
             (
@@ -312,6 +311,7 @@ final class FilesystemUtility
 
     /**
      * Calls clearstatcache to clear the realpath-cache for the given local path.
+     *
      * @codeCoverageIgnore
      *
      * @param string $path

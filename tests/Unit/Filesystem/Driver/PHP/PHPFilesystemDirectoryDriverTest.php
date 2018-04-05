@@ -68,6 +68,7 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
      * @depends testConstruct
      *
      * @param PHPFilesystemDirectoryDriver $driver
+     *
      * @return PHPFilesystemDirectoryDriver
      */
     public function testSetDirectory(PHPFilesystemDirectoryDriver $driver): PHPFilesystemDirectoryDriver
@@ -200,7 +201,7 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
     }
 
     /**
-     * return array
+     * return array.
      */
     public function provideTestTargetExistsData()
     {
@@ -243,6 +244,7 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
      * @depends testSetDirectory
      *
      * @param PHPFilesystemDirectoryDriver $driver
+     *
      * @return PHPFilesystemDirectoryDriver
      */
     public function testSetIteratorPattern(PHPFilesystemDirectoryDriver $driver): PHPFilesystemDirectoryDriver
@@ -266,8 +268,7 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
         $this->assertInstanceOf(\IteratorAggregate::class, $driver);
 
         $actual = array_map(
-            function(\SplFileInfo $fileInfo): string
-            {
+            function (\SplFileInfo $fileInfo): string {
                 return $fileInfo->getPathname();
             },
             iterator_to_array($driver, true)
@@ -276,8 +277,7 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
         $expect = array_combine(
             array_keys(self::FILESYSTEM_STRUCTURE),
             array_map(
-                function(string $file) use($path): string
-                {
+                function (string $file) use ($path): string {
                     return $path . $file;
                 },
                 array_keys(self::FILESYSTEM_STRUCTURE)
@@ -287,6 +287,6 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
         ksort($actual);
         ksort($expect);
 
-        $this->assertEquals($expect, $actual);
+        $this->assertSame($expect, $actual);
     }
 }

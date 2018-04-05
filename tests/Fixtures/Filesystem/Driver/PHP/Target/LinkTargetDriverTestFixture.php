@@ -15,6 +15,8 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
 /**
  * @param string $filename
+ * @param mixed  $target
+ * @param mixed  $link
  */
 function symlink($target, $link)
 {

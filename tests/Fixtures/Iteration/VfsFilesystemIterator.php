@@ -1,13 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Runtime Capability project.
+ *
+ * (c) Stephan Jorek <stephan.jorek@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sjorek\RuntimeCapability\Tests\Fixtures\Iteration;
 
 /**
- * vfs-specific FilesystemIterator implementation
+ * vfs-specific FilesystemIterator implementation.
  */
 class VfsFilesystemIterator extends \FilesystemIterator
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \FilesystemIterator::getType()
      */
     public function getType()
@@ -20,7 +33,8 @@ class VfsFilesystemIterator extends \FilesystemIterator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \FilesystemIterator::isFile()
      */
     public function isFile()
@@ -33,7 +47,8 @@ class VfsFilesystemIterator extends \FilesystemIterator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \FilesystemIterator::isDir()
      */
     public function isDir()
@@ -46,7 +61,8 @@ class VfsFilesystemIterator extends \FilesystemIterator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @see \FilesystemIterator::isFile()
      */
     public function isLink()
@@ -58,4 +74,3 @@ class VfsFilesystemIterator extends \FilesystemIterator
         return parent::isLink();
     }
 }
-

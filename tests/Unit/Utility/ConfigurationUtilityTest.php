@@ -93,6 +93,7 @@ class ConfigurationUtilityTest extends AbstractTestCase
             '"resource (closed)" as of PHP 7.2.0' => [
                 'resource', 'resource', (function ($r) {
                     fclose($r);
+
                     return $r;
                 })(fopen('php://memory', 'r+')),
             ],

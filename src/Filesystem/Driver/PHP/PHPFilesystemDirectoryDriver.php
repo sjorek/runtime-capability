@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
-use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
-use Sjorek\RuntimeCapability\Iteration\GlobFilterKeyIterator;
-use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
+use Sjorek\RuntimeCapability\Iteration\GlobFilterKeyIterator;
+use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * Facade to filesystem specific functionality, providing a reduced interface to what is needed.
@@ -233,6 +233,7 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
     /**
      * @param string $directory
      * @param string $pattern
+     *
      * @return \Iterator
      */
     protected function createFilesystemIterator(string $directory, string $pattern): \Iterator
