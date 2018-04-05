@@ -15,7 +15,12 @@ namespace Sjorek\RuntimeCapability\Tests\Unit\Filesystem\Driver\PHP;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
+// use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDriver;
+use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\PHP\PHPFilesystemDriverTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractFilesystemTestCase;
 
@@ -33,6 +38,12 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
      */
     public function testConstruct(): PHPFilesystemDirectoryDriver
     {
+        // test default behavior
+        $driver = new PHPFilesystemDirectoryDriver();
+        $this->assertAttributeInstanceOf(FileTargetDriverInterface::class, 'targetDriver', $driver);
+        $this->assertAttributeInstanceOf(FileTargetDriver::class, 'targetDriver', $driver);
+
+        // test custom behavior
         $targetDriver = new PHPFilesystemDriverTestFixture();
         $driver = new PHPFilesystemDirectoryDriver($targetDriver);
 
@@ -263,9 +274,10 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
      */
     public function testGetIterator(PHPFilesystemDirectoryDriver $driver)
     {
-        $path = $this->getFilesystem()->url() . '/';
         $this->assertInstanceOf(\Traversable::class, $driver);
         $this->assertInstanceOf(\IteratorAggregate::class, $driver);
+
+        $path = $this->getFilesystem()->url() . '/';
 
         $actual = array_map(
             function (\SplFileInfo $fileInfo): string {
@@ -288,5 +300,152 @@ class PHPFilesystemDirectoryDriverTest extends AbstractFilesystemTestCase
         ksort($expect);
 
         $this->assertSame($expect, $actual);
+    }
+
+    /**
+     * @covers ::prependDirectory
+     * @depends testSetDirectory
+     *
+     * @param PHPFilesystemDirectoryDriver $driver
+     */
+    public function testPrependDirectory(PHPFilesystemDirectoryDriver $driver)
+    {
+        $path = $this->getFilesystem()->url() . '/test';
+
+        $this->assertSame($path, $this->callProtectedMethod($driver, 'prependDirectory', 'test'));
+        $this->assertSame($path, $this->callProtectedMethod($driver, 'prependDirectory', './test'));
+    }
+
+    /**
+     * @covers ::prependDirectory
+     * @depends testSetDirectory
+     * @testWith ["/"]
+     *           ["/test"]
+     *           ["c:/"]
+     *           ["c:\\"]
+     *
+     * @param string                       $path
+     * @param PHPFilesystemDirectoryDriver $driver
+     */
+    public function testPrependDirectoryToAbsolutePathThrowsException(string $path, PHPFilesystemDirectoryDriver $driver)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf('Invalid path given: %s. Can not prepend directory to an absolute path.', $path)
+        );
+        $this->expectExceptionCode(1522171647);
+
+        if (0 === strpos($path, 'c:')) {
+            $ns = $this->getFilesystemUtilityNamespace();
+            $GLOBALS[$ns]['constant']['DIRECTORY_SEPARATOR'] = '\\';
+        }
+        $this->callProtectedMethod($driver, 'prependDirectory', $path);
+    }
+
+    /**
+     * @covers ::prependDirectory
+     * @depends testSetDirectory
+     * @testWith ["file://localhost/"]
+     *           ["file:///"]
+     *           ["vfs://root-777/"]
+     *
+     * @param string                       $url
+     * @param PHPFilesystemDirectoryDriver $driver
+     */
+    public function testPrependDirectoryToLocalUrlThrowsException(
+        string $url,
+        PHPFilesystemDirectoryDriver $driver)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            sprintf('Invalid path given: %s. Can not prepend directory to an url.', $url)
+        );
+        $this->expectExceptionCode(1522171650);
+
+        $this->callProtectedMethod($driver, 'prependDirectory', $url);
+    }
+
+    /**
+     * @covers ::prependDirectory
+     * @depends testSetDirectory
+     * @testWith ["."]
+     *           ["./"]
+     *           [".\\"]
+     *
+     * @param string                       $path
+     * @param PHPFilesystemDirectoryDriver $driver
+     */
+    public function testPrependDirectoryToDotDirectoryThrowsException(
+        string $path,
+        PHPFilesystemDirectoryDriver $driver)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Invalid path given. Can not prepend directory to current directory (.) without any path.'
+        );
+        $this->expectExceptionCode(1522318072);
+
+        $this->callProtectedMethod($driver, 'prependDirectory', $path);
+    }
+
+    /**
+     * @covers ::createFilesystemIterator
+     * @dataProvider provideTestCreateFilesystemIteratorData
+     *
+     * @param PHPFilesystemDirectoryDriver $driver
+     * @param string                       $innerIteratorClass
+     * @param string                       $innerIteratorClass
+     * @param array                        $structure
+     */
+    public function testCreateFilesystemIterator(
+        PHPFilesystemDirectoryDriver $driver,
+        string $innerIteratorClass,
+        string $pattern,
+        array $structure)
+    {
+        $path = $this->getFilesystem()->url();
+
+        /** @var GlobFilterKeyIterator $iterator */
+        $iterator = $this->callProtectedMethod($driver, 'createFilesystemIterator', $path, $pattern);
+
+        $this->assertAttributeSame($pattern, 'pattern', $iterator);
+        $this->assertInstanceOf($innerIteratorClass, $iterator->getInnerIterator());
+        $this->assertSame($structure, array_keys(iterator_to_array($iterator, true)));
+    }
+
+    /**
+     * @return array
+     */
+    public function provideTestCreateFilesystemIteratorData(): array
+    {
+        return [
+            'file target' => [
+                new PHPFilesystemDirectoryDriver(new FileTargetDriver()),
+                FilesystemFilterByTypeIterator::class,
+                'vfs://root-777/f*',
+                ['vfs://root-777/file'],
+            ],
+            'directory target' => [
+                new PHPFilesystemDirectoryDriver(new DirectoryTargetDriver()),
+                FilesystemFilterByTypeIterator::class,
+                'vfs://root-777/f*',
+                ['vfs://root-777/folder'],
+            ],
+            // symbolic links are not yet supported with php + vfs-stream-wrappers
+            // @see https://github.com/mikey179/vfsStream/issues/89
+            // @see https://wiki.php.net/rfc/linking_in_stream_wrappers
+            // 'link target' => [
+            //     new PHPFilesystemDirectoryDriver(new LinkTargetDriver()),
+            //     FilesystemFilterByTypeIterator::class,
+            //     'vfs://root-777/s*',
+            //     ['vfs://root-777/symlink'],
+            // ],
+            'any target' => [
+                new PHPFilesystemDirectoryDriver(new PHPFilesystemDriverTestFixture()),
+                \FilesystemIterator::class,
+                'vfs://root-777/f*',
+                ['vfs://root-777/file', 'vfs://root-777/folder'],
+            ],
+        ];
     }
 }

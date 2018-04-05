@@ -17,6 +17,7 @@ use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
 use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
 use Sjorek\RuntimeCapability\Iteration\GlobFilterKeyIterator;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
@@ -58,12 +59,15 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
     protected $iteratorPattern = '*';
 
     /**
-     * @param PHPFilesystemDriverInterface $targetDriver
+     * @param null|PHPFilesystemDriverInterface $targetDriver
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(PHPFilesystemDriverInterface $targetDriver = null)
     {
+        if (null === $targetDriver) {
+            $targetDriver = new FileTargetDriver();
+        }
         if ($targetDriver instanceof FilesystemDirectoryDriverInterface) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -208,10 +212,17 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
     {
         $this->validatePath($path);
 
-        if (FilesystemUtility::isAbsolutePath($path) || FilesystemUtility::isUrl($path)) {
+        if (FilesystemUtility::isAbsolutePath($path)) {
             throw new \InvalidArgumentException(
-                sprintf('Invalid path given: %s. Can not prepend directory to absolute paths or urls.', $path),
+                sprintf('Invalid path given: %s. Can not prepend directory to an absolute path.', $path),
                 1522171647
+            );
+        }
+
+        if (FilesystemUtility::isUrl($path)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid path given: %s. Can not prepend directory to an url.', $path),
+                1522171650
             );
         }
 
@@ -222,7 +233,7 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
         $path = ltrim($path, '/\\');
         if ('' === $path) {
             throw new \InvalidArgumentException(
-                sprintf('Invalid path given: %s. Can not prepend directory to empty paths.', $path),
+                'Invalid path given. Can not prepend directory to current directory (.) without any path.',
                 1522318072
             );
         }
@@ -234,9 +245,9 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
      * @param string $directory
      * @param string $pattern
      *
-     * @return \Iterator
+     * @return GlobFilterKeyIterator
      */
-    protected function createFilesystemIterator(string $directory, string $pattern): \Iterator
+    protected function createFilesystemIterator(string $directory, string $pattern): GlobFilterKeyIterator
     {
         $iterator = new \FilesystemIterator($directory, self::FILESYSTEM_ITERATOR_FLAGS);
 
@@ -250,13 +261,10 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
         if ($this->targetDriver instanceof LinkTargetDriverInterface) {
             $flags |= FilesystemFilterByTypeIterator::ACCEPT_LINK;
         }
-        if (FilesystemFilterByTypeIterator::ACCEPT_NONE === $flags) {
-            $flags = FilesystemFilterByTypeIterator::ACCEPT_ALL;
+        if (FilesystemFilterByTypeIterator::ACCEPT_NONE !== $flags) {
+            $iterator = new FilesystemFilterByTypeIterator($iterator, $flags);
         }
-        $iterator = new FilesystemFilterByTypeIterator($iterator, $flags);
 
-        $iterator = new GlobFilterKeyIterator($iterator, $pattern, self::FNMATCH_PATTERN_FLAGS);
-
-        return $iterator;
+        return new GlobFilterKeyIterator($iterator, $pattern, self::FNMATCH_PATTERN_FLAGS);
     }
 }
