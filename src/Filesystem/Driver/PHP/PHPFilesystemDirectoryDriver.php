@@ -16,7 +16,7 @@ namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 use Sjorek\RuntimeCapability\Iteration\GlobFilterKeyIterator;
-use Sjorek\RuntimeCapability\Iteration\FilesystemFilterIterator;
+use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
@@ -239,20 +239,20 @@ class PHPFilesystemDirectoryDriver extends AbstractPHPFilesystemDriver implement
     {
         $iterator = new \FilesystemIterator($directory, self::FILESYSTEM_ITERATOR_FLAGS);
 
-        $filterFlags = 0;
+        $flags = FilesystemFilterByTypeIterator::ACCEPT_NONE;
         if ($this->targetDriver instanceof FileTargetDriverInterface) {
-            $filterFlags |= FilesystemFilterIterator::ACCEPT_FILE;
+            $flags |= FilesystemFilterByTypeIterator::ACCEPT_FILE;
         }
         if ($this->targetDriver instanceof DirectoryTargetDriverInterface) {
-            $filterFlags |= FilesystemFilterIterator::ACCEPT_DIRECTORY;
+            $flags |= FilesystemFilterByTypeIterator::ACCEPT_DIRECTORY;
         }
         if ($this->targetDriver instanceof LinkTargetDriverInterface) {
-            $filterFlags |= FilesystemFilterIterator::ACCEPT_LINK;
+            $flags |= FilesystemFilterByTypeIterator::ACCEPT_LINK;
         }
-        if (0 === $filterFlags) {
-            $filterFlags = FilesystemFilterIterator::DEFAULT_FLAGS;
+        if (FilesystemFilterByTypeIterator::ACCEPT_NONE === $flags) {
+            $flags = FilesystemFilterByTypeIterator::ACCEPT_ALL;
         }
-        $iterator = new FilesystemFilterIterator($iterator, $filterFlags);
+        $iterator = new FilesystemFilterByTypeIterator($iterator, $flags);
 
         $iterator = new GlobFilterKeyIterator($iterator, $pattern, self::FNMATCH_PATTERN_FLAGS);
 
