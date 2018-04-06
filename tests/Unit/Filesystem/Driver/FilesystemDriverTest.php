@@ -17,7 +17,7 @@ use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\FilesystemDriverTe
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
- * Identifiable test case.
+ * AbstractFilesystemDriver test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Filesystem\Driver\AbstractFilesystemDriver
  */

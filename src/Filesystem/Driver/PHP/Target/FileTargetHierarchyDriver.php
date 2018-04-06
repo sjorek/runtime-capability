@@ -23,6 +23,6 @@ class FileTargetHierarchyDriver extends PHPFilesystemHierarchyDriver implements 
 {
     public function __construct()
     {
-        parent::__construct(new FileTargetDriver(), new DirectoryTargetDriver());
+        parent::__construct(new FileTargetDriver());
     }
 }

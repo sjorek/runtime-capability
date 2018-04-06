@@ -25,7 +25,7 @@ use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\PHP\PHPFilesystemD
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractFilesystemTestCase;
 
 /**
- * Identifiable test case.
+ * PHPFilesystemDirectoryDriver test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDirectoryDriver
  */

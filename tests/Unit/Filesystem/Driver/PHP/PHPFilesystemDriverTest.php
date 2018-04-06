@@ -17,7 +17,7 @@ use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\PHP\PHPFilesystemD
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractFilesystemTestCase;
 
 /**
- * Identifiable test case.
+ * AbstractPHPFilesystemDriver test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver
  */

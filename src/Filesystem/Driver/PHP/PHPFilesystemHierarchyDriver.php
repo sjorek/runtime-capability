@@ -37,8 +37,12 @@ class PHPFilesystemHierarchyDriver extends PHPFilesystemDirectoryDriver implemen
     public function __construct(PHPFilesystemDriverInterface $targetDriver = null,
                                 DirectoryTargetDriver $directoryDriver = null)
     {
-        parent::__construct($targetDriver);
+        if (null === $directoryDriver) {
+            $directoryDriver = new DirectoryTargetDriver();
+        }
         $this->directoryDriver = $directoryDriver;
+
+        parent::__construct($targetDriver);
     }
 
     /**
@@ -48,7 +52,7 @@ class PHPFilesystemHierarchyDriver extends PHPFilesystemDirectoryDriver implemen
      */
     public function createDirectory($path)
     {
-        return $this->directoryDriver->createTarget($this->prependWorkingDirectory($path));
+        return $this->directoryDriver->createTarget($this->prependDirectory($path));
     }
 
     /**
@@ -58,6 +62,6 @@ class PHPFilesystemHierarchyDriver extends PHPFilesystemDirectoryDriver implemen
      */
     public function removeDirectory($path)
     {
-        return $this->directoryDriver->removeTarget($this->prependWorkingDirectory($path));
+        return $this->directoryDriver->removeTarget($this->prependDirectory($path));
     }
 }
