@@ -13,42 +13,22 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
-use Sjorek\RuntimeCapability\Management\ManagerInterface;
-use Sjorek\RuntimeCapability\RuntimeCapabilityInterface;
-
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DetectorManagerInterface extends ManagerInterface
+interface DetectorManagerInterface
 {
     /**
-     * {@inheritdoc}
-     *
      * @param DetectorInterface $detector
      *
      * @return DetectorInterface
-     *
-     * @see ManagerInterface::register()
      */
-    public function register(DetectorInterface $detector): DetectorInterface;
+    public function registerDetector(DetectorInterface $detector): DetectorInterface;
 
     /**
-     * {@inheritdoc}
-     *
      * @param string $idOrDetectorClass
      *
      * @return DetectorInterface
-     *
-     * @see ManagerInterface::get()
      */
-    public function get(string $idOrDetectorClass): DetectorInterface;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return RuntimeCapabilityInterface
-     *
-     * @see ManagerInterface::getManagement()
-     */
-    public function getManagement(): RuntimeCapabilityInterface;
+    public function createDetector(string $idOrDetectorClass): DetectorInterface;
 }

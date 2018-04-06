@@ -23,10 +23,6 @@ class FilesystemDriverManager extends AbstractManager implements FilesystemDrive
     /**
      * {@inheritdoc}
      *
-     * @param FilesystemDriverInterface $driver
-     *
-     * @return FilesystemDriverInterface
-     *
      * @see FilesystemDriverManagerInterface::registerFilesystemDriver()
      */
     public function registerFilesystemDriver(FilesystemDriverInterface $driver): FilesystemDriverInterface
@@ -36,10 +32,6 @@ class FilesystemDriverManager extends AbstractManager implements FilesystemDrive
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $idOrFilesystemDriverClass
-     *
-     * @return FilesystemDriverInterface
      *
      * @see FilesystemDriverManagerInterface::createFilesystemDriver()
      */

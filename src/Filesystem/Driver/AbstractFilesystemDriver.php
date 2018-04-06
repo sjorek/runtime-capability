@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
+use Sjorek\RuntimeCapability\Management\ManageableInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -34,6 +36,44 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
      * @var FilesystemDriverManagerInterface
      */
     protected $manager = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see FilesystemDriverInterface::setFilesystemDriverManager()
+     */
+    public function setFilesystemDriverManager(FilesystemDriverManagerInterface $manager): FilesystemDriverInterface
+    {
+        return parent::setManager($manager);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see FilesystemDriverInterface::getFilesystemDriverManager()
+     */
+    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface
+    {
+        return parent::getManager();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractManageable::setManager()
+     */
+    public function setManager(ManagerInterface $manager): ManageableInterface
+    {
+        return $this->setFilesystemDriverManager($manager);
+    }
+
+    /**
+     * @return FilesystemDriverManagerInterface
+     */
+    public function getManager(): ManagerInterface
+    {
+        return $this->getFilesystemDriverManager();
+    }
 
     /**
      * {@inheritdoc}

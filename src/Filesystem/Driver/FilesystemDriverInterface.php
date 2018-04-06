@@ -55,4 +55,16 @@ interface FilesystemDriverInterface extends ManageableInterface
      * @return int
      */
     public function getMaximumPathLength(): int;
+
+    /**
+     * @param FilesystemDriverManagerInterface $manager
+     *
+     * @return self
+     */
+    public function setFilesystemDriverManager(FilesystemDriverManagerInterface $manager): self;
+
+    /**
+     * @return FilesystemDriverManagerInterface
+     */
+    public function getFilesystemDriverManager(): FilesystemDriverManagerInterface;
 }

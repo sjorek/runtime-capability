@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Filesystem\Driver;
 
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManager;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverManagerInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\FilesystemDriverTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
@@ -46,6 +49,34 @@ class FilesystemDriverTest extends AbstractTestCase
         $this->subject = null;
 
         parent::tearDown();
+    }
+
+    /**
+     * @covers ::setManager
+     * @covers ::setFilesystemDriverManager
+     */
+    public function testSetManager(): FilesystemDriverTestFixture
+    {
+        $actual = $this->subject;
+        $expect = new FilesystemDriverManager();
+        $this->assertSame($this->subject, $actual->setManager($expect));
+        $this->assertAttributeSame($expect, 'manager', $actual);
+        $this->assertAttributeInstanceOf(ManagerInterface::class, 'manager', $actual);
+        $this->assertAttributeInstanceOf(FilesystemDriverManagerInterface::class, 'manager', $actual);
+
+        return $this->subject;
+    }
+
+    /**
+     * @covers ::getManager
+     * @covers ::getFilesystemDriverManager
+     * @depends testSetManager
+     */
+    public function testGetManager(FilesystemDriverTestFixture $actual)
+    {
+        $this->assertAttributeSame($actual->getManager(), 'manager', $actual);
+        $this->assertInstanceOf(ManagerInterface::class, $actual->getManager());
+        $this->assertInstanceOf(FilesystemDriverManagerInterface::class, $actual->getManager());
     }
 
     /**

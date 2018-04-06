@@ -16,6 +16,8 @@ namespace Sjorek\RuntimeCapability\Detection;
 use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Configuration\ConfigurableTrait;
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
+use Sjorek\RuntimeCapability\Management\ManageableInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -33,6 +35,44 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
      * @var bool
      */
     protected $compactResult = false;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see DetectorInterface::setDetectorManager()
+     */
+    public function setDetectorManager(DetectorManagerInterface $manager): DetectorInterface
+    {
+        return parent::setManager($manager);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see DetectorInterface::getDetectorManager()
+     */
+    public function getDetectorManager(): DetectorManagerInterface
+    {
+        return parent::getManager();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see AbstractManageable::setManager()
+     */
+    public function setManager(ManagerInterface $manager): ManageableInterface
+    {
+        return $this->setDetectorManager($manager);
+    }
+
+    /**
+     * @return DetectorManagerInterface
+     */
+    public function getManager(): ManagerInterface
+    {
+        return $this->getDetectorManager();
+    }
 
     /**
      * {@inheritdoc}

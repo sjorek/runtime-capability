@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Configuration;
 
+use Sjorek\RuntimeCapability\Configuration\ConfigurationManager;
+use Sjorek\RuntimeCapability\Configuration\ConfigurationManagerInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
@@ -73,6 +76,40 @@ class ConfigurationTest extends AbstractTestCase
         $this->expectExceptionCode(1522138977);
 
         new ConfigurationTestFixture(range(0, 9));
+    }
+
+    /**
+     * @covers ::setManager
+     * @covers ::setConfigurationManager
+     * @depends testConstruct
+     *
+     * @param ConfigurationTestFixture $actual
+     *
+     * @return ConfigurationTestFixture
+     */
+    public function testSetManager(ConfigurationTestFixture $actual): ConfigurationTestFixture
+    {
+        $expect = new ConfigurationManager();
+        $this->assertSame($actual, $actual->setManager($expect));
+        $this->assertAttributeSame($expect, 'manager', $actual);
+        $this->assertAttributeInstanceOf(ManagerInterface::class, 'manager', $actual);
+        $this->assertAttributeInstanceOf(ConfigurationManagerInterface::class, 'manager', $actual);
+
+        return $actual;
+    }
+
+    /**
+     * @covers ::getManager
+     * @covers ::getConfigurationManager
+     * @depends testSetManager
+     *
+     * @param ConfigurationTestFixture $configuration
+     */
+    public function testGetManager(ConfigurationTestFixture $actual)
+    {
+        $this->assertAttributeSame($actual->getManager(), 'manager', $actual);
+        $this->assertInstanceOf(ManagerInterface::class, $actual->getManager());
+        $this->assertInstanceOf(ConfigurationManagerInterface::class, $actual->getManager());
     }
 
     /**

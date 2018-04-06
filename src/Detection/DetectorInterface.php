@@ -20,7 +20,7 @@ use Sjorek\RuntimeCapability\Management\ManageableInterface;
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DetectorInterface extends ManageableInterface, ConfigurableInterface, DependableInterface
+interface DetectorInterface extends ConfigurableInterface, DependableInterface, ManageableInterface
 {
     /**
      * @return array[bool[]]|bool[]|bool
@@ -30,7 +30,12 @@ interface DetectorInterface extends ManageableInterface, ConfigurableInterface, 
     /**
      * @param DetectorManagerInterface $manager
      *
-     * @return DetectorInterface
+     * @return self
      */
-    public function setManager(DetectorManagerInterface $manager): self;
+    public function setDetectorManager(DetectorManagerInterface $manager): self;
+
+    /**
+     * @return DetectorManagerInterface
+     */
+    public function getDetectorManager(): DetectorManagerInterface;
 }

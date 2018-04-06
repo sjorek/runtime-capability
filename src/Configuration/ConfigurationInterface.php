@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Configuration;
 
+use Sjorek\RuntimeCapability\Management\ManageableInterface;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface ConfigurationInterface extends \ArrayAccess
+interface ConfigurationInterface extends \ArrayAccess, ManageableInterface
 {
     /**
      * @param array $configuration
@@ -41,4 +43,16 @@ interface ConfigurationInterface extends \ArrayAccess
      * @return self
      */
     public function merge(self $configuration): self;
+
+    /**
+     * @param ConfigurationManagerInterface $manager
+     *
+     * @return self
+     */
+    public function setConfigurationManager(ConfigurationManagerInterface $manager): self;
+
+    /**
+     * @return ConfigurationManagerInterface
+     */
+    public function getConfigurationManager(): ConfigurationManagerInterface;
 }

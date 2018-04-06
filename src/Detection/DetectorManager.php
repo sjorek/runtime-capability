@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Management\AbstractManager;
-use Sjorek\RuntimeCapability\RuntimeCapabilityInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -24,40 +23,20 @@ class DetectorManager extends AbstractManager implements DetectorManagerInterfac
     /**
      * {@inheritdoc}
      *
-     * @param DetectorInterface $detector
-     *
-     * @return DetectorInterface
-     *
-     * @see AbstractManager::register()
+     * @see DetectorManagerInterface::registerDetector()
      */
-    public function register(DetectorInterface $detector): DetectorInterface
+    public function registerDetector(DetectorInterface $driver): DetectorInterface
     {
-        return parent::register($detector);
+        return $this->registerManageable($driver);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param string $idOrDetectorClass
-     *
-     * @return DetectorInterface
-     *
-     * @see AbstractManager::get()
+     * @see DetectorManagerInterface::createDetector()
      */
-    public function get(string $idOrDetectorClass): DetectorInterface
+    public function createDetector(string $idOrDetectorClass): DetectorInterface
     {
-        return parent::get($idOrDetectorClass);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return RuntimeCapabilityInterface
-     *
-     * @see AbstractManager::getManagement()
-     */
-    public function getManagement(): RuntimeCapabilityInterface
-    {
-        return parent::getManagement();
+        return $this->createManageable($idOrDetectorClass);
     }
 }

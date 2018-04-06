@@ -51,9 +51,9 @@ class FilesystemDriverManagerTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::registerManageable
+     * @covers ::registerFilesystemDriver
      */
-    public function testRegisterManager()
+    public function testRegisterFilesystemDriver()
     {
         $instance = new FilesystemDriverTestFixture();
         $this->assertSame($instance, $this->subject->registerFilesystemDriver($instance));
@@ -64,9 +64,9 @@ class FilesystemDriverManagerTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::createManager
+     * @covers ::createFilesystemDriver
      */
-    public function testCreateManager()
+    public function testCreateFilesystemDriver()
     {
         $instance = $this->subject->createFilesystemDriver(FilesystemDriverTestFixture::class);
         $this->assertSame($instance, $this->subject->createFilesystemDriver($instance->identify()));

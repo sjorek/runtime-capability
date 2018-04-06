@@ -51,9 +51,9 @@ class ConfigurationManagerTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::registerManageable
+     * @covers ::registerConfiguration
      */
-    public function testRegisterManager()
+    public function testRegisterConfiguration()
     {
         $instance = new ConfigurationTestFixture();
         $this->assertSame($instance, $this->subject->registerConfiguration($instance));
@@ -64,9 +64,9 @@ class ConfigurationManagerTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::createManager
+     * @covers ::createConfiguration
      */
-    public function testCreateManager()
+    public function testCreateConfiguration()
     {
         $instance = $this->subject->createConfiguration(ConfigurationTestFixture::class);
         $this->assertSame($instance, $this->subject->createConfiguration($instance->identify()));
