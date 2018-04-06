@@ -11,19 +11,23 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Detection;
-
-use Sjorek\RuntimeCapability\Dependence\DependingInterface;
+namespace Sjorek\RuntimeCapability\Dependence;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DependingDetectorInterface extends DetectorInterface, DependingInterface
+trait DependingTrait
 {
     /**
-     * @param array[bool[]]|bool[] ...$dependencies
-     *
-     * @return self
+     * @var string[]
      */
-    public function setDependencies(...$dependencies): self;
+    const DEPENDENCIES = [];
+
+    /**
+     * @return string[]
+     */
+    public function depends(): array
+    {
+        return static::DEPENDENCIES;
+    }
 }

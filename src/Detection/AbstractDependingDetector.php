@@ -24,6 +24,11 @@ abstract class AbstractDependingDetector extends AbstractDetector implements Dep
     const DEPENDENCIES = [];
 
     /**
+     * @var array[bool[]]|bool[]
+     */
+    protected $dependencies;
+
+    /**
      * {@inheritdoc}
      *
      * @see DetectorInterface::depends()
@@ -36,11 +41,21 @@ abstract class AbstractDependingDetector extends AbstractDetector implements Dep
     /**
      * {@inheritdoc}
      *
+     * @see DependingDetectorInterface::setDependencies()
+     */
+    public function setDependencies(...$dependencies): DependingDetectorInterface
+    {
+        $this->dependencies = $dependencies;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see DetectorInterface::detect()
      */
-    public function detect(...$dependencies)
+    public function detect()
     {
-        $capabilities = $this->evaluate(...$dependencies);
+        $capabilities = $this->evaluate(...$this->dependencies);
         if ($this->compactResult) {
             $capabilities = $this->reduceResult($capabilities);
         }
@@ -49,11 +64,11 @@ abstract class AbstractDependingDetector extends AbstractDetector implements Dep
     }
 
     /**
-     * @param array[bool[]]|bool[]|bool ...$dependencies
+     * @param array[bool[]]|bool[] ...$dependencies
      *
      * @return array[bool[]]|bool[]|bool
      *
-     * @see AbstractDetector::detect()
+     * @see AbstractDependingDetector::detect()
      */
     abstract protected function evaluate(...$dependencies);
 }

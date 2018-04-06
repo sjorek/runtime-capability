@@ -11,19 +11,15 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Detection;
-
-use Sjorek\RuntimeCapability\Dependence\DependingInterface;
+namespace Sjorek\RuntimeCapability\Dependence;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DependingDetectorInterface extends DetectorInterface, DependingInterface
+interface DependingInterface extends DependableInterface
 {
     /**
-     * @param array[bool[]]|bool[] ...$dependencies
-     *
-     * @return self
+     * @return string[]
      */
-    public function setDependencies(...$dependencies): self;
+    public function depends(): array;
 }

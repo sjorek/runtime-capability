@@ -109,20 +109,6 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     abstract protected function evaluate();
 
     /**
-     * {@inheritdoc}
-     *
-     * @param DetectorManagerInterface $manager
-     *
-     * @return DetectorInterface
-     *
-     * @see DetectorInterface::setManager()
-     */
-    public function setManager(DetectorManagerInterface $manager): DetectorInterface
-    {
-        return parent::setManager($manager);
-    }
-
-    /**
      * Reduce the given array of capability detection results to the most compact value.
      *
      * @param array[bool[]] $capabilities

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Dependence\DependencyResolverInterface;
+use Sjorek\RuntimeCapability\Dependence\DependencyManagerInterface;
 use Sjorek\RuntimeCapability\Detection\DetectorInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface CapabilityInterface extends DependencyResolverInterface
+interface CapabilityInterface extends DependencyManagerInterface
 {
     const MAXIMIMUM_EVALUATION_RETRIES = 2;
 
@@ -42,7 +42,7 @@ interface CapabilityInterface extends DependencyResolverInterface
      *
      * @return \Generator
      *
-     * @see DependencyResolverInterface::resolve()
+     * @see DependencyManagerInterface::resolve()
      */
     public function resolve(DetectorInterface $detector): \Generator;
 }

@@ -79,23 +79,26 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
             if (isset($results[$detector->identify()])) {
                 continue;
             }
-            $dependencies = [];
-            foreach ($detector->depends() as $id) {
-                $id = $this->detectorManager->get($id)->identify();
-                if (isset($results[$id])) {
-                    $dependencies[] = $results[$id];
-                    continue;
+            if ($detector instanceof DependingDetectorInterface) {
+                $dependencies = [];
+                foreach ($detector->depends() as $id) {
+                    $id = $this->detectorManager->createDetector($id)->identify();
+                    if (isset($results[$id])) {
+                        $dependencies[] = $results[$id];
+                        continue;
+                    }
+                    array_push($instances, $detector);
+                    continue 2;
                 }
-                array_push($instances, $detector);
-                continue 2;
+                $dependencies = array_map(
+                    function ($id) use ($results) {
+                        return $results[$this->detectorManager->createDetector($id)->identify()];
+                    },
+                    $detector->depends()
+                );
+                $detector->setDependencies(...$dependencies);
             }
-            $dependencies = array_map(
-                function ($id) use ($results) {
-                    return $results[$this->detectorManager->get($id)->identify()];
-                },
-                $detector->depends()
-            );
-            $results[$detector->identify()] = $detector->detect(...$dependencies);
+            $results[$detector->identify()] = $detector->detect();
         }
         if (0 === $limit) {
             throw new CapabilityDetectionFailure(
@@ -117,7 +120,7 @@ abstract class AbstractCapability extends AbstractManageable implements Capabili
         if ($detector instanceof DependingDetectorInterface) {
             return function () use ($detector) {
                 foreach ($detector->depends() as $id) {
-                    yield from $this->resolve($this->detectorManager->get($id));
+                    yield from $this->resolve($this->detectorManager->createDetector($id));
                 }
                 yield $detector->identify() => $detector;
             };

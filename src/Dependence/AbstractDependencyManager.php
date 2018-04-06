@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Dependence;
 
+use Sjorek\RuntimeCapability\Management\AbstractManager;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DependencyInterface extends DependableInterface
+abstract class AbstractDependencyManager extends AbstractManager implements DependencyManagerInterface
 {
-    /**
-     * @return DependableInterface[]|string[]
-     */
-    public function depends();
+    use DependencyManagerTrait;
 }
