@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Capability;
 
-use Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity\HierarchicalFilesystemDetector as CaseSensitivityDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\Encoding\HierarchicalFilesystemDetector as EncodingDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\PathLength\HierarchicalFilesystemDetector as PathLengthDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity\FilesystemHierarchyDetector as CaseSensitivityDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding\FilesystemHierarchyDetector as PathEncodingDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\PathLength\FilesystemHierarchyDetector as PathLengthDetector;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class HierarchicalFilesystemCapability extends AbstractCapability
+class FilesystemHierarchyCapability extends AbstractCapability
 {
     /**
      * {@inheritdoc}
@@ -34,7 +34,7 @@ class HierarchicalFilesystemCapability extends AbstractCapability
         return $this->evaluate(
             $manager->get(CaseSensitivityDetector::class),
             $manager->get(PathLengthDetector::class),
-            $manager->get(EncodingDetector::class)
+            $manager->get(PathEncodingDetector::class)
         );
     }
 }

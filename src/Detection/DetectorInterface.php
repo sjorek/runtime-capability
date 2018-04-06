@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
-use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Dependence\DependableInterface;
 use Sjorek\RuntimeCapability\Management\ManageableInterface;
 

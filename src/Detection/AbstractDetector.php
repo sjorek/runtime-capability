@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
-use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableInterface;
-use Sjorek\RuntimeCapability\Capability\Configuration\ConfigurableTrait;
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
+use Sjorek\RuntimeCapability\Configuration\ConfigurableTrait;
 use Sjorek\RuntimeCapability\Management\AbstractManageable;
 
 /**
