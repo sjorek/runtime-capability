@@ -65,6 +65,7 @@ class ManagerTest extends AbstractTestCase
 
     /**
      * @covers ::createManageable
+     * @depends testRegisterManageable
      */
     public function testCreateManageable()
     {
@@ -78,6 +79,7 @@ class ManagerTest extends AbstractTestCase
 
     /**
      * @covers ::createManageable
+     * @depends testRegisterManageable
      */
     public function testCreateManageableWithNonExistentClassThrowsInvalidArgumentException()
     {
@@ -89,6 +91,7 @@ class ManagerTest extends AbstractTestCase
 
     /**
      * @covers ::createManageable
+     * @depends testRegisterManageable
      */
     public function testCreateManageableWithInvalidClassThrowsInvalidArgumentException()
     {
