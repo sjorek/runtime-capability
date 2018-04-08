@@ -19,7 +19,7 @@ use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixtu
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
- * Configuration test case.
+ * ConfigurationManager test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Configuration\ConfigurationManager
  */
