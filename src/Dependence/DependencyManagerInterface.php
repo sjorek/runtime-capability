@@ -21,11 +21,27 @@ use Sjorek\RuntimeCapability\Management\ManagerInterface;
 interface DependencyManagerInterface extends ManagerInterface
 {
     /**
+     * @param DependableInterface $instance
+     *
+     * @return DependableInterface
+     */
+    public function registerDependency(DependableInterface $instance): DependableInterface;
+
+    /**
+     * @param string $idOrDependableClass
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return DependableInterface
+     */
+    public function createDependency(string $idOrDependableClass): DependableInterface;
+
+    /**
      * Return a generator yielding DependableInterface::identify() => DependableInterface.
      *
      * @param DependableInterface $instance
      *
-     * @return \Generator
+     * @return \Generator with DependableInterface::identify() => DependableInterface
      */
     public function resolveDependencies(DependableInterface $instance): \Generator;
 }

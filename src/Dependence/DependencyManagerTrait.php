@@ -19,6 +19,28 @@ namespace Sjorek\RuntimeCapability\Dependence;
 trait DependencyManagerTrait
 {
     /**
+     * @param DependableInterface $instance
+     *
+     * @return DependableInterface
+     */
+    public function registerDependency(DependableInterface $instance): DependableInterface
+    {
+        return $this->registerManageable($instance);
+    }
+
+    /**
+     * @param string $idOrDependableClass
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return DependableInterface
+     */
+    public function createDependency(string $idOrDependableClass): DependableInterface
+    {
+        return $this->createManageable($idOrDependableClass);
+    }
+
+    /**
      * Return a generator yielding DependableInterface::identify() => DependableInterface.
      *
      * @param DependableInterface $instance
@@ -29,56 +51,63 @@ trait DependencyManagerTrait
      */
     public function resolveDependencies(DependableInterface $instance): \Generator
     {
-        $_identifiers = [];
-        $_instances = [];
-
-        return $this->resolveDependenciesWithCircularProtection($instance, $_identifiers, $_instances);
+        return $this->generateDependencyChain($instance);
     }
 
     /**
      * @param DependableInterface $instance
-     * @param array               $_identifiers
-     * @param array               $_instances
+     * @param array|null          $_dependencies
+     * @param array|null          $_dependents
+     * @param string|null         $_parent
      *
      * @throws \RuntimeException
      *
      * @return \Generator
      */
-    protected function resolveDependenciesWithCircularProtection(
+    protected function generateDependencyChain(
         DependableInterface $instance,
-        array &$_identifiers,
-        array &$_instances): \Generator
+        array &$_dependencies = null,
+        array &$_dependents = null,
+        string $_parent = null)
     {
+        if (null === $_dependencies) {
+            $_dependencies = [];
+        }
+        if (null === $_dependents) {
+            $_dependents = [];
+        }
+        if (null === $_parent) {
+            $_parent = '_';
+        }
+
         $id = $instance->identify();
-        if (in_array($id, $_identifiers, true)) {
-            throw new \RuntimeException(
-                sprintf('Invalid circular dependency for id: %s', $id),
+        if (isset($_dependencies[$id])) {
+            throw new \LogicException(
+                sprintf(
+                    'Invalid circular dependency for id "%s" (%s) with parent id "%s".',
+                    $id,
+                    get_class($instance),
+                    $_parent
+                ),
                 1521250751
             );
         }
-        if (in_array($instance, $_instances, true)) {
-            throw new \RuntimeException(
-                sprintf('Invalid circular dependency for instance: %s', get_class($instance)),
-                1521250755
-            );
-        }
+        $_dependencies[$_parent][] = $id;
+        $_dependents[$id][] = $_parent;
+
         if ($instance instanceof DependingInterface) {
-            $generator = function (array &$_identifiers, array &$_instances) use ($id, $instance) {
-                foreach ($instance->depends() as $id) {
-                    yield from $this->resolveDependenciesWithCircularProtection(
-                        $this->createManageable($id),
-                        $_identifiers,
-                        $_instances
-                    );
-                }
-                yield $id => $instance;
-            };
-        } else {
-            $generator = function () use ($id, $instance) {
-                yield $id => $instance;
-            };
+            foreach ($instance->depends() as $dependency) {
+                yield from $this->generateDependencyChain(
+                    $this->createDependency($dependency),
+                    $_dependencies,
+                    $_dependents,
+                    $id
+                );
+                $_dependencies[$_parent][] = $dependency;
+                $_dependents[$dependency][] = $_parent;
+            }
         }
 
-        return $generator($_identifiers, $_instances);
+        yield $id => $instance;
     }
 }

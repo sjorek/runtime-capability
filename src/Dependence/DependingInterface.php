@@ -19,6 +19,11 @@ namespace Sjorek\RuntimeCapability\Dependence;
 interface DependingInterface extends DependableInterface
 {
     /**
+     * @var string[]
+     */
+    const DEPENDENCIES = [];
+
+    /**
      * @return string[]
      */
     public function depends(): array;

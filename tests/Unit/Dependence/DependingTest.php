@@ -1,0 +1,43 @@
+<?php
+namespace Sjorek\RuntimeCapability\Tests\Unit\Dependence;
+
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture1;
+
+/**
+ * AbstractDepending test case.
+ *
+ * @coversDefaultClass \Sjorek\RuntimeCapability\Dependence\AbstractDepending
+ */
+class DependingTest extends AbstractTestCase
+{
+    /**
+     * @var DependingTestFixture1
+     */
+    private $subject;
+
+    /**
+     * Prepares the environment before running a test.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->subject = new DependingTestFixture1();
+    }
+
+    /**
+     * Cleans up the environment after running a test.
+     */
+    protected function tearDown()
+    {
+        $this->subject = null;
+
+        parent::tearDown();
+    }
+
+    public function testDepends()
+    {
+        $this->assertSame(DependingTestFixture1::DEPENDENCIES, $this->subject->depends());
+    }
+}

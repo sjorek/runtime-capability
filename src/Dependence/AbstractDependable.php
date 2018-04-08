@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Dependence;
 
-use Sjorek\RuntimeCapability\Identification\AbstractIdentifiable;
+use Sjorek\RuntimeCapability\Management\AbstractManageable;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractDependable extends AbstractIdentifiable implements DependableInterface
+abstract class AbstractDependable extends AbstractManageable implements DependableInterface
 {
+    use DependableTrait;
 }

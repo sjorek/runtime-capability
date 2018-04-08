@@ -13,11 +13,22 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Dependence;
 
-use Sjorek\RuntimeCapability\Identification\IdentifiableInterface;
+use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DependableInterface extends IdentifiableInterface
+interface DependableInterface extends ManageableInterface
 {
+    /**
+     * @param DependencyManagerInterface $manager
+     *
+     * @return ManageableInterface
+     */
+    public function setDependencyManager(DependencyManagerInterface $manager): self;
+
+    /**
+     * @return DependencyManagerInterface
+     */
+    public function getDependencyManager(): DependencyManagerInterface;
 }

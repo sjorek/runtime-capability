@@ -19,11 +19,6 @@ namespace Sjorek\RuntimeCapability\Dependence;
 trait DependingTrait
 {
     /**
-     * @var string[]
-     */
-    const DEPENDENCIES = [];
-
-    /**
      * @return string[]
      */
     public function depends(): array
