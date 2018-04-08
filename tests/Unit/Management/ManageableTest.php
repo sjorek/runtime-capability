@@ -66,6 +66,7 @@ class ManageableTest extends AbstractTestCase
 
     /**
      * @covers ::getManager
+     * @depends testSetManager
      */
     public function testGetManager()
     {
@@ -86,6 +87,7 @@ class ManageableTest extends AbstractTestCase
 
     /**
      * @covers ::getManagement
+     * @depends testSetManager
      */
     public function testGetManagement()
     {

@@ -42,40 +42,40 @@ abstract class AbstractManager extends AbstractManageable implements ManagerInte
     }
 
     /**
-     * @param string $idOrManagableClass
+     * @param string $idOrManageableClass
      *
      * @throws \InvalidArgumentException
      *
      * @return ManageableInterface
      */
-    public function createManageable(string $idOrManagableClass): ManageableInterface
+    public function createManageable(string $idOrManageableClass): ManageableInterface
     {
-        if (isset($this->instances[$idOrManagableClass])) {
-            return $this->instances[$idOrManagableClass];
+        if (isset($this->instances[$idOrManageableClass])) {
+            return $this->instances[$idOrManageableClass];
         }
-        if (isset($this->registry[$idOrManagableClass])) {
-            $idOrManagableClass = $this->registry[$idOrManagableClass];
+        if (isset($this->registry[$idOrManageableClass])) {
+            $idOrManageableClass = $this->registry[$idOrManageableClass];
         }
-        if (!class_exists($idOrManagableClass, true)) {
+        if (!class_exists($idOrManageableClass, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'The class does not exist: %s',
-                    $idOrManagableClass
+                    $idOrManageableClass
                 ),
                 1521207163
             );
         }
-        if (!is_subclass_of($idOrManagableClass, ManageableInterface::class, true)) {
+        if (!is_subclass_of($idOrManageableClass, ManageableInterface::class, true)) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'The class does implement the interface "%s": %s',
                     ManageableInterface::class,
-                    $idOrManagableClass
+                    $idOrManageableClass
                 ),
                 1521207167
             );
         }
 
-        return $this->registerManageable(new $idOrManagableClass());
+        return $this->registerManageable(new $idOrManageableClass());
     }
 }
