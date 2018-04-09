@@ -26,7 +26,7 @@ use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 /**
  * Manager test case.
  *
- * @coversDefaultClass \Sjorek\RuntimeCapability\Management\AbstractManager
+ * @coversDefaultClass \Sjorek\RuntimeCapability\Dependence\AbstractDepedencyManager
  */
 class DependencyManagerTest extends AbstractTestCase
 {
