@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Dependence;
 
-use Sjorek\RuntimeCapability\Management\ManagerInterface;
 use Sjorek\RuntimeCapability\Management\ManageableInterface;
+use Sjorek\RuntimeCapability\Management\ManagerInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -27,7 +27,7 @@ trait DependableTrait
     protected $manager = null;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see DependableInterface::setDependencyManager()
      */
@@ -37,7 +37,7 @@ trait DependableTrait
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @see DependableInterface::setDependencyManager()
      */

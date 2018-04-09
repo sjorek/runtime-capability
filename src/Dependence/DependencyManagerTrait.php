@@ -56,9 +56,9 @@ trait DependencyManagerTrait
 
     /**
      * @param DependableInterface $instance
-     * @param array|null          $_dependencies
-     * @param array|null          $_dependents
-     * @param string|null         $_parent
+     * @param null|array          $_dependencies
+     * @param null|array          $_dependents
+     * @param null|string         $_parent
      *
      * @throws \RuntimeException
      *

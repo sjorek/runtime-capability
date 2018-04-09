@@ -16,12 +16,12 @@ namespace Sjorek\RuntimeCapability\Tests\Unit\Dependence;
 use Sjorek\RuntimeCapability\Dependence\DependableInterface;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependableTestFixture;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependencyManagerTestFixture;
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture1;
-use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture2;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestCircularFixture1;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestCircularFixture2;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestCircularFixture3;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture1;
+use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture2;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
  * Manager test case.
@@ -90,7 +90,7 @@ class DependencyManagerTest extends AbstractTestCase
      * @depends testCreateDependency
      * @dataProvider provideTestResolveDependenciesData
      *
-     * @param array $expect
+     * @param array                 $expect
      * @param DependableInterface   $dependable
      * @param DependableInterface[] $register
      */
@@ -101,7 +101,7 @@ class DependencyManagerTest extends AbstractTestCase
         $this->assertSame(
             $register,
             array_map(
-                function(DependableInterface $instance) use($manager) {
+                function (DependableInterface $instance) use ($manager) {
                     return $manager->registerDependency($instance);
                 },
                 $register
@@ -129,7 +129,7 @@ class DependencyManagerTest extends AbstractTestCase
                     $dependable->identify() => $dependable,
                 ],
                 $dependable,
-                [$dependable]
+                [$dependable],
             ],
             'two dependencies' => [
                 [
@@ -137,7 +137,7 @@ class DependencyManagerTest extends AbstractTestCase
                     $depending1->identify() => $depending1,
                 ],
                 $depending1,
-                [$dependable, $depending1]
+                [$dependable, $depending1],
             ],
             'multiple dependencies' => [
                 [
@@ -146,7 +146,7 @@ class DependencyManagerTest extends AbstractTestCase
                     $depending2->identify() => $depending2,
                 ],
                 $depending2,
-                [$dependable, $depending1, $depending2]
+                [$dependable, $depending1, $depending2],
             ],
         ];
     }
