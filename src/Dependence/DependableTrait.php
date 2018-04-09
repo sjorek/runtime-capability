@@ -33,7 +33,9 @@ trait DependableTrait
      */
     public function setDependencyManager(DependencyManagerInterface $manager): DependableInterface
     {
-        return parent::setManager($manager);
+        $this->manager = $manager;
+
+        return $this;
     }
 
     /**
@@ -43,7 +45,11 @@ trait DependableTrait
      */
     public function getDependencyManager(): DependencyManagerInterface
     {
-        return parent::getManager();
+        if (null !== $this->manager) {
+            return $this->manager;
+        }
+
+        throw new \RuntimeException('Missing manager instance.', 1522098121);
     }
 
     /**

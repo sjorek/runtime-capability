@@ -24,7 +24,7 @@ use Sjorek\RuntimeCapability\Tests\Fixtures\Dependence\DependingTestFixture2;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
- * Manager test case.
+ * AbstractDepedencyManager test case.
  *
  * @coversDefaultClass \Sjorek\RuntimeCapability\Dependence\AbstractDepedencyManager
  */

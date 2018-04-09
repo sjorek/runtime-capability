@@ -37,11 +37,11 @@ interface DependencyManagerInterface extends ManagerInterface
     public function createDependency(string $idOrDependableClass): DependableInterface;
 
     /**
-     * Return a generator yielding DependableInterface::identify() => DependableInterface.
+     * Resolve the given dependable's dependencies.
      *
      * @param DependableInterface $instance
      *
-     * @return \Generator with DependableInterface::identify() => DependableInterface
+     * @return \Generator yielding DependableInterface::identify() => DependableInterface
      */
     public function resolveDependencies(DependableInterface $instance): \Generator;
 }
