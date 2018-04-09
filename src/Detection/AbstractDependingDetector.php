@@ -13,62 +13,50 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
+use Sjorek\RuntimeCapability\Dependence\DependingTrait;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
 abstract class AbstractDependingDetector extends AbstractDetector implements DependingDetectorInterface
 {
-    /**
-     * @var string[]
-     */
-    const DEPENDENCIES = [];
+    use DependingTrait;
 
     /**
      * @var array[bool[]]|bool[]
      */
-    protected $dependencies;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see DetectorInterface::depends()
-     */
-    public function depends()
-    {
-        return static::DEPENDENCIES;
-    }
+    protected $dependencyResults = [];
 
     /**
      * {@inheritdoc}
      *
      * @see DependingDetectorInterface::setDependencies()
      */
-    public function setDependencies(...$dependencies): DependingDetectorInterface
+    public function setDependencyResults(...$results): DependingDetectorInterface
     {
-        $this->dependencies = $dependencies;
+        $this->dependencyResults = $results;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see DetectorInterface::detect()
+     * @see AbstractDetector::evaluate()
      */
-    public function detect()
+    protected function evaluate()
     {
-        $capabilities = $this->evaluate(...$this->dependencies);
-        if ($this->compactResult) {
-            $capabilities = $this->reduceResult($capabilities);
-        }
-
-        return $capabilities;
+        return $this->evaluateWithDependency(...$this->dependencyResults);
     }
 
-    /**
-     * @param array[bool[]]|bool[] ...$dependencies
-     *
-     * @return array[bool[]]|bool[]|bool
-     *
-     * @see AbstractDependingDetector::detect()
-     */
-    abstract protected function evaluate(...$dependencies);
+    // /**
+    //  * @throws \RuntimeException
+    //  */
+    // protected function evaluateWithDependency()
+    // {
+    //     throw new \Exception(
+    //         'Missing implementation of method "evaluateWithDependency".',
+    //         1523271351
+    //     );
+    // }
 }

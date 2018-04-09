@@ -13,17 +13,19 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
+use Sjorek\RuntimeCapability\Dependence\DependencyManagerInterface;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DetectorManagerInterface
+interface DetectorManagerInterface extends DependencyManagerInterface
 {
     /**
-     * @param DetectorInterface $detector
+     * @param DetectorInterface $instance
      *
      * @return DetectorInterface
      */
-    public function registerDetector(DetectorInterface $detector): DetectorInterface;
+    public function registerDetector(DetectorInterface $instance): DetectorInterface;
 
     /**
      * @param string $idOrDetectorClass
@@ -31,4 +33,13 @@ interface DetectorManagerInterface
      * @return DetectorInterface
      */
     public function createDetector(string $idOrDetectorClass): DetectorInterface;
+
+    /**
+     * Resolve the given detector's dependencies.
+     *
+     * @param DetectorInterface $instance
+     *
+     * @return \Generator yielding DetectorInterface::identify() => DetectorInterface
+     */
+    public function resolveDetectorDependencies(DetectorInterface $instance): \Generator;
 }

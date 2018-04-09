@@ -23,4 +23,9 @@ abstract class AbstractConfigurable implements ConfigurableInterface, Identifiab
 {
     use IdentifiableTrait;
     use ConfigurableTrait;
+
+    /**
+     * @var array
+     */
+    protected static $DEFAULT_CONFIGURATION = [];
 }

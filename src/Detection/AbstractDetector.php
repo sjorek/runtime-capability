@@ -15,16 +15,23 @@ namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Configuration\ConfigurableTrait;
-use Sjorek\RuntimeCapability\Management\AbstractManageable;
-use Sjorek\RuntimeCapability\Management\ManageableInterface;
-use Sjorek\RuntimeCapability\Management\ManagerInterface;
+use Sjorek\RuntimeCapability\Dependence\AbstractDependable;
+use Sjorek\RuntimeCapability\Dependence\DependableInterface;
+use Sjorek\RuntimeCapability\Dependence\DependencyManagerInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-abstract class AbstractDetector extends AbstractManageable implements DetectorInterface
+abstract class AbstractDetector extends AbstractDependable implements DetectorInterface
 {
     use ConfigurableTrait;
+
+    /**
+     * @var array
+     */
+    protected static $DEFAULT_CONFIGURATION = [
+        'compact-result' => false,
+    ];
 
     /**
      * @var DetectorManagerInterface
@@ -34,7 +41,7 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     /**
      * @var bool
      */
-    protected $compactResult = false;
+    protected $compactResult = null;
 
     /**
      * {@inheritdoc}
@@ -43,7 +50,9 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
      */
     public function setDetectorManager(DetectorManagerInterface $manager): DetectorInterface
     {
-        return parent::setManager($manager);
+        $this->manager = $manager;
+
+        return $this;
     }
 
     /**
@@ -53,23 +62,29 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
      */
     public function getDetectorManager(): DetectorManagerInterface
     {
-        return parent::getManager();
+        if (null !== $this->manager) {
+            return $this->manager;
+        }
+
+        throw new \RuntimeException('Missing manager instance.', 1522098121);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @see AbstractManageable::setManager()
+     * @see DependableInterface::setDependencyManager()
      */
-    public function setManager(ManagerInterface $manager): ManageableInterface
+    public function setDependencyManager(DependencyManagerInterface $manager): DependableInterface
     {
         return $this->setDetectorManager($manager);
     }
 
     /**
-     * @return DetectorManagerInterface
+     * {@inheritdoc}
+     *
+     * @see DependableInterface::getDependencyManager()
      */
-    public function getManager(): ManagerInterface
+    public function getDependencyManager(): DependencyManagerInterface
     {
         return $this->getDetectorManager();
     }
@@ -79,7 +94,7 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
      *
      * @see ConfigurableInterface::setup()
      */
-    public function setup()
+    public function setup(): ConfigurableInterface
     {
         $this->compactResult = $this->config('compact-result', 'boolean');
 
@@ -94,7 +109,7 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     public function detect()
     {
         $capabilities = $this->evaluate();
-        if ($this->compactResult) {
+        if ($this->compactResult && is_array($capabilities)) {
             $capabilities = $this->reduceResult($capabilities);
         }
 
@@ -109,27 +124,31 @@ abstract class AbstractDetector extends AbstractManageable implements DetectorIn
     abstract protected function evaluate();
 
     /**
-     * Reduce the given array of capability detection results to the most compact value.
+     * Reduce the first two levels of the given multidimensional array to the most compact value.
      *
-     * @param array[bool[]] $capabilities
+     * @param bool|bool[] $capabilities
      */
     protected function reduceResult(array $capabilities)
     {
-        return array_map(
-            function ($capability) {
-                if (false === $capability || true === $capability) {
-                    return $capability;
-                }
+        $isNotBoolean = function ($value) {
+            return !is_bool($value);
+        };
+        $reduce = function ($capability) use ($isNotBoolean) {
+            if (false === $capability || true === $capability) {
+                return $capability;
+            }
+            if (is_array($capability) && empty(array_filter($capability, $isNotBoolean))) {
                 if (!in_array(false, $capability, true)) {
                     return true;
                 }
-                if (in_array(true, $capability, true)) {
-                    return $capability;
+                if (!in_array(true, $capability, true)) {
+                    return false;
                 }
+            }
 
-                return false;
-            },
-            $capabilities
-        );
+            return $capability;
+        };
+
+        return $reduce(array_map($reduce, $capabilities));
     }
 }

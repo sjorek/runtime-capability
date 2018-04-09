@@ -22,11 +22,6 @@ use Sjorek\RuntimeCapability\Utility\ConfigurationUtility;
 trait ConfigurableTrait
 {
     /**
-     * @var array
-     */
-    protected static $DEFAULT_CONFIGURATION = [];
-
-    /**
      * @var ConfigurationInterface
      */
     protected $configuration;

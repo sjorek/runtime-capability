@@ -15,12 +15,11 @@ namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Dependence\DependableInterface;
-use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface DetectorInterface extends ConfigurableInterface, DependableInterface, ManageableInterface
+interface DetectorInterface extends ConfigurableInterface, DependableInterface
 {
     /**
      * @return array[bool[]]|bool[]|bool

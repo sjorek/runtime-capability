@@ -21,9 +21,9 @@ use Sjorek\RuntimeCapability\Dependence\DependingInterface;
 interface DependingDetectorInterface extends DetectorInterface, DependingInterface
 {
     /**
-     * @param array[bool[]]|bool[] ...$dependencies
+     * @param array[bool[]]|bool[] ...$results
      *
      * @return self
      */
-    public function setDependencies(...$dependencies): self;
+    public function setDependencyResults(...$results): self;
 }

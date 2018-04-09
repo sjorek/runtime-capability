@@ -32,7 +32,7 @@ class LocaleCharsetDetector extends AbstractDependingDetector
     const LOCALE_CATEGORIES = [LC_ALL, LC_COLLATE, LC_CTYPE, LC_MESSAGES, LC_MONETARY, LC_NUMERIC, LC_TIME];
 
     /**
-     * @var int[]
+     * @var array
      */
     protected static $DEFAULT_CONFIGURATION = [
         'locale-categories' => static::LOCALE_CATEGORIES,
