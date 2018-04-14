@@ -62,11 +62,11 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      *
      * @see FilesystemDetector::evaluate()
      */
-    protected function evaluate(array $localeCharset, string $defaultCharset)
+    protected function evaluateWithDependency(array $localeCharset, string $defaultCharset)
     {
         $this->filesystemDriver->setDirectory($this->filesystemPath);
 
-        return parent::evaluate($localeCharset, $defaultCharset);
+        return parent::evaluateWithDependency($localeCharset, $defaultCharset);
     }
 
     /**

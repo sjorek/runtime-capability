@@ -114,7 +114,7 @@ class LocaleCharsetDetector extends AbstractDependingDetector
      *
      * @see AbstractDetector::evaluate()
      */
-    protected function evaluate(array $platform)
+    protected function evaluateWithDependency(array $platform)
     {
         $capabilities = [];
         foreach ($this->categories as $category) {

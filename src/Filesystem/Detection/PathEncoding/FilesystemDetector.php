@@ -132,7 +132,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      *
      * @see \Sjorek\RuntimeCapability\Detection\AbstractDetector::evaluate()
      */
-    protected function evaluate(array $localeCharset = null, string $defaultCharset = null)
+    protected function evaluateWithDependency(array $localeCharset = null, string $defaultCharset = null)
     {
         $charset = $this->filepathEncoding;
         if ('BINARY' === $charset ||

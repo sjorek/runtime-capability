@@ -63,7 +63,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
      *
      * @see FilesystemDirectoryDetector::evaluate()
      */
-    protected function evaluate(array $localeCharset, string $defaultCharset)
+    protected function evaluateWithDependency(array $localeCharset, string $defaultCharset)
     {
         $this->filesystemDriver->setDirectory($this->filesystemPath);
         $backupFilesystemPath = $this->filesystemPath;
@@ -71,7 +71,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
         $this->filesystemDriver->createDirectory($this->detectionFolderName);
         $this->filesystemPath = $this->detectionFolderName;
 
-        $result = parent::evaluate($localeCharset, $defaultCharset);
+        $result = parent::evaluateWithDependency($localeCharset, $defaultCharset);
 
         $this->filesystemPath = $backupFilesystemPath;
         $this->filesystemDriver->setDirectory($this->filesystemPath);

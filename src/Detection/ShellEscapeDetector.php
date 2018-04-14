@@ -95,7 +95,7 @@ class ShellEscapeDetector extends AbstractDependingDetector
      * @see https://developer.apple.com/library/content/documentation/General/Reference/APIDiffsMacOSX10_10SeedDiff/modules/Darwin.html
      * @see https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/mbclen-mblen-mblen-l
      */
-    protected function evaluate(array $platform, array $localeCharset, string $defaultCharset)
+    protected function evaluateWithDependency(array $platform, array $localeCharset, string $defaultCharset)
     {
         $testString = hex2bin(self::TEST_STRING);
         $quote = 'Windows' === $platform['os-family'] ? '"' : '\'';
