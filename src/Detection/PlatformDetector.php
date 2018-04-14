@@ -26,11 +26,11 @@ class PlatformDetector extends AbstractDetector
     protected function evaluate()
     {
         return [
-            'engine' => 'php',
-            'binary' => PHP_BINARY,
+            'name' => defined('HHVM_VERSION') ? 'hhvm' : 'php',
+            'binary' => defined('PHP_BINARY') ? PHP_BINARY : null,
             'os' => PHP_OS,
             'os-family' => PHP_OS_FAMILY,
-            'version' => PHP_VERSION,
+            'version' => defined('HHVM_VERSION') ? HHVM_VERSION : PHP_VERSION,
             'version-id' => PHP_VERSION_ID,
         ];
     }
