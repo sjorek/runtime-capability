@@ -14,18 +14,18 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Tests\Unit\Detection;
 
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
-use Sjorek\RuntimeCapability\Detection\PlatformDetector;
+use Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
 
 /**
- * PlatformDetector test case.
+ * DefaultCharsetDetector test case.
  *
- * @coversDefaultClass \Sjorek\RuntimeCapability\Detection\PlatformDetector
+ * @coversDefaultClass \Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector
  */
-class PlatformDetectorTest extends AbstractTestCase
+class DefaultCharsetDetectorTest extends AbstractTestCase
 {
     /**
-     * @var PlatformDetector
+     * @var DefaultCharsetDetector
      */
     private $subject;
 
@@ -36,7 +36,7 @@ class PlatformDetectorTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->subject = (new PlatformDetector())->setConfiguration(new ConfigurationTestFixture());
+        $this->subject = (new DefaultCharsetDetector())->setConfiguration(new ConfigurationTestFixture());
     }
 
     /**
@@ -64,7 +64,9 @@ class PlatformDetectorTest extends AbstractTestCase
      */
     public function testEvaluate()
     {
-        $actual = $this->subject->detect();
-        $this->assertSame(['name', 'binary', 'os', 'os-family', 'version', 'version-id'], array_keys($actual));
+        $charset = ini_get('default_charset');
+        ini_set('default_charset', 'utf8');
+        $this->assertSame('UTF-8', $this->subject->detect());
+        ini_set('default_charset', $charset);
     }
 }

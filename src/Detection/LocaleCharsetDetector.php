@@ -36,25 +36,12 @@ class LocaleCharsetDetector extends AbstractDependingDetector
      */
     protected static $DEFAULT_CONFIGURATION = [
         'locale-categories' => static::LOCALE_CATEGORIES,
-        'locale-charset' => 'UTF8',
-        'windows-codepage' => CharsetUtility::WINDOWS_CODEPAGE_UTF8,
-        'empty-locale-on-windows-is-valid' => true,
     ];
 
     /**
      * @var int[]
      */
     protected $localeCategories = [];
-
-    /**
-     * @var string
-     */
-    protected $localeCharset = null;
-
-    /**
-     * @var string
-     */
-    protected $windowsCodepage = null;
 
     /**
      * On platform Windows an empty locale value falls back to the “implementation-defined native
@@ -86,24 +73,6 @@ class LocaleCharsetDetector extends AbstractDependingDetector
         }
         $this->localeCategories = $categories;
 
-        $charset = $this->config('locale-charset', 'string');
-        if (!in_array($charset, CharsetUtility::getEncodings(), true)) {
-            throw new ConfigurationFailure(
-                sprintf('Invalid configuration value for key "locale-charset": %s', $charset),
-                1521291498
-            );
-        }
-        $this->localeCharset = $charset;
-
-        $codepage = $this->config('locale-charset', 'string');
-        if (!in_array($codepage, CharsetUtility::WINDOWS_CODEPAGES, true)) {
-            throw new ConfigurationFailure(
-                sprintf('Invalid configuration value for key "windows-codepage": %s', $codepage),
-                1521291499
-            );
-        }
-        $this->windowsCodepage = $codepage;
-
         $this->emptyLocaleOnWindowsIsValid = $this->config('empty-locale-on-windows-is-valid', 'boolean');
 
         return $this;
@@ -118,27 +87,22 @@ class LocaleCharsetDetector extends AbstractDependingDetector
     {
         $capabilities = [];
         foreach ($this->categories as $category) {
-            $locale = setlocale($category, 0);
             $capabilities[$category] = false;
+            $locale = setlocale($category, 0);
             if (false === $locale) {
                 continue;
             }
-            if (false !== stripos(strtr($locale, '-', ''), '.' . strtr($this->localeCharset, '-', ''))) {
-                $capabilities[$category] = $this->localeCharset;
+            if ('' === $locale) {
+                if ('Windows' === $platform['os-family']) {
+                    $capabilities[$category] = $this->emptyLocaleOnWindowsIsValid;
+                }
                 continue;
             }
-            if ('Windows' === $platform['os-family']) {
-                if ('' === $locale) {
-                    if ($this->emptyLocaleOnWindowsIsValid) {
-                        $capabilities[$category] = $this->localeCharset;
-                    }
-                    continue;
-                }
-                if (false !== strpos($locale, '.' . $this->windowsCodepage)) {
-                    $capabilities[$category] = $this->localeCharset;
-                    continue;
-                }
+            $charset = CharsetUtility::getEncodingNameFromLocaleString($locale);
+            if (null === $charset) {
+                continue;
             }
+            $capabilities[$category] = $charset;
         }
 
         return $capabilities;

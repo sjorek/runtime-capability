@@ -24,16 +24,35 @@ use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 class CharsetUtilityTest extends AbstractTestCase
 {
     /**
-     * @covers ::getEncodings
+     * @covers ::normalizeEncodingName
+     * @testWith ["UTF-8", "utf8"]
+     *           ["auto", "unknown"]
+     *           [null, "invalid"]
+     *
+     * @param string|null $expect
+     * @param string      $charset
      */
-    public function testGetEncodings()
+    public function testNormalizEncodingNamee(?string $expect, string $charset)
     {
-        $actual = CharsetUtility::getEncodings();
-        $this->assertNotEmpty($actual);
-        $this->assertContainsOnly('string', $actual);
-        $this->assertContains('UTF8', $actual);
-        $this->assertContains('UTF-8', $actual);
-        $this->assertNotContains('utf8', $actual);
-        $this->assertNotContains('utf-8', $actual);
+        $this->assertSame($expect, CharsetUtility::normalizeEncodingName($charset));
+    }
+
+    /**
+     * @covers ::getEncodingNameFromLocaleString
+     * @testWith ["UTF-8", "de_DE.utf8"]
+     *           ["UTF-8", "de_DE.utf-8"]
+     *           ["UTF-8", "de_DE.UTF8"]
+     *           ["UTF-8", "de_DE.UTF-8"]
+     *           ["UTF-8", "de_DE.UTF-8@euro"]
+     *           ["UTF-8", "de_DE.65001"]
+     *           ["UTF-8", "de_DE.65001@euro"]
+     *           [null, "de_DE@euro"]
+     *
+     * @param string|null $expect
+     * @param string      $locale
+     */
+    public function testGetEncodingNameFromLocaleString(?string $expect, string $locale)
+    {
+        $this->assertSame($expect, CharsetUtility::getEncodingNameFromLocaleString($locale));
     }
 }

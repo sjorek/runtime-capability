@@ -41,7 +41,7 @@ abstract class AbstractDetector extends AbstractDependable implements DetectorIn
     /**
      * @var bool
      */
-    protected $compactResult = null;
+    protected $compactResult = false;
 
     /**
      * {@inheritdoc}

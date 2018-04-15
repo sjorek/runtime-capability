@@ -15,6 +15,7 @@ namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -41,7 +42,7 @@ class ShellEscapeDetector extends AbstractDependingDetector
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'charset' => 'UTF8',
+        'charset' => 'utf-8',
     ];
 
     /**
@@ -56,18 +57,20 @@ class ShellEscapeDetector extends AbstractDependingDetector
      *
      * @see AbstractDetector::setup()
      */
-    public function setup()
+    public function setup(): ConfigurableInterface
     {
+        // the evaluation result must never be reduced, as it does not contain any booleans
+        $this->configuration['compact-result'] = false;
+
         parent::setup();
 
         $charset = $this->config('charset', 'string');
-        if (!in_array($charset, CharsetUtility::getEncodings(), true)) {
+        if (null === ($this->charset = CharsetUtility::normalizeEncodingName($charset))) {
             throw new ConfigurationFailure(
                 sprintf('Invalid configuration value for key "charset": %s', $charset),
                 1521291497
             );
         }
-        $this->charset = $charset;
 
         return $this;
     }

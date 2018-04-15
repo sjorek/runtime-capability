@@ -13,11 +13,26 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
+
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
 class PlatformDetector extends AbstractDetector
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see ConfigurableInterface::setup()
+     */
+    public function setup(): ConfigurableInterface
+    {
+        // the evaluation result must never be reduced, as it does not contain any booleans
+        $this->configuration['compact-result'] = false;
+
+        return parent::setup();
+    }
+
     /**
      * {@inheritdoc}
      *
