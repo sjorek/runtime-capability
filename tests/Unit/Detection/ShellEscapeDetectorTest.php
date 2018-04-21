@@ -105,6 +105,7 @@ class ShellEscapeDetectorTest extends AbstractTestCase
      *           [false, "27c3a4c3b6c3bc27", "UTF-8", "UTF-8", "UTF-8", "Windows"]
      *           [true, "22c3a4c3b6c3bc22", "UTF-8", "UTF-8", "UTF-8", "Windows"]
      *           [true, "27c3a4c3b6c3bc27", "UTF-8", "ISO-8859-1", "ISO-8859-1", "Linux", 50599]
+     *           [true, "22c3a4c3b6c3bc22", "UTF-8", "ISO-8859-1", "ISO-8859-1", "Windows", 50599]
      *
      * @param boolean $expect
      * @param string $charset
