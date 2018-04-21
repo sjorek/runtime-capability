@@ -37,6 +37,14 @@ class ShellEscapeDetectorTest extends AbstractTestCase
     {
         parent::setUp();
 
+        unset($GLOBALS['Sjorek\\RuntimeCapability\\Detection']);
+
+        require_once str_replace(
+            ['/Unit/', '.php'],
+            ['/Fixtures/', 'Fixture.php'],
+            __FILE__
+        );
+
         $this->subject = (new ShellEscapeDetector())->setConfiguration(new ConfigurationTestFixture());
     }
 
@@ -46,6 +54,8 @@ class ShellEscapeDetectorTest extends AbstractTestCase
     protected function tearDown()
     {
         $this->subject = null;
+
+        unset($GLOBALS['Sjorek\\RuntimeCapability\\Detection']);
 
         parent::tearDown();
     }
@@ -88,11 +98,42 @@ class ShellEscapeDetectorTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::evaluate
+     * @covers ::evaluateWithDependency
+     * @testWith [true, "27c3a4c3b6c3bc27"]
+     *           [false, "27c3a4c3b6c3bc27", "ISO-8859-1"]
+     *           [false, "27c3a4c3b6c3bc27", "UTF-8", "ISO-8859-1", "ISO-8859-1"]
+     *           [false, "27c3a4c3b6c3bc27", "UTF-8", "UTF-8", "UTF-8", "Windows"]
+     *           [true, "22c3a4c3b6c3bc22", "UTF-8", "UTF-8", "UTF-8", "Windows"]
+     *           [true, "27c3a4c3b6c3bc27", "UTF-8", "ISO-8859-1", "ISO-8859-1", "Linux", 50599]
+     *
+     * @param boolean $expect
+     * @param string $charset
+     * @param string $escapeshellarg
+     * @param array $dependencies
      */
-    public function _testEvaluate(array $dependencyResults)
+    public function testEvaluateWithDependency(
+        bool $expect,
+        string $escapeshellarg,
+        string $charset = 'UTF-8',
+        string $localeCharset = 'UTF-8',
+        string $defaultCharset = 'UTF-8',
+        string $osFamily = 'Linux',
+        int $verionId = 70000)
     {
-        $this->subject->setDependencyResults(...$dependencyResults);
-        $this->assertInternalType('boolean', $this->subject->detect());
+        $this->subject->setConfiguration(new ConfigurationTestFixture(['charset' => $charset]))->setup();
+
+        $namespace = 'Sjorek\\RuntimeCapability\\Detection';
+        $GLOBALS[$namespace]['escapeshellarg'] = hex2bin($escapeshellarg);
+        $this->subject->setDependencyResults(
+            ["os-family" => $osFamily, "version-id" => $verionId],
+            [LC_CTYPE => $localeCharset],
+            $defaultCharset
+        );
+
+        $actual = $this->subject->detect();
+        $this->assertInternalType('boolean', $actual);
+        $this->assertSame($expect, $actual);
+
+        unset($GLOBALS[$namespace]['escapeshellarg']);
     }
 }

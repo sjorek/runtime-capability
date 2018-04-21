@@ -101,6 +101,9 @@ class ShellEscapeDetector extends AbstractDependingDetector
     protected function evaluateWithDependency(array $platform, array $localeCharset, string $defaultCharset)
     {
         $testString = hex2bin(self::TEST_STRING);
+        if ('UTF-8' !== $this->charset) {
+            $testString = mb_convert_encoding($testString, $this->charset, 'UTF-8');
+        }
         $quote = 'Windows' === $platform['os-family'] ? '"' : '\'';
 
         return
