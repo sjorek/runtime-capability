@@ -15,6 +15,7 @@ namespace Sjorek\RuntimeCapability\Detection;
 
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -35,7 +36,8 @@ class LocaleCharsetDetector extends AbstractDependingDetector
      * @var array
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'locale-categories' => static::LOCALE_CATEGORIES,
+        'locale-categories' => self::LOCALE_CATEGORIES,
+        'empty-locale-on-windows-is-valid' => true,
     ];
 
     /**
@@ -60,15 +62,21 @@ class LocaleCharsetDetector extends AbstractDependingDetector
      *
      * @see AbstractDetector::setup()
      */
-    public function setup()
+    public function setup(): ConfigurableInterface
     {
         parent::setup();
 
         $categories = $this->config('locale-categories', 'array');
+        if (empty($categories)) {
+            throw new ConfigurationFailure(
+                'Missing configuration values for key "locale-categories"',
+                1524298141
+            );
+        }
         if ($invalid = array_diff($categories, static::LOCALE_CATEGORIES)) {
             throw new ConfigurationFailure(
                 sprintf('Invalid configuration values for key "locale-categories": %s', implode(',', $invalid)),
-                1521291497
+                1524298144
             );
         }
         $this->localeCategories = $categories;
@@ -86,7 +94,7 @@ class LocaleCharsetDetector extends AbstractDependingDetector
     protected function evaluateWithDependency(array $platform)
     {
         $capabilities = [];
-        foreach ($this->categories as $category) {
+        foreach ($this->localeCategories as $category) {
             $capabilities[$category] = false;
             $locale = setlocale($category, 0);
             if (false === $locale) {

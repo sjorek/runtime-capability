@@ -11,32 +11,53 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Utility {
-    if (!function_exists('posix_geteuid')) {
-        /**
-         * @return int
-         */
-        function posix_geteuid()
-        {
-            return PosixUtility::ROOT_UID;
-        }
+if (!function_exists('posix_geteuid')) {
+    /**
+     * polyfill implementation
+     *
+     * @return int
+     */
+    function posix_geteuid()
+    {
+        return \Sjorek\RuntimeCapability\Utility\PosixUtility::ROOT_UID;
     }
-    if (!function_exists('posix_getegid')) {
-        /**
-         * @return int
-         */
-        function posix_getegid()
-        {
-            return PosixUtility::ROOT_GID;
-        }
+}
+if (!function_exists('posix_getegid')) {
+    /**
+     * polyfill implementation
+     *
+     * @return int
+     */
+    function posix_getegid()
+    {
+        return \Sjorek\RuntimeCapability\Utility\PosixUtility::ROOT_GID;
     }
-    if (!function_exists('posix_getgroups')) {
-        /**
-         * @return int[]
-         */
-        function posix_getgroups()
-        {
-            return PosixUtility::USER_GROUPS;
-        }
+}
+if (!function_exists('posix_getgroups')) {
+    /**
+     * polyfill implementation
+     *
+     * @return int[]
+     */
+    function posix_getgroups()
+    {
+        return \Sjorek\RuntimeCapability\Utility\PosixUtility::USER_GROUPS;
+    }
+}
+
+if (!function_exists('nl_langinfo')) {
+    if (!defined('CODESET')) {
+        // "nl_langinfo" polyfill implementation
+        define('CODESET', 14);
+    }
+    /**
+     * polyfill implementation
+     *
+     * @param int $item
+     * @return string
+     */
+    function nl_langinfo($item)
+    {
+        return \Sjorek\RuntimeCapability\Utility\CharsetUtility::languageInfo($item);
     }
 }

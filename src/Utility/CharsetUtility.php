@@ -58,20 +58,39 @@ final class CharsetUtility
         }
 
         $candidate = '';
-        if (function_exists('nl_langinfo')) {
-            $current = setlocale(LC_CTYPE, 0);
-            if (false !== setlocale(LC_CTYPE, $locale)) {
-                // returns '' if the codeset can not be determined
-                $candidate = nl_langinfo(CODESET);
-            }
-            setlocale(LC_CTYPE, $current);
+        $current = setlocale(LC_CTYPE, 0);
+        if (false !== setlocale(LC_CTYPE, $locale)) {
+            // returns '' if the codeset can not be determined
+            $candidate = nl_langinfo(CODESET);
         }
-        if ('' === $candidate) {
-            $candidate = preg_replace('/^[^.]+\.([^@]+)(?:@.*)?$/', '$1', $locale);
+        setlocale(LC_CTYPE, $current);
+
+        return '' !== $candidate ? self::normalizeEncodingName($candidate) : null;
+    }
+
+    /**
+     * This method implements the 'nl_langinfo'-polyfill from the autoload bootstrap.
+     *
+     * @param int $item
+     * @return string
+     */
+    public static function languageInfo(int $item): string
+    {
+        if (CODESET !== $item) {
+            trigger_error(sprintf("Warning: nl_langinfo(): Item '%s' is not valid", $item), E_USER_WARNING);
+
+            return '';
         }
 
-        return self::normalizeEncodingName($candidate);
+        $locale = setlocale(LC_CTYPE, 0);
+        $match = null;
+        if (false === $locale || 1 !== preg_match('/^[^.]+\.([^@]+)(?:@.*)?$/', $locale, $match)) {
+            return '';
+        }
+
+        return $match[1];
     }
+
 
     /**
      * Map known codepages to charsets.
