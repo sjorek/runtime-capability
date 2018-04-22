@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Filesystem\Driver\PHP;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemHierarchyDriver;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractFilesystemTestCase;
 
 /**

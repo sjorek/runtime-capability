@@ -16,6 +16,7 @@ namespace Sjorek\RuntimeCapability\Detection;
 /**
  * @param string $arg
  */
-function escapeshellarg(string $arg) {
+function escapeshellarg(string $arg)
+{
     return $GLOBALS[__NAMESPACE__]['escapeshellarg'] ?? \escapeshellarg($arg);
 }

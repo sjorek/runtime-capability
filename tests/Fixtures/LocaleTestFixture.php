@@ -14,13 +14,14 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Utility;
 
 /**
- * @param int         $category
- * @param int|string  $locale
- * @param string[]    ...$locales
- * @return string|false
+ * @param int        $category
+ * @param int|string $locale
+ * @param string[]   ...$locales
+ *
+ * @return false|string
  */
-function setlocale(int $category, $locale, ...$locales) {
-
+function setlocale(int $category, $locale, ...$locales)
+{
     if (isset($GLOBALS[__NAMESPACE__]['setlocale'][$category])) {
         return $GLOBALS[__NAMESPACE__]['setlocale'][$category];
     }
@@ -36,8 +37,10 @@ function setlocale(int $category, $locale, ...$locales) {
 
 /**
  * @param int $item
+ *
  * @return string
  */
-function nl_langinfo(int $item) {
+function nl_langinfo(int $item)
+{
     return $GLOBALS[__NAMESPACE__]['nl_langinfo'][$item] ?? \nl_langinfo($item);
 }

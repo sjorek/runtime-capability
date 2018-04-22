@@ -22,23 +22,16 @@ use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver implements PHPFilesystemDriverInterface
 {
     /**
-     * @var string
-     */
-    protected $workingDirectory = null;
-
-    /**
-     * Normalize the given path.
+     * Normalize the given path any validate the normalized path.
      *
      * Hint: CWD = getcwd();
      *
      * <pre>
-     * .            =>  CWD             # replace single dot with current working directory
-     * ./test       =>  CWD/test        # replace leading dot with current working directory in path
-     * .\test       =>  CWD/test        # replace leading dot with current working directory in windows path
-     * test/file    =>  CWD/test/file   # prepend current working directory to relative path
-     * test\file    =>  CWD/test/file   # prepend current working directory to relative windows path
-     * /test        =>  /test           # keep absolute posix path absolute
-     * c:\test      =>  c:/test         # keep absolute windows path absolute
+     * .            =>  EMPTY       # replace single dot with current working directory
+     * ./test       =>  test        # replace leading dot with current working directory in path
+     * .\test       =>  test        # replace leading dot with current working directory in windows path
+     * test/file    =>  test/file   # prepend current working directory to relative path
+     * test\file    =>  test/file   # prepend current working directory to relative windows path
      * </pre>
      *
      * @param string $path
@@ -47,42 +40,11 @@ abstract class AbstractPHPFilesystemDriver extends AbstractFilesystemDriver impl
      */
     protected function normalizePath(string $path): string
     {
-        $this->validatePath($path);
-
         $path = FilesystemUtility::normalizePath($path);
-
-        if (!(FilesystemUtility::isAbsolutePath($path) || FilesystemUtility::isUrl($path))) {
-            if ('' === $path) {
-                $path = $this->getWorkingDirectory();
-            } else {
-                $path = $this->getWorkingDirectory() . '/' . $path;
-            }
-        }
 
         $this->validatePath($path);
 
         return $path;
-    }
-
-    protected function setWorkingDirectory(string $path): string
-    {
-        return $this->workingDirectory = $this->normalizePath($path);
-    }
-
-    /**
-     * Return the current working directory.
-     *
-     * @return string
-     *
-     * @see FilesystemUtility::getWorkingDirectory()
-     */
-    protected function getWorkingDirectory(): string
-    {
-        if (null !== $this->workingDirectory) {
-            return $this->workingDirectory;
-        }
-
-        return $this->workingDirectory = FilesystemUtility::getCurrentWorkingDirectory();
     }
 
     /**

@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\AbstractPHPFilesystemDriver;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 use Sjorek\RuntimeCapability\Utility\FilesystemUtility;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FileTargetDriver extends AbstractPHPFilesystemDriver implements FileTargetDriverInterface
+class FileTargetDriver extends AbstractPHPFilesystemDriver implements FileTargetInterface
 {
     /**
      * {@inheritdoc}

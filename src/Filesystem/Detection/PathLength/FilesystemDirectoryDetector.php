@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDirectoryDriverInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -27,7 +27,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FileTargetDirectoryDriver::class,
         'filesystem-path' => '.',
-        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
 
     /**

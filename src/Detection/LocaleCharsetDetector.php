@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Detection;
 
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
-use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>

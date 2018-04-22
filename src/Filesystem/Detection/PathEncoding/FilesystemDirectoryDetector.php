@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDirectoryDriverInterface;
 
 /**
  * Class to detect unicode filesystem capabilities.
@@ -31,7 +31,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
         'filesystem-path' => '.',
         'filepath-encoding' => 'BINARY',
         'filename-tests' => self::UTF8_FILENAME_TESTS,
-        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
 
     /**

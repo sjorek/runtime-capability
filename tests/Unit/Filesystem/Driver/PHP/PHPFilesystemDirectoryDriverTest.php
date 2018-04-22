@@ -15,10 +15,10 @@ namespace Sjorek\RuntimeCapability\Tests\Unit\Filesystem\Driver\PHP;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDirectoryDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDirectoryDriver;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDriverInterface;
 // use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDriver;
 use Sjorek\RuntimeCapability\Iteration\FilesystemFilterByTypeIterator;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Filesystem\Driver\PHP\PHPFilesystemDriverTestFixture;

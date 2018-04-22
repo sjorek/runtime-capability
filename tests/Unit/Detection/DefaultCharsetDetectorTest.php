@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Detection;
 
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 use Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**
  * DefaultCharsetDetector test case.

@@ -14,19 +14,23 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Detection;
 
 /**
- * @param int         $category
- * @param int|string  $locale
- * @param string[]    ...$locales
- * @return string|false
+ * @param int        $category
+ * @param int|string $locale
+ * @param string[]   ...$locales
+ *
+ * @return false|string
  */
-function setlocale(int $category, $locale, ...$locales) {
+function setlocale(int $category, $locale, ...$locales)
+{
     return \Sjorek\RuntimeCapability\Utility\setlocale($category, $locale, ...$locales);
 }
 
 /**
  * @param int $item
+ *
  * @return string
  */
-function nl_langinfo(int $item) {
+function nl_langinfo(int $item)
+{
     return \Sjorek\RuntimeCapability\Utility\nl_langinfo($item);
 }

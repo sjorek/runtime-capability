@@ -51,8 +51,8 @@ trait ConfigurableTrait
     /**
      * {@inheritdoc}
      *
-     * @param string      $key
-     * @param null|string $type
+     * @param string   $key
+     * @param string[] $types
      *
      * @throws ConfigurationFailure
      *
@@ -60,7 +60,7 @@ trait ConfigurableTrait
      *
      * @see ConfigurableInterface::setup()
      */
-    public function config(string $key, string $type = null)
+    public function config(string $key, string ...$types)
     {
         $key = $this->normalizeIdentifier($key);
         $id = strtolower(sprintf('%s.%s', $this->identify(), $key));
@@ -92,11 +92,15 @@ trait ConfigurableTrait
             );
         }
 
-        if (null === $type) {
+        if (empty($types)) {
             return $value;
         }
 
-        if ($type !== ($actual = ConfigurationUtility::getTypeForValue($type, $value))) {
+        foreach ($types as $type) {
+            $actual = ConfigurationUtility::getTypeForValue($type, $value);
+            if ($type === $actual) {
+                continue;
+            }
             throw new ConfigurationFailure(
                 sprintf(
                     'Invalid configuration value type for key "%s", expected type "%s", but got type "%s".',

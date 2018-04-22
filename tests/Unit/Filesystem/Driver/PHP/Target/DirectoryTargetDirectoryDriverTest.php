@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Filesystem\Driver\PHP\Target;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDirectoryDriverInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDirectoryDriver;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDriverInterface;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
 /**

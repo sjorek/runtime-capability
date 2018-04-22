@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Driver;
 
+use Sjorek\RuntimeCapability\Filesystem\Strategy\FilesystemStrategyInterface;
 use Sjorek\RuntimeCapability\Management\ManageableInterface;
 
 /**
@@ -20,42 +21,8 @@ use Sjorek\RuntimeCapability\Management\ManageableInterface;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface FilesystemDriverInterface extends ManageableInterface
+interface FilesystemDriverInterface extends ManageableInterface, FilesystemStrategyInterface
 {
-    /**
-     * Create an filesystem entry.
-     *
-     * @param string $path path of target to create or just its name
-     *
-     * @return bool true on success
-     */
-    public function createTarget($path): bool;
-
-    /**
-     * Returns whether the target exists.
-     *
-     * @param string $path path of target to check or just its name
-     *
-     * @return bool
-     */
-    public function targetExists($path): bool;
-
-    /**
-     * Removes given target.
-     *
-     * @param string $path path of target to remove or just its name
-     *
-     * @return bool true on success
-     */
-    public function removeTarget($path): bool;
-
-    /**
-     * Get the maximum path length.
-     *
-     * @return int
-     */
-    public function getMaximumPathLength(): int;
-
     /**
      * @param FilesystemDriverManagerInterface $manager
      *

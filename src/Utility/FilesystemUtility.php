@@ -175,11 +175,11 @@ final class FilesystemUtility
      */
     public static function normalizePath(string $path): string
     {
-        if ('.' === $path) {
-            $path = '';
+        if ('' === $path || '.' === $path) {
+            return '';
         }
 
-        if ('' === $path || self::isUrl($path)) {
+        if (self::isUrl($path)) {
             return rtrim($path, '/');
         }
 

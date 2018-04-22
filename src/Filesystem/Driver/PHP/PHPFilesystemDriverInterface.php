@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Driver\PHP;
 
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\FilesystemStrategyInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface PHPFilesystemDriverInterface extends FilesystemDriverInterface
+interface PHPFilesystemDriverInterface extends FilesystemDriverInterface, FilesystemStrategyInterface
 {
 }

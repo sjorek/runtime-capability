@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Detection;
 
-use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Detection\ShellEscapeDetector;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractTestCase;
 
@@ -107,10 +107,10 @@ class ShellEscapeDetectorTest extends AbstractTestCase
      *           [true, "27c3a4c3b6c3bc27", "UTF-8", "ISO-8859-1", "ISO-8859-1", "Linux", 50599]
      *           [true, "22c3a4c3b6c3bc22", "UTF-8", "ISO-8859-1", "ISO-8859-1", "Windows", 50599]
      *
-     * @param boolean $expect
+     * @param bool   $expect
      * @param string $charset
      * @param string $escapeshellarg
-     * @param array $dependencies
+     * @param array  $dependencies
      */
     public function testEvaluateWithDependency(
         bool $expect,
@@ -126,7 +126,7 @@ class ShellEscapeDetectorTest extends AbstractTestCase
         $namespace = 'Sjorek\\RuntimeCapability\\Detection';
         $GLOBALS[$namespace]['escapeshellarg'] = hex2bin($escapeshellarg);
         $this->subject->setDependencyResults(
-            ["os-family" => $osFamily, "version-id" => $verionId],
+            ['os-family' => $osFamily, 'version-id' => $verionId],
             [LC_CTYPE => $localeCharset],
             $defaultCharset
         );

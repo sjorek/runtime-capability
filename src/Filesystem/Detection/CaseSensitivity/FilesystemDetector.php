@@ -13,26 +13,36 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivity;
 
+use Sjorek\RuntimeCapability\Configuration\ConfigurableInterface;
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemCaseSensitivityDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Detection\CaseSensitivityDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemCaseSensitivityDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDetector implements CaseSensitivityDetectorInterface
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FileTargetDriver::class,
-        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
 
     /**
-     * @var FileTargetDriverInterface
+     * @var FileTargetInterface
      */
     protected $filesystemDriver;
 
@@ -46,11 +56,11 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      *
      * @see AbstractFilesystemDetector::setup()
      */
-    public function setup()
+    public function setup(): ConfigurableInterface
     {
         parent::setup();
         $this->filenameDetectionPattern =
-            $this->config('filename-detection-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
+            $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
         return $this;
@@ -87,12 +97,12 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     }
 
     /**
-     * @return FileTargetDriverInterface
+     * @return FileTargetInterface
      */
-    protected function setupFilesystemDriver(): FileTargetDriverInterface
+    protected function setupFilesystemDriver(): FileTargetInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
+            $this->config('filesystem-driver', 'subclass:' . FileTargetInterface::class)
         );
     }
 }

@@ -14,21 +14,21 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemPathLengthDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\FileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Detection\PathLengthDetectorInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDriverInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemPathLengthDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDetector implements PathLengthDetectorInterface
 {
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => FileTargetDriver::class,
-        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
 
     /**
@@ -50,7 +50,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     {
         parent::setup();
         $this->filenameDetectionPattern =
-            $this->config('filename-detection-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
+            $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
         return $this;

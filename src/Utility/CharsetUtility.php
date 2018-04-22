@@ -20,7 +20,8 @@ final class CharsetUtility
 {
     /**
      * @param string $charset
-     * @return string|null
+     *
+     * @return null|string
      */
     public static function normalizeEncodingName(string $charset): ?string
     {
@@ -32,7 +33,7 @@ final class CharsetUtility
         $aliases = array_filter($aliases);
         $charset = strtolower($charset);
 
-        foreach(mb_list_encodings() as $encoding) {
+        foreach (mb_list_encodings() as $encoding) {
             if ($charset === strtolower($encoding)) {
                 return $encoding;
             }
@@ -49,7 +50,8 @@ final class CharsetUtility
 
     /**
      * @param string $locale
-     * @return string|null
+     *
+     * @return null|string
      */
     public static function getEncodingNameFromLocaleString(string $locale): ?string
     {
@@ -72,6 +74,7 @@ final class CharsetUtility
      * This method implements the 'nl_langinfo'-polyfill from the autoload bootstrap.
      *
      * @param int $item
+     *
      * @return string
      */
     public static function languageInfo(int $item): string
@@ -91,7 +94,6 @@ final class CharsetUtility
         return $match[1];
     }
 
-
     /**
      * Map known codepages to charsets.
      *
@@ -101,6 +103,7 @@ final class CharsetUtility
      * </pre>
      *
      * @var string[]
+     *
      * @see https://msdn.microsoft.com/de-de/library/windows/desktop/dd317756(v=vs.85).aspx
      */
     const CODEPAGE_TO_CHARSET = [

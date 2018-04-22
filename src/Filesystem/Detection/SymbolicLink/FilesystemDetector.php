@@ -14,32 +14,36 @@ declare(strict_types=1);
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLink;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
-use Sjorek\RuntimeCapability\Filesystem\Detection\FilesystemSymbolicLinkDetectorInterface;
-use Sjorek\RuntimeCapability\Filesystem\Driver\LinkTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Detection\SymbolicLinkDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\LinkTargetDriver;
+use Sjorek\RuntimeCapability\Filesystem\Target\LinkTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements FilesystemSymbolicLinkDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDetector implements SymbolicLinkDetectorInterface
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . LinkTargetInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => LinkTargetDriver::class,
-        'filename-detection-pattern' => self::DETECTION_FILENAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
-
-    /**
-     * @var LinkTargetDriverInterface
-     */
-    protected $filesystemDriver;
 
     /**
      * @var string
      */
-    protected $filenameDetectionPattern;
+    protected $symlinkDetectionPattern;
 
     /**
      * {@inheritdoc}
@@ -49,8 +53,8 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
     public function setup()
     {
         parent::setup();
-        $this->filenameDetectionPattern =
-            $this->config('filename-detection-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
+        $this->symlinkDetectionPattern =
+            $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
         return $this;
@@ -63,7 +67,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
      */
     protected function evaluate()
     {
-        return $this->testFilesystem(sprintf($this->filenameDetectionPattern, (string) time()));
+        return $this->testFilesystem(sprintf($this->symlinkDetectionPattern, (string) time()));
     }
 
     /**
@@ -80,15 +84,5 @@ class FilesystemDetector extends AbstractFilesystemDetector implements Filesyste
         }
 
         return $result;
-    }
-
-    /**
-     * @return LinkTargetDriverInterface
-     */
-    protected function setupFilesystemDriver(): LinkTargetDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . LinkTargetDriverInterface::class)
-        );
     }
 }

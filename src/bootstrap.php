@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 if (!function_exists('posix_geteuid')) {
     /**
-     * polyfill implementation
+     * polyfill implementation.
      *
      * @return int
      */
@@ -24,7 +24,7 @@ if (!function_exists('posix_geteuid')) {
 }
 if (!function_exists('posix_getegid')) {
     /**
-     * polyfill implementation
+     * polyfill implementation.
      *
      * @return int
      */
@@ -35,7 +35,7 @@ if (!function_exists('posix_getegid')) {
 }
 if (!function_exists('posix_getgroups')) {
     /**
-     * polyfill implementation
+     * polyfill implementation.
      *
      * @return int[]
      */
@@ -51,9 +51,10 @@ if (!function_exists('nl_langinfo')) {
         define('CODESET', 14);
     }
     /**
-     * polyfill implementation
+     * polyfill implementation.
      *
      * @param int $item
+     *
      * @return string
      */
     function nl_langinfo($item)

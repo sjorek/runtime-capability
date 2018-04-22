@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Utility;
 
-use Sjorek\RuntimeCapability\Utility\CharsetUtility;
-use Sjorek\RuntimeCapability\Tests\Unit\AbstractLocaleTestCase;
 use PHPUnit\Framework\Error\Warning;
+use Sjorek\RuntimeCapability\Tests\Unit\AbstractLocaleTestCase;
+use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 
 /**
  * CharsetUtility test case.
@@ -30,7 +30,7 @@ class CharsetUtilityTest extends AbstractLocaleTestCase
      *           ["auto", "unknown"]
      *           [null, "invalid"]
      *
-     * @param string|null $expect
+     * @param null|string $expect
      * @param string      $charset
      */
     public function testNormalizEncodingNamee(?string $expect, string $charset)
@@ -40,6 +40,7 @@ class CharsetUtilityTest extends AbstractLocaleTestCase
 
     /**
      * @covers ::getEncodingNameFromLocaleString
+     *
      * @uses ::languageInfo
      * @testWith ["ASCII", "C"]
      *           ["UTF-8", "de_DE.utf8"]
@@ -51,7 +52,7 @@ class CharsetUtilityTest extends AbstractLocaleTestCase
      *           ["UTF-8", "de_DE.65001@euro"]
      *           [null, "de_DE@euro"]
      *
-     * @param string|null $expect
+     * @param null|string $expect
      * @param string      $locale
      */
     public function testGetEncodingNameFromLocaleString(?string $expect, string $locale)
@@ -74,7 +75,7 @@ class CharsetUtilityTest extends AbstractLocaleTestCase
      *           ["65001", "de_DE.65001@euro"]
      *           ["", "de_DE@euro"]
      *
-     * @param string|null $expect
+     * @param null|string $expect
      * @param string      $locale
      */
     public function testLanguageInfo(?string $expect, string $locale)
@@ -87,7 +88,7 @@ class CharsetUtilityTest extends AbstractLocaleTestCase
 
     /**
      * @covers ::languageInfo
-      */
+     */
     public function testLanguageInfoTriggersWarningForUnsupportedItem()
     {
         $this->expectException(Warning::class);

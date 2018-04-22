@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Tests\Unit\Detection;
 
-use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
+use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
 use Sjorek\RuntimeCapability\Tests\Fixtures\Configuration\ConfigurationTestFixture;
 use Sjorek\RuntimeCapability\Tests\Unit\AbstractLocaleTestCase;
 
@@ -113,10 +113,10 @@ class LocaleCharsetDetectorTest extends AbstractLocaleTestCase
      *           [false, "", "", "Linux"]
      *           [true, "", "", "Windows"]
      *
-     * @param boolean|string $expect
-     * @param boolean|string $locale
-     * @param string $charset
-     * @param string|null $osFamily
+     * @param bool|string $expect
+     * @param bool|string $locale
+     * @param string      $charset
+     * @param null|string $osFamily
      */
     public function testEvaluateWithDependency($expect, $locale, $charset, ?string $osFamily)
     {
@@ -124,7 +124,7 @@ class LocaleCharsetDetectorTest extends AbstractLocaleTestCase
 
         $namespace = $this->getCharsetUtilityNamespace();
         $GLOBALS[$namespace]['setlocale'] = array_map(
-            function() use($locale) {
+            function () use ($locale) {
                 return $locale;
             },
             array_flip(LocaleCharsetDetector::LOCALE_CATEGORIES)
@@ -137,7 +137,7 @@ class LocaleCharsetDetectorTest extends AbstractLocaleTestCase
         $this->assertInternalType('array', $actual);
         $this->assertSame(
             array_map(
-                function() use($expect) {
+                function () use ($expect) {
                     return $expect;
                 },
                 array_flip(LocaleCharsetDetector::LOCALE_CATEGORIES)

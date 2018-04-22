@@ -78,14 +78,15 @@ abstract class AbstractFilesystemDriver extends AbstractManageable implements Fi
     /**
      * {@inheritdoc}
      *
-     * @see FilesystemDriverInterface::getMaximumPathLength()
+     * @see \Sjorek\RuntimeCapability\Filesystem\Strategy\FilesystemStrategyInterface::getMaximumPathLength()
      */
     public function getMaximumPathLength(): int
     {
         $pathLength = static::MAXIMUM_PATH_LENGTH;
+        // TODO get rid of the windows dependency for maximum path lengths
         if ('\\' === DIRECTORY_SEPARATOR) {
-            // subtract 2 for windows drive letter plus double colon, like 'c:'
-            $pathLength -= 2;
+            // subtract 2 for windows drive letter plus double-colon, like 'c:'
+            return $pathLength - 2;
         }
 
         return $pathLength;
