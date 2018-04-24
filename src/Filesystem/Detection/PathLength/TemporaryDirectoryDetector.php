@@ -11,34 +11,36 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetHierarchyDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetHierarchyDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetInTemporaryDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\TemporaryDirectoryStrategyInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 
 /**
- * Class to detect unicode filesystem capabilities.
- *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
+class TemporaryDirectoryDetector extends ExistingDirectoryDetector
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+        'subclass:' . TemporaryDirectoryStrategyInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FileTargetHierarchyDriver::class,
+        'filesystem-driver' => FileTargetInTemporaryDirectoryDriver::class,
         'filesystem-path' => '.',
-        'filepath-encoding' => 'BINARY',
-        'filename-tests' => self::UTF8_FILENAME_TESTS,
         'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
         'detection-folder-name' => self::DETECTION_FOLDER_NAME,
     ];
-
-    /**
-     * @var FileTargetHierarchyDriverInterface
-     */
-    protected $filesystemDriver;
 
     /**
      * @var string
@@ -48,7 +50,7 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     /**
      * {@inheritdoc}
      *
-     * @see FilesystemDirectoryDetector::setup()
+     * @see ExistingDirectoryDetector::setup()
      */
     public function setup()
     {
@@ -61,9 +63,9 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
     /**
      * {@inheritdoc}
      *
-     * @see FilesystemDirectoryDetector::evaluate()
+     * @see ExistingDirectoryDetector::evaluate()
      */
-    protected function evaluateWithDependency(array $localeCharset, string $defaultCharset)
+    protected function evaluate()
     {
         $this->filesystemDriver->setDirectory($this->filesystemPath);
         $backupFilesystemPath = $this->filesystemPath;
@@ -71,22 +73,12 @@ class FilesystemHierarchyDetector extends FilesystemDirectoryDetector
         $this->filesystemDriver->createDirectory($this->detectionFolderName);
         $this->filesystemPath = $this->detectionFolderName;
 
-        $result = parent::evaluateWithDependency($localeCharset, $defaultCharset);
+        $result = parent::evaluate();
 
         $this->filesystemPath = $backupFilesystemPath;
         $this->filesystemDriver->setDirectory($this->filesystemPath);
         $this->filesystemDriver->removeDirectory($this->detectionFolderName);
 
         return $result;
-    }
-
-    /**
-     * @return FileTargetHierarchyDriverInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetHierarchyDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetHierarchyDriverInterface::class)
-        );
     }
 }

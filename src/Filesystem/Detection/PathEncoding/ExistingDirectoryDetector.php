@@ -13,31 +13,37 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetInExistingDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\ExistingDirectoryStrategyInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 
 /**
  * Class to detect unicode filesystem capabilities.
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDirectoryDetector extends FilesystemDetector
+class ExistingDirectoryDetector extends CurrentDirectoryDetector
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+        'subclass:' . ExistingDirectoryStrategyInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FileTargetDirectoryDriver::class,
+        'filesystem-driver' => FileTargetInExistingDirectoryDriver::class,
         'filesystem-path' => '.',
         'filepath-encoding' => 'BINARY',
         'filename-tests' => self::UTF8_FILENAME_TESTS,
         'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
-
-    /**
-     * @var FileTargetDirectoryDriverInterface
-     */
-    protected $filesystemDriver;
 
     /**
      * @var string
@@ -62,7 +68,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
      *
      * @see FilesystemDetector::evaluate()
      */
-    protected function evaluateWithDependency(array $localeCharset, string $defaultCharset)
+    protected function evaluateWithDependency(array $localeCharset = null, string $defaultCharset = null)
     {
         $this->filesystemDriver->setDirectory($this->filesystemPath);
 
@@ -165,15 +171,5 @@ class FilesystemDirectoryDetector extends FilesystemDetector
         }
 
         return $tests;
-    }
-
-    /**
-     * @return FileTargetDirectoryDriverInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetDirectoryDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetDirectoryDriverInterface::class)
-        );
     }
 }

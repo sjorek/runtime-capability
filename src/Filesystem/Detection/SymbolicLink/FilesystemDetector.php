@@ -43,7 +43,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements SymbolicL
     /**
      * @var string
      */
-    protected $symlinkDetectionPattern;
+    protected $detectionTargetPattern;
 
     /**
      * {@inheritdoc}
@@ -53,7 +53,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements SymbolicL
     public function setup()
     {
         parent::setup();
-        $this->symlinkDetectionPattern =
+        $this->detectionTargetPattern =
             $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
@@ -67,7 +67,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements SymbolicL
      */
     protected function evaluate()
     {
-        return $this->testFilesystem(sprintf($this->symlinkDetectionPattern, (string) time()));
+        return $this->testFilesystem(sprintf($this->detectionTargetPattern, (string) time()));
     }
 
     /**

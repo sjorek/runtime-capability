@@ -15,8 +15,9 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathHierarchy;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\PathHierarchyDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\DirectoryTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
@@ -24,22 +25,30 @@ use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDriverInter
 class FilesystemDetector extends AbstractFilesystemDetector implements PathHierarchyDetectorInterface
 {
     /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . DirectoryTargetInterface::class,
+    ];
+
+    /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
         'filesystem-driver' => DirectoryTargetDriver::class,
-        'directoryname-detection-pattern' => self::DETECTION_DIRECTORYNAME_PATTERN,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
 
     /**
-     * @var DirectoryTargetDriverInterface
+     * @var DirectoryTargetInterface
      */
     protected $filesystemDriver;
 
     /**
      * @var string
      */
-    protected $directorynameDetectionPattern;
+    protected $detectionTargetPattern;
 
     /**
      * {@inheritdoc}
@@ -49,8 +58,8 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathHiera
     public function setup()
     {
         parent::setup();
-        $this->directorynameDetectionPattern =
-            $this->config('directoryname-detection-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
+        $this->detectionTargetPattern =
+            $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
         return $this;
@@ -63,7 +72,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathHiera
      */
     protected function evaluate()
     {
-        return $this->testFilesystem(sprintf($this->directorynameDetectionPattern, (string) time()));
+        return $this->testFilesystem(sprintf($this->detectionTargetPattern, (string) time()));
     }
 
     /**
@@ -80,15 +89,5 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathHiera
         }
 
         return $result;
-    }
-
-    /**
-     * @return DirectoryTargetDriverInterface
-     */
-    protected function setupFilesystemDriver(): DirectoryTargetDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . DirectoryTargetDriverInterface::class)
-        );
     }
 }

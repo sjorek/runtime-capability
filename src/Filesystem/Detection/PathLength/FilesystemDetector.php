@@ -15,14 +15,23 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
 use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\PathLengthDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
 class FilesystemDetector extends AbstractFilesystemDetector implements PathLengthDetectorInterface
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+    ];
+
     /**
      * @var int[]
      */
@@ -32,14 +41,14 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathLengt
     ];
 
     /**
-     * @var FileTargetDriverInterface
+     * @var FileTargetInterface
      */
     protected $filesystemDriver;
 
     /**
      * @var string
      */
-    protected $filenameDetectionPattern;
+    protected $detectionTargetPattern;
 
     /**
      * {@inheritdoc}
@@ -49,7 +58,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathLengt
     public function setup()
     {
         parent::setup();
-        $this->filenameDetectionPattern =
+        $this->detectionTargetPattern =
             $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
@@ -103,7 +112,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathLengt
      */
     protected function generateDetectionFileName($pathLength)
     {
-        $pattern = $this->filenameDetectionPattern;
+        $pattern = $this->detectionTargetPattern;
         $length =
             // $pattern - 2 x '%s'
             strlen($pattern) - 4 +
@@ -114,15 +123,5 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathLengt
         }
 
         return sprintf($pattern, $pathLength, str_pad('', $pathLength - $length, 'x'));
-    }
-
-    /**
-     * @return FileTargetDriverInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
-        );
     }
 }

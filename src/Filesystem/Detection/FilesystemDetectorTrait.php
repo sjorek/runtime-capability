@@ -59,7 +59,7 @@ trait FilesystemDetectorTrait
     /**
      * @return FilesystemDriverInterface
      */
-    public function setupFilesystemDriver(string ...$types): FilesystemDriverInterface
+    protected function setupFilesystemDriver(string ...$types): FilesystemDriverInterface
     {
         return $this->manager->getManagement()->getFilesystemDriverManager(
             $this->config('filesystem-driver', ...$types)

@@ -16,11 +16,12 @@ namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathEncoding;
 use Sjorek\RuntimeCapability\Detection\DefaultCharsetDetector;
 use Sjorek\RuntimeCapability\Detection\LocaleCharsetDetector;
 use Sjorek\RuntimeCapability\Exception\ConfigurationFailure;
-use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDetector;
+use Sjorek\RuntimeCapability\Filesystem\Detection\AbstractFilesystemDependingDetector;
 use Sjorek\RuntimeCapability\Filesystem\Detection\PathEncodingDetectorInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\PHPFilesystemDriverInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 use Sjorek\RuntimeCapability\Utility\CharsetUtility;
 
 /**
@@ -28,8 +29,16 @@ use Sjorek\RuntimeCapability\Utility\CharsetUtility;
  *
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDetector extends AbstractFilesystemDetector implements PathEncodingDetectorInterface
+class FilesystemDetector extends AbstractFilesystemDependingDetector implements PathEncodingDetectorInterface
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+    ];
+
     /**
      * @var string[]
      */
@@ -37,16 +46,6 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
         LocaleCharsetDetector::class,
         DefaultCharsetDetector::class,
     ];
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Sjorek\RuntimeCapability\Detection\AbstractDependingDetector::depends()
-     */
-    public function depends()
-    {
-        return $this->filesystemDriver instanceof PHPFilesystemDriverInterface ? static::DEPENDENCIES : [];
-    }
 
     /**
      * @var int[]
@@ -59,14 +58,14 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
     ];
 
     /**
-     * @var FileTargetDriverInterface
+     * @var FileTargetInterface
      */
     protected $filesystemDriver;
 
     /**
      * @var string
      */
-    protected $filepathEncoding = 'binary';
+    protected $filepathEncoding = 'BINARY';
 
     /**
      * @var bool[]|string[]
@@ -76,19 +75,30 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
     /**
      * @var string
      */
-    protected $filenameDetectionPattern = '%s-%s';
+    protected $detectionTargetPattern = '%s-%s';
 
     /**
      * {@inheritdoc}
      *
-     * @see AbstractFilesystemDetector::setup()
+     * @see \Sjorek\RuntimeCapability\Detection\AbstractDependingDetector::depends()
+     */
+    public function depends()
+    {
+        return $this->filesystemDriver instanceof PHPFilesystemDriverInterface ? static::DEPENDENCIES : [];
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Sjorek\RuntimeCapability\Detection\AbstractDetector::setup()
      */
     public function setup()
     {
         parent::setup();
+
         $filepathEncoding = $this->config('filepath-encoding', 'string');
         if ('BINARY' !== $filepathEncoding &&
-            !in_array($filepathEncoding, CharsetUtility::getPathEncodings(), true)) {
+            null == ($filepathEncoding = CharsetUtility::normalizeEncodingName($filepathEncoding))) {
             throw new ConfigurationFailure(
                 sprintf('Invalid configuration value for key "filesystem-encoding": %s', $filepathEncoding),
                 1521291497
@@ -98,7 +108,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
 
         $this->filenameTests = $this->config('filename-tests', 'array');
 
-        $this->filenameDetectionPattern =
+        $this->detectionTargetPattern =
             $this->config(
                 'detection-target-pattern',
                 'match:^[A-Za-z0-9_.-]{1,100}(?:%s[A-Za-z0-9_.-]{0,10}){2}$'
@@ -114,12 +124,14 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
      * The result will look like following example:
      * <pre>
      * php > [
-     * php >      NormalizationForms::NONE => true,
-     * php >      NormalizationForms::NFC => true,
-     * php >      NormalizationForms::NFD => true,
-     * php >      NormalizationForms::NFKC => true,
-     * php >      NormalizationForms::NFKC => true,
-     * php >      NormalizationForms::NFD_MAC => false,
+     * php >     'UTF-8' => [
+     * php >         NormalizationForms::NONE => true,
+     * php >         NormalizationForms::NFC => true,
+     * php >         NormalizationForms::NFD => true,
+     * php >         NormalizationForms::NFKC => true,
+     * php >         NormalizationForms::NFKC => true,
+     * php >         NormalizationForms::NFD_MAC => false,
+     * php >     ]
      * php > ]
      * </pre>
      *
@@ -136,7 +148,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
     {
         $charset = $this->filepathEncoding;
         if ('BINARY' === $charset ||
-            (null === $localeCharset && null === $defaultCharset) ||
+            (empty($this->depends()) && null === $localeCharset && null === $defaultCharset) ||
             $charset === $localeCharset[LC_CTYPE] ||
             $charset === $defaultCharset) {
             return [
@@ -181,21 +193,11 @@ class FilesystemDetector extends AbstractFilesystemDetector implements PathEncod
      */
     protected function generateDetectionFileNameForIndex($index, $testString)
     {
-        $fileName = sprintf($this->filenameDetectionPattern, $index, $testString);
-        if (in_array($this->filepathEncoding, [null, 'BINARY', 'UTF8'], true)) {
+        $fileName = sprintf($this->detectionTargetPattern, $index, $testString);
+        if (in_array($this->filepathEncoding, [null, 'BINARY', 'UTF-8'], true)) {
             return $fileName;
         }
 
-        return mb_convert_encoding($fileName, $this->filesystemPathEncoding, 'UTF8');
-    }
-
-    /**
-     * @return FileTargetDriverInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetDriverInterface::class)
-        );
+        return mb_convert_encoding($fileName, $this->filesystemPathEncoding, 'UTF-8');
     }
 }

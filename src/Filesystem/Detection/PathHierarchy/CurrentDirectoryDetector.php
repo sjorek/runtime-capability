@@ -11,16 +11,17 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sjorek\RuntimeCapability\Filesystem\Detection;
+namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathHierarchy;
 
-use Sjorek\RuntimeCapability\Detection\DetectorInterface;
 use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetInCurrentDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\CurrentDirectoryStrategyInterface;
 use Sjorek\RuntimeCapability\Filesystem\Target\DirectoryTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-interface PathHierarchyDetectorInterface extends DetectorInterface
+class CurrentDirectoryDetector extends FilesystemDetector
 {
     /**
      * @var string[]
@@ -28,12 +29,14 @@ interface PathHierarchyDetectorInterface extends DetectorInterface
     const FILESYSTEM_DRIVER_CONFIG_TYPES = [
         'subclass:' . FilesystemDriverInterface::class,
         'subclass:' . DirectoryTargetInterface::class,
+        'subclass:' . CurrentDirectoryStrategyInterface::class,
     ];
 
     /**
-     * We use a pattern to identify the test files that have been created.
-     *
-     * @var string
+     * @var int[]
      */
-    const DETECTION_TARGET_PATTERN = '.hierarchy-test-%s';
+    protected static $DEFAULT_CONFIGURATION = [
+        'filesystem-driver' => DirectoryTargetInCurrentDirectoryDriver::class,
+        'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
+    ];
 }

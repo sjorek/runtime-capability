@@ -13,27 +13,33 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathLength;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetDirectoryDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\FileTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\FileTargetInExistingDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\ExistingDirectoryStrategyInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\FileTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDirectoryDetector extends FilesystemDetector
+class ExistingDirectoryDetector extends CurrentDirectoryDetector
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . FileTargetInterface::class,
+        'subclass:' . ExistingDirectoryStrategyInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => FileTargetDirectoryDriver::class,
+        'filesystem-driver' => FileTargetInExistingDirectoryDriver::class,
         'filesystem-path' => '.',
         'detection-target-pattern' => self::DETECTION_TARGET_PATTERN,
     ];
-
-    /**
-     * @var FileTargetDirectoryDriverInterface
-     */
-    protected $filesystemDriver;
 
     /**
      * @var string
@@ -75,7 +81,7 @@ class FilesystemDirectoryDetector extends FilesystemDetector
         $length =
             strlen($this->filesystemPath) + strlen(DIRECTORY_SEPARATOR) +
             // $pattern - 2 x '%s'
-            strlen($this->filenameDetectionPattern) - 4 +
+            strlen($this->detectionTargetPattern) - 4 +
             strlen((string) $pathLength)
         ;
         if ($pathLength < ($length + 1)) {
@@ -83,15 +89,5 @@ class FilesystemDirectoryDetector extends FilesystemDetector
         }
 
         return parent::generateDetectionFileName($pathLength);
-    }
-
-    /**
-     * @return FileTargetDirectoryDriverInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetDirectoryDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetDirectoryDriverInterface::class)
-        );
     }
 }

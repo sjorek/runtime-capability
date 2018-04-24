@@ -49,7 +49,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements CaseSensi
     /**
      * @var string
      */
-    protected $filenameDetectionPattern;
+    protected $detectionTargetPattern;
 
     /**
      * {@inheritdoc}
@@ -59,7 +59,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements CaseSensi
     public function setup(): ConfigurableInterface
     {
         parent::setup();
-        $this->filenameDetectionPattern =
+        $this->detectionTargetPattern =
             $this->config('detection-target-pattern', 'match:^[A-Za-z0-9_.-]{1,100}%s[A-Za-z0-9_.-]{0,20}$')
         ;
 
@@ -73,7 +73,7 @@ class FilesystemDetector extends AbstractFilesystemDetector implements CaseSensi
      */
     protected function evaluate()
     {
-        return $this->testFilesystem(sprintf($this->filenameDetectionPattern, 'aAbB'));
+        return $this->testFilesystem(sprintf($this->detectionTargetPattern, 'aAbB'));
     }
 
     /**
@@ -94,15 +94,5 @@ class FilesystemDetector extends AbstractFilesystemDetector implements CaseSensi
         }
 
         return $result;
-    }
-
-    /**
-     * @return FileTargetInterface
-     */
-    protected function setupFilesystemDriver(): FileTargetInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . FileTargetInterface::class)
-        );
     }
 }

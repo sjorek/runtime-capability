@@ -13,27 +13,33 @@ declare(strict_types=1);
 
 namespace Sjorek\RuntimeCapability\Filesystem\Detection\PathHierarchy;
 
-use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetDirectoryDriver;
-use Sjorek\RuntimeCapability\Filesystem\Driver\Target\DirectoryTargetDirectoryDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\FilesystemDriverInterface;
+use Sjorek\RuntimeCapability\Filesystem\Driver\PHP\Target\DirectoryTargetInExistingDirectoryDriver;
+use Sjorek\RuntimeCapability\Filesystem\Strategy\ExistingDirectoryStrategyInterface;
+use Sjorek\RuntimeCapability\Filesystem\Target\DirectoryTargetInterface;
 
 /**
  * @author Stephan Jorek <stephan.jorek@gmail.com>
  */
-class FilesystemDirectoryDetector extends FilesystemDetector
+class ExistingDirectoryDetector extends CurrentDirectoryDetector
 {
+    /**
+     * @var string[]
+     */
+    const FILESYSTEM_DRIVER_CONFIG_TYPES = [
+        'subclass:' . FilesystemDriverInterface::class,
+        'subclass:' . DirectoryTargetInterface::class,
+        'subclass:' . ExistingDirectoryStrategyInterface::class,
+    ];
+
     /**
      * @var int[]
      */
     protected static $DEFAULT_CONFIGURATION = [
-        'filesystem-driver' => DirectoryTargetDirectoryDriver::class,
+        'filesystem-driver' => DirectoryTargetInExistingDirectoryDriver::class,
         'filesystem-path' => '.',
         'directoryname-detection-pattern' => self::DETECTION_DIRECTORYNAME_PATTERN,
     ];
-
-    /**
-     * @var DirectoryTargetDirectoryDriverInterface
-     */
-    protected $filesystemDriver;
 
     /**
      * @var string
@@ -63,15 +69,5 @@ class FilesystemDirectoryDetector extends FilesystemDetector
         $this->filesystemPath = $this->filesystemDriver->setDirectory($this->filesystemPath);
 
         return parent::evaluate();
-    }
-
-    /**
-     * @return DirectoryTargetDirectoryDriverInterface
-     */
-    protected function setupFilesystemDriver(): DirectoryTargetDirectoryDriverInterface
-    {
-        return $this->manager->getManagement()->getFilesystemDriverManager(
-            $this->config('filesystem-driver', 'subclass:' . DirectoryTargetDirectoryDriverInterface::class)
-        );
     }
 }
